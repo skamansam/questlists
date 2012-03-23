@@ -1,4 +1,6 @@
 Questlists::Application.routes.draw do
+  resources :accounts
+
   devise_for :users
 
   resources :templates
