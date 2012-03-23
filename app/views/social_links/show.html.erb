@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @social_link.user %>
+</p>
+
+<p>
+  <b>Service name:</b>
+  <%= @social_link.service_name %>
+</p>
+
+<p>
+  <b>Identifier:</b>
+  <%= @social_link.identifier %>
+</p>
+
+
+<%= link_to 'Edit', edit_social_link_path(@social_link) %> |
+<%= link_to 'Back', social_links_path %>

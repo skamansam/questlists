@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  template: 
+  info: MyText
+  parent_id: 1
+  link_list_id: 1
+
+two:
+  name: MyString
+  template: 
+  info: MyText
+  parent_id: 1
+  link_list_id: 1

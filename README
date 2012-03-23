@@ -1,0 +1,10 @@
+== Quest Lists
+
+This is the public code for http://questlists.for-our.info. It is an app which
+keeps track of the following:
+
+1. Your progress in quests.
+2. Items collected
+3. Overall progress in the game
+4. Locations reached
+5. Information about any other object in the game
