@@ -1,0 +1,11 @@
+%h3 Login
+= form_for User.new, :url=>user_session_path do |f|
+  %ul.nav.nav-list
+    %li.nav-header email:
+      = f.text_field :email
+    %li.nav-header password:
+      = f.password_field :password
+    %li #{f.check_box :remember_me, :style=>"display:inline-block;"} #{f.label :remember_me, 'Remember me', :style=>"display:inline-block;"}
+    %li
+      %button Sign in
+    %li= link_to "Forgot your password?", new_password_path('user')

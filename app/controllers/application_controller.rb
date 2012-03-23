@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   load_and_authorize_resource
 
   check_authorization
+  layout 'application'
   
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = exception.message
