@@ -1,3 +1,3 @@
 class Home < ActiveRecord::Base
-  skip_authorization_check
+  #skip_authorization_check
 end

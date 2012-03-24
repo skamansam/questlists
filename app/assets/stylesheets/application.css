@@ -16,3 +16,25 @@ ul.nav.nav-list.login .nav-header{
   float:right;
 }
 
+#errors, #alert, #notice{
+  float: left;
+  position: fixed;
+  top: 40px;
+  width: 33%;
+  left: 33%;
+  padding-left: 30px;
+  border: 1px solid #666666;
+  padding: 1em;
+}
+#errors{
+  border-color: #FF0000;
+  background-color: #ffcccc;
+}
+#alert{
+  border-color: #666666;
+  background-color: #cccccc;
+}
+#notice{
+  border-color: #00ff00;
+  background-color: #ccffcc;
+}

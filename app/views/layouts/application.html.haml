@@ -16,10 +16,12 @@
     %link{:href => "images/apple-touch-icon-72x72.png", :rel => "apple-touch-icon", :sizes => "72x72"}/
     %link{:href => "images/apple-touch-icon-114x114.png", :rel => "apple-touch-icon", :sizes => "114x114"}/
   %body
-    - if flash[:errors]
-      #errors= flash[:errors]
-    - if flash[:info]
-      #info= flash[:info]
+    - if flash[:error]
+      #errors= flash[:error]
+    - if flash[:alert]
+      #alert= flash[:alert]
+    - if flash[:notice]
+      #notice= flash[:notice]
     .navbar.navbar-fixed-top
       .navbar-inner
         .container
@@ -31,7 +33,7 @@
           .container.nav-collapse
             %ul.nav
               %li= link_to "Lists", lists_path
-              %li= link_to "Users", accounts_path
+              %li= link_to "Contributors", accounts_path
               -if current_user
                 %li= current_user.fullname
     .container

@@ -7,3 +7,4 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 @admin = User.create!(:firstname=>"\"Skaman Sam\"uel",:lastname=>"Tyler",:admin=>true,:public=>true, :email=>"skamansam@gmail.com",:confirmed_at=>Time.now, :password=>"skamansam", :password_confirmation=>"skamansam")
 @admin.confirm!
+@admin.save!

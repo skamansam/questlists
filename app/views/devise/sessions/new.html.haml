@@ -1,5 +1,5 @@
 %h2 Sign in
-
+= resource.errors if resource.errors
 = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
   .fieldset
     = f.label :email
@@ -7,7 +7,7 @@
 
   .fieldset
     = f.label :password
-    = f.email_field :password
+    = f.password_field :password
   
   - if devise_mapping.rememberable?
     .fieldset

@@ -9,9 +9,9 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource_or_scope)
-    if resource.class==Home
+    #if resource.class==Home
       return homes_path
-    end
-    return stored_location_for(resource)
+    #end
+    #return stored_location_for(resource)
   end
 end
