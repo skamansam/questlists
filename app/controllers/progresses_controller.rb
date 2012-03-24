@@ -1,4 +1,5 @@
 class ProgressesController < ApplicationController
+  load_and_authorize_resource
   # GET /progresses
   # GET /progresses.json
   def index

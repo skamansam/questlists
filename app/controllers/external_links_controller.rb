@@ -1,4 +1,5 @@
 class ExternalLinksController < ApplicationController
+  load_and_authorize_resource
   # GET /external_links
   # GET /external_links.json
   def index

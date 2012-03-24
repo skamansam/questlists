@@ -1,4 +1,6 @@
 class AccountsController < ApplicationController
+  load_and_authorize_resource
+
   # GET /accounts
   # GET /accounts.json
   def index

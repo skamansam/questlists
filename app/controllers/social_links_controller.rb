@@ -1,4 +1,5 @@
 class SocialLinksController < ApplicationController
+  load_and_authorize_resource
   # GET /social_links
   # GET /social_links.json
   def index
