@@ -22,20 +22,7 @@
       #alert= flash[:alert]
     - if flash[:notice]
       #notice= flash[:notice]
-    .navbar.navbar-fixed-top
-      .navbar-inner
-        .container
-          %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-          %a.brand{:href => "#"} Questlists
-          .container.nav-collapse
-            %ul.nav
-              %li= link_to "Lists", lists_path
-              %li= link_to "Contributors", accounts_path
-              -if current_user
-                %li= current_user.fullname
+    = render 'toolbar'
     .container
       .content
         .row
@@ -45,7 +32,6 @@
             .well.sidebar-nav
               = render (current_user ? "my_lists" : "login_form")
 
-      %footer
-        %p &copy; Company 2012
-
+      =render 'footer'
+      
     = javascript_include_tag "application"

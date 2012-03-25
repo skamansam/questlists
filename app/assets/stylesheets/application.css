@@ -3,38 +3,6 @@
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *= require_tree . 
+ *= require './global'
  *= require_self
 */
-
-ul.nav.nav-list.login .nav-header{
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding-top:0px;
-  padding-bottom:0px;
-}
-.right{
-  float:right;
-}
-
-#errors, #alert, #notice{
-  float: left;
-  position: fixed;
-  top: 40px;
-  width: 33%;
-  left: 33%;
-  padding-left: 30px;
-  border: 1px solid #666666;
-  padding: 1em;
-}
-#errors{
-  border-color: #FF0000;
-  background-color: #ffcccc;
-}
-#alert{
-  border-color: #666666;
-  background-color: #cccccc;
-}
-#notice{
-  border-color: #00ff00;
-  background-color: #ccffcc;
-}

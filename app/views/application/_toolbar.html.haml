@@ -1,0 +1,14 @@
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.brand{:href => "#"} Questlists
+      .container.nav-collapse
+        %ul.nav
+          %li= link_to "Lists", lists_path
+          %li= link_to "Contributors", accounts_path
+          -if current_user
+            %li= current_user.fullname
