@@ -6,8 +6,8 @@ class Ability
     if user.admin
       can :manage, :all
     else
-      if user.confirmed_at
-        can :edit, :all
+      if user.valid?
+        can [:create,:read,:update], :all
         cannot [:manage, :update,:edit, :create], User
         can :manage, user
       end

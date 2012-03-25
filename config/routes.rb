@@ -1,4 +1,6 @@
 Questlists::Application.routes.draw do
+  resources :tag_icons
+
   resources :accounts
 
   devise_for :users
@@ -11,13 +13,14 @@ Questlists::Application.routes.draw do
 
   resources :homes
 
-  resources :list_items
-
   resources :social_links
 
   resources :users
 
-  resources :lists
+  resources :lists do
+    resources :list_items
+  end
+
   root :to=>'lists#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.

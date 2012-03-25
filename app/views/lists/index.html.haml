@@ -1,0 +1,24 @@
+.hero-unit
+  %h2 Welcome to QuestLists!
+  %p This is a site for keeping track of lists for RPGs. 
+  %p If you want to add or update a list, you must sign up! Otherwise, feel free to browse around and see what others have added.
+  %h3 Features
+  %p The planned features for this site are:
+  %ul
+    %li Lists and items of game-related materials
+    %li Ability to tag lists with categories.
+    %li Ability to add icons for categories.
+    %li Ability to upload maps for each game, using "map" category
+    %li Ability to link a list item to a map location
+    %li Use Google Maps API for showing and navigating maps
+.hero-unit
+  %h2 Current Quest Lists
+  %dl
+    - @lists.each do |list|
+      %dt= list.name
+      %dd
+        = link_to 'Show', list
+        = link_to 'Edit', edit_list_path(list)
+        = link_to 'Destroy', list, confirm: 'Are you sure?', method: :delete
+      %dd= list.info
+  = link_to 'New List', new_list_path
