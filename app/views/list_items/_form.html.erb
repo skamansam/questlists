@@ -1,10 +1,12 @@
-<%= form_for(@list_item) do |f| %>
-  <% if @list_item.errors.any? %>
+- list_item ||= @list_item
+- list ||= @list || list_item.list
+<%= form_for([list,list_item]) do |f| %>
+  <% if list_item.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@list_item.errors.count, "error") %> prohibited this list_item from being saved:</h2>
+      <h2><%= pluralize(list_item.errors.count, "error") %> prohibited this list_item from being saved:</h2>
 
       <ul>
-      <% @list_item.errors.full_messages.each do |msg| %>
+      <% list_item.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>

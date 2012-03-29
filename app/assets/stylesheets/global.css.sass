@@ -36,13 +36,19 @@ a
   &.new, &.edit, &.destroy, &.delete, &.show
     text-indent: -9999px
     display: inline-block
-    background-image: image-url('icons/add.png')
     background-repeat: no-repeat
     height: 18px
     width: 18px
     background-position: 50% 50%
+  &.show
+    background-image: image-url('icons/magnifier.png')
   &.edit
     background-image: image-url('icons/pencil.png')
   &.destroy
     background-image: image-url('icons/delete.png')
 
+input
+  &.inline-edit
+    border: none
+    background: none
+    box-shadow: none

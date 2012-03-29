@@ -6,7 +6,7 @@ class CreateListItems < ActiveRecord::Migration
       t.text :description
       t.text :location
       t.references :template
-
+      t.integer :parent_id
       t.timestamps
     end
     add_index :list_items, :list_id

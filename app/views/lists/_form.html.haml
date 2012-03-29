@@ -6,15 +6,22 @@
         - @list.errors.full_messages.each do |msg|
           %li= msg
 
+  %h3
+    = f.input :name, :input_html=>{:class=>'inline-edit',:placeholder=>"Enter new name here"}
   .field
-    = f.input :name
+    = f.input :info, :input_html=>{:class=>'inline-edit',:placeholder=>"Enter a description here"}
   .field
-    = f.association :template
+    = f.association :template, :input_html=>{:class=>'inline-edit',:placeholder=>"Select a template"}
   .field
-    = f.input :info
-  .field
-    = f.association :parent 
+    = f.association :parent, :input_html=>{:class=>'inline-edit',:placeholder=>"Enter new name here"}
   -#.field
     = f.association :external_links
+  -# @list.list_items.each do |item|
+  = render 'list_items/inline_form', :list=>@list, :f=>f
+  -#= f.simple_fields_for :list_items,@list.list_items.new do |itemform|
+    %p Items:
+    = itemform.input :title
+    = itemform.input :description
+  =# render 'list_items/inline_form', :f=>f,:list_item=>ListItem.new(:list=>@list), :list=>@list
   .actions
     = f.submit

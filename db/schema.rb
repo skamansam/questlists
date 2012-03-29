@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120323144236) do
+ActiveRecord::Schema.define(:version => 20120324170841) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20120323144236) do
     t.text     "description"
     t.text     "location"
     t.integer  "template_id"
+    t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -87,6 +88,13 @@ ActiveRecord::Schema.define(:version => 20120323144236) do
   end
 
   add_index "social_links", ["user_id"], :name => "index_social_links_on_user_id"
+
+  create_table "tag_icons", :force => true do |t|
+    t.string   "tag"
+    t.string   "icon"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "templates", :force => true do |t|
     t.string   "name"
