@@ -1,4 +1,8 @@
 Questlists::Application.routes.draw do
+  resources :locations
+
+  resources :maps
+
   resources :tag_icons
 
   resources :accounts

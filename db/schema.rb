@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120324170841) do
+ActiveRecord::Schema.define(:version => 20120331163623) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(:version => 20120324170841) do
     t.integer  "list_id"
     t.string   "title"
     t.text     "description"
-    t.text     "location"
     t.integer  "template_id"
+    t.integer  "location_id"
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -67,6 +67,25 @@ ActiveRecord::Schema.define(:version => 20120324170841) do
   end
 
   add_index "lists", ["template_id"], :name => "index_lists_on_template_id"
+
+  create_table "locations", :force => true do |t|
+    t.text     "coordinates"
+    t.integer  "map_id"
+    t.integer  "list_item_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locations", ["list_item_id"], :name => "index_locations_on_list_item_id"
+  add_index "locations", ["map_id"], :name => "index_locations_on_map_id"
+
+  create_table "maps", :force => true do |t|
+    t.string   "image"
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "progresses", :force => true do |t|
     t.integer  "list_id"

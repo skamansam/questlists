@@ -4,8 +4,8 @@ class CreateListItems < ActiveRecord::Migration
       t.references :list
       t.string :title
       t.text :description
-      t.text :location
       t.references :template
+      t.references :location
       t.integer :parent_id
       t.timestamps
     end

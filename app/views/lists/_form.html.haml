@@ -7,21 +7,21 @@
           %li= msg
 
   %h3
-    = f.input :name, :input_html=>{:class=>'inline-edit',:placeholder=>"Enter new name here"}
+    = f.input :name, :input_html=>{:class=>'name-edit inline-edit',:placeholder=>"Enter new name here"}
   .field
-    = f.input :info, :input_html=>{:class=>'inline-edit',:placeholder=>"Enter a description here"}
+    = f.input :info, :input_html=>{:class=>'info-edit inline-edit',:placeholder=>"Enter a description here"}
   .field
-    = f.association :template, :input_html=>{:class=>'inline-edit',:placeholder=>"Select a template"}
+    = f.association :template, :input_html=>{:class=>'template-edit inline-edit',:placeholder=>"Select a template"}
   .field
-    = f.association :parent, :input_html=>{:class=>'inline-edit',:placeholder=>"Enter new name here"}
+    = f.association :parent, :input_html=>{:class=>'parent-edit inline-edit',:placeholder=>"Enter new name here"}
   -#.field
-    = f.association :external_links
+    = f.association :external_links, :input_html=>{:class=>'link-edit-edit inline-edit'}
   -# @list.list_items.each do |item|
   = render 'list_items/inline_form', :list=>@list, :f=>f
   -#= f.simple_fields_for :list_items,@list.list_items.new do |itemform|
     %p Items:
-    = itemform.input :title
-    = itemform.input :description
+    = itemform.input :title, :input_html=>{:class=>'name-edit inline-edit'
+    = itemform.input :description,:input_html=>{:class=>'info-edit inline-edit'
   =# render 'list_items/inline_form', :f=>f,:list_item=>ListItem.new(:list=>@list), :list=>@list
   .actions
     = f.submit
