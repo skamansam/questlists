@@ -1,0 +1,8 @@
+- list_item ||= @list_item || ListItem.new
+- list ||= @list || list_item.list || List.new
+- itemform ||= f
+=itemform.simple_fields_for(:locations) do |locform|
+  = locform.object
+  = locform.input :coordinates,:input_html=>{:class=>'coord-edit inline-edit'}
+  = locform.association :map, :input_html=>{:class=>'desc-edit inline-edit'}
+
