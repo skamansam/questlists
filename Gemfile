@@ -7,6 +7,7 @@ gem 'rails' #, '~> 3.2'
 
 gem 'sqlite3'
 gem 'devise'
+gem 'devise-encryptable'
 gem 'haml'
 gem 'sass'
 gem 'acts_as_tree'
@@ -14,7 +15,11 @@ gem 'simple_form'
 gem 'acts-as-taggable-on'
 gem 'paperclip'
 gem 'cancan'
-gem 'twitter-bootstrap-rails'
+gem "therubyracer"
+gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+gem "twitter-bootstrap-rails"
+gem 'jquery-rails'
+
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -23,8 +28,6 @@ group :assets do
   gem 'coffee-rails'  #, "~> 3.1.0"
   gem 'uglifier'
 end
-
-gem 'jquery-rails'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -38,6 +41,7 @@ gem 'jquery-rails'
 group :test do
   # Pretty printed test output
   gem 'turn', :require => false
+  gem 'guard'
 end
 group :development do
   gem 'railroady'

@@ -6,5 +6,5 @@ class ListItem < ActiveRecord::Base
   acts_as_tree
   acts_as_taggable
   acts_as_taggable_on :game_category, :game_name
-  accepts_attributes_for :locations
+  #accepts_attributes_for :locations
 end
