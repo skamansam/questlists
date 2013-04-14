@@ -10,21 +10,25 @@
       = javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
 
     = stylesheet_link_tag "application", :media => "all"
-
+    = javascript_include_tag "application"
     %link{:href => "images/favicon.ico", :rel => "shortcut icon"}/
     %link{:href => "images/apple-touch-icon.png", :rel => "apple-touch-icon"}/
     %link{:href => "images/apple-touch-icon-72x72.png", :rel => "apple-touch-icon", :sizes => "72x72"}/
     %link{:href => "images/apple-touch-icon-114x114.png", :rel => "apple-touch-icon", :sizes => "114x114"}/
   %body
     - if flash[:error]
-      #errors= flash[:error]
+      #errors
+        = flash[:error]
     - if flash[:alert]
-      #alert= flash[:alert]
+      #alert
+        = flash[:alert]
     - if flash[:notice]
-      #notice= flash[:notice]
+      #notice
+        = flash[:notice]
+        
     = render 'toolbar'
     .container
-      .content
+      .row.main
         .row
           .span9
             = yield
@@ -34,4 +38,4 @@
 
       =render 'footer'
       
-    = javascript_include_tag "application"
+

@@ -14,8 +14,8 @@
 ActiveRecord::Schema.define(:version => 20120331163623) do
 
   create_table "accounts", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "external_links", :force => true do |t|
@@ -23,13 +23,13 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
     t.string   "name"
     t.string   "title"
     t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "homes", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "list_items", :force => true do |t|
@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
     t.integer  "template_id"
     t.integer  "location_id"
     t.integer  "parent_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "list_items", ["list_id"], :name => "index_list_items_on_list_id"
@@ -49,8 +49,8 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
   create_table "list_links", :force => true do |t|
     t.integer  "list_id"
     t.integer  "external_link_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   add_index "list_links", ["external_link_id"], :name => "index_list_links_on_external_link_id"
@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
     t.text     "info"
     t.integer  "parent_id"
     t.integer  "link_list_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "lists", ["template_id"], :name => "index_lists_on_template_id"
@@ -72,8 +72,8 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
     t.text     "coordinates"
     t.integer  "map_id"
     t.integer  "list_item_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "locations", ["list_item_id"], :name => "index_locations_on_list_item_id"
@@ -83,16 +83,16 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
     t.string   "image"
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "progresses", :force => true do |t|
     t.integer  "list_id"
     t.integer  "user_id"
     t.text     "complete"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "progresses", ["list_id"], :name => "index_progresses_on_list_id"
@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
     t.integer  "user_id"
     t.string   "service_name"
     t.string   "identifier"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "social_links", ["user_id"], :name => "index_social_links_on_user_id"
@@ -111,15 +111,15 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
   create_table "tag_icons", :force => true do |t|
     t.string   "tag"
     t.string   "icon"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "templates", :force => true do |t|
     t.string   "name"
     t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -149,8 +149,8 @@ ActiveRecord::Schema.define(:version => 20120331163623) do
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.string   "authentication_token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
   end
 
 end

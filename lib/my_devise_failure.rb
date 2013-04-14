@@ -3,7 +3,9 @@ class MyDeviseFailure < Devise::FailureApp
     #return super unless [:worker, :employer, :user].include?(scope) #make it specific to a scope
      #new_user_session_url(:subdomain => 'secure')
      #lists_url
-     redirect_to request.referrer
+     Rails.logger.info request.referrer
+     Rails.logger.info root_path
+     redirect_to(request.referrer.blank? ? request.referrer : root_path) and return
   end
 
   # You need to override respond to eliminate recall
@@ -11,7 +13,7 @@ class MyDeviseFailure < Devise::FailureApp
     if http_auth?
       http_auth
     else
-      redirect
+      redirect_url
     end
   end
 end
