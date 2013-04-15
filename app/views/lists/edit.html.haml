@@ -1,6 +1,5 @@
-.hero-unit
-  %h2 Editing #{@list.name}
+%h2 Editing #{@list.name}
 
-  = render 'form'
+= render 'form'
 
-  = link_to 'Show', @list
+= link_to 'Show', @list unless request.xhr?

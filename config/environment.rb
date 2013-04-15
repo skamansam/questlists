@@ -14,3 +14,5 @@ Questlists::Application.initialize!
     :password => ENV['QUESTLISTS_EMAIL_PASSWORD'],
     :enable_starttls_auto => true
   }
+  
+  Mime::Type.register "text/ht", :html

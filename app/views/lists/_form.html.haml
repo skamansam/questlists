@@ -17,7 +17,7 @@
   -#.field
     = f.association :external_links, :input_html=>{:class=>'link-edit-edit inline-edit'}
   -# @list.list_items.each do |item|
-  = render 'list_items/inline_form', :list=>@list, :f=>f
+  =# render 'list_items/inline_form', :list=>@list, :f=>f
   -#= f.simple_fields_for :list_items,@list.list_items.new do |itemform|
     %p Items:
     = itemform.input :title, :input_html=>{:class=>'name-edit inline-edit'

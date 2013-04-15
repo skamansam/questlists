@@ -9,5 +9,5 @@
 //= require twitter/bootstrap
 //= require_tree .
 
-$('.inline-edit').live('focus',function(){console.log('focus');$(this).addClass('show-edit').removeClass('inline-edit')})
-$('.show-edit').live('blur',function(){console.log('blur');$(this).addClass('inline-edit').removeClass('show-edit')})
+//$('.inline-edit').on('focus',function(){console.log('focus');$(this).addClass('show-edit').removeClass('inline-edit')})
+//$('.show-edit').on('blur',function(){console.log('blur');$(this).addClass('inline-edit').removeClass('show-edit')})

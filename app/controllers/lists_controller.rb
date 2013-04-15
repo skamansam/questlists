@@ -6,10 +6,9 @@ class ListsController < ApplicationController
   # GET /lists.json
   def index
   
-    @lists = List.all
-
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render layout: !request.xhr? }
+      #format.html # index.html.erb
       format.json { render json: @lists }
     end
   end
@@ -17,8 +16,6 @@ class ListsController < ApplicationController
   # GET /lists/1
   # GET /lists/1.json
   def show
-    @list = List.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @list }
@@ -28,8 +25,6 @@ class ListsController < ApplicationController
   # GET /lists/new
   # GET /lists/new.json
   def new
-    @list = List.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @list }
@@ -38,7 +33,10 @@ class ListsController < ApplicationController
 
   # GET /lists/1/edit
   def edit
-    @list = List.find(params[:id])
+    respond_to do |format|
+      format.html { render layout: !request.xhr? }
+      format.json { render json: @lists }
+    end
   end
 
   # POST /lists
