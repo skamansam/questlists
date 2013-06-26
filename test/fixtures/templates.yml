@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  for_object_type: MyString
+  for_object_id: 1
+  body: MyText
+
+two:
+  name: MyString
+  for_object_type: MyString
+  for_object_id: 1
+  body: MyText

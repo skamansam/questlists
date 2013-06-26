@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Coordinates:</b>
+  <%= @location.coordinates %>
+</p>
+
+<p>
+  <b>Map:</b>
+  <%= @location.map %>
+</p>
+
+<p>
+  <b>List item:</b>
+  <%= @location.list_item %>
+</p>
+
+
+<%= link_to 'Edit', edit_location_path(@location) %> |
+<%= link_to 'Back', locations_path %>

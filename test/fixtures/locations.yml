@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  coordinates: MyText
+  map: 
+  list_item: 
+
+two:
+  coordinates: MyText
+  map: 
+  list_item: 

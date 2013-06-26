@@ -1,4 +1,31 @@
-RailsApp::Application.routes.draw do
+Questlists::Application.routes.draw do
+  resources :locations
+
+  resources :maps
+
+  resources :tag_icons
+
+  resources :accounts
+
+  devise_for :users
+
+  resources :templates
+
+  resources :external_links
+
+  resources :progresses
+
+  resources :homes
+
+  resources :social_links
+
+  resources :users
+
+  resources :lists do
+    resources :list_items
+  end
+
+  root :to=>'lists#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
