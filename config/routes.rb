@@ -1,4 +1,31 @@
-RailsApp::Application.routes.draw do
+Questlists::Application.routes.draw do
+  resources :locations
+
+  resources :maps
+
+  resources :tag_icons
+
+  resources :accounts
+
+  devise_for :users
+
+  resources :templates
+
+  resources :external_links
+
+  resources :progresses
+
+  resources :homes
+
+  resources :social_links
+
+  resources :users
+
+  resources :lists do
+    resources :list_items
+  end
+
+  root :to=>'lists#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -54,5 +81,5 @@ RailsApp::Application.routes.draw do
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
+  # match ':controller(/:action(/:id(.:format)))'
 end

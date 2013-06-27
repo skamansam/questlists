@@ -21,3 +21,7 @@ production:
   # socket:   <%=ENV['OPENSHIFT_MYSQL_DB_SOCKET']%>
   host:     <%=ENV['OPENSHIFT_MYSQL_DB_HOST']%>
   port:     <%=ENV['OPENSHIFT_MYSQL_DB_PORT']%>
+   Root User: adminzdivfy3
+   Root Password: _r4IXmRXLPuT
+   Database Name: questlists
+Connection URL: postgresql://$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT
