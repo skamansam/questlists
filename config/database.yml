@@ -29,9 +29,5 @@ test: &test
   <<: *common
   database: questlists_test
 
-production:
-  <<: *common
-  database: questlists
-
 cucumber:
   <<: *test
