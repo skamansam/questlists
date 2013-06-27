@@ -1,46 +1,50 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.2.13'
-gem 'rack', '~> 1.4.5'
+gem 'rails' #, '~> 3.2'
 
 # Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'mysql2'
-gem 'sqlite3'
+#gem 'sqlite3'
+gem 'pg'
+gem 'devise'
+gem 'devise-encryptable'
+gem 'haml'
+gem 'sass'
+gem 'acts_as_tree'
+gem 'simple_form'
+gem 'acts-as-taggable-on'
+gem 'paperclip'
+gem 'cancan'
+gem "therubyracer"
+gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+gem "twitter-bootstrap-rails"
+gem 'jquery-rails'
 
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
+  gem 'sass-rails'    #, "  ~> 3.1.0"
+  gem 'coffee-rails'  #, "~> 3.1.0"
+  gem 'uglifier'
 end
 
-gem 'jquery-rails'
-
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
+# Use unicorn as the web server
 # gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'
 
 # To use debugger
-# gem 'debugger'
+# gem 'ruby-debug19', :require => 'ruby-debug'
 
-# This version needs to be hardcoded for OpenShift compatibility
-gem 'thor', '= 0.14.6'
-
-# This needs to be installed so we can run Rails console on OpenShift directly
-gem 'minitest'
+group :test do
+  # Pretty printed test output
+  gem 'turn', :require => false
+  gem 'guard'
+end
+group :development do
+  gem 'railroady'
+  gem 'yard'
+end
