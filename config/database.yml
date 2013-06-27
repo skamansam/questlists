@@ -1,15 +1,3 @@
-test:
-  adapter: sqlite3
-  database: db/test.sqlite3
-  pool: 5
-  timeout: 5000
-
-development:
-  adapter: sqlite3
-  database: db/development.sqlite3
-  pool: 5
-  timeout: 5000
-
 production:
   adapter: mysql2
   encoding: utf8
@@ -21,7 +9,29 @@ production:
   # socket:   <%=ENV['OPENSHIFT_MYSQL_DB_SOCKET']%>
   host:     <%=ENV['OPENSHIFT_MYSQL_DB_HOST']%>
   port:     <%=ENV['OPENSHIFT_MYSQL_DB_PORT']%>
-   Root User: adminzdivfy3
-   Root Password: _r4IXmRXLPuT
-   Database Name: questlists
-Connection URL: postgresql://$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT
+
+common: &common
+  adapter: postgresql
+  username: questlists
+  password: questlists
+#  host: 127.0.0.1
+#  pool: 5
+#  timeout: 5000
+
+development:
+  <<: *common
+  database: questlists_dev
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test: &test
+  <<: *common
+  database: questlists_test
+
+production:
+  <<: *common
+  database: questlists
+
+cucumber:
+  <<: *test
