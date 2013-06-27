@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Href:</b>
+  <%= @external_link.href %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @external_link.name %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%= @external_link.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @external_link.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_external_link_path(@external_link) %> |
+<%= link_to 'Back', external_links_path %>

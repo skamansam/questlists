@@ -1,0 +1,27 @@
+<h1>Listing social_links</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Service name</th>
+    <th>Identifier</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @social_links.each do |social_link| %>
+  <tr>
+    <td><%= social_link.user %></td>
+    <td><%= social_link.service_name %></td>
+    <td><%= social_link.identifier %></td>
+    <td><%= link_to 'Show', social_link %></td>
+    <td><%= link_to 'Edit', edit_social_link_path(social_link) %></td>
+    <td><%= link_to 'Destroy', social_link, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Social link', new_social_link_path %>

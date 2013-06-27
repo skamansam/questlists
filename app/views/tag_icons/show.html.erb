@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Tag:</b>
+  <%= @tag_icon.tag %>
+</p>
+
+<p>
+  <b>Icon:</b>
+  <%= @tag_icon.icon %>
+</p>
+
+
+<%= link_to 'Edit', edit_tag_icon_path(@tag_icon) %> |
+<%= link_to 'Back', tag_icons_path %>

@@ -1,0 +1,7 @@
+%h3= current_user.firstname
+%ul.nav.nav-list
+  %li.nav-header My Lists
+  - current_user.lists.each do |list|
+    %li= link_to list.name, list
+  - if current_user.lists.empty?
+    %li You have not started any lists yet.

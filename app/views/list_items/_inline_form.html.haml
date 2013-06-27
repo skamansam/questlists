@@ -1,0 +1,21 @@
+- list_item ||= @list_item || ListItem.new
+- list ||= @list || list_item.list || List.new
+- listform ||= f
+%dl
+  =listform.simple_fields_for(:list_items) do |itemform|
+    %dt
+      = itemform.input :title, :input_html=>{:class=>'name-edit inline-edit'}
+    %dd
+    = itemform.input :description, :input_html=>{:class=>'info-edit inline-edit'}
+    - list_item.locations.each do |loc|
+      = render "locations/inline_form", :f=>itemform, :location=>loc
+    =# itemform.association :location, :input_html=>{:class=>'location-edit inline-edit'}
+    
+  =listform.simple_fields_for(@list.list_items.new) do |itemform|
+    %dt
+      = itemform.input :title, :input_html=>{:class=>'name-edit inline-edit'}
+    %dd
+      = itemform.input :description, :input_html=>{:class=>'info-edit inline-edit'}
+    %dd
+      = itemform.submit
+
