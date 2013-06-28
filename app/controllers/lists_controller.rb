@@ -7,9 +7,9 @@ class ListsController < ApplicationController
   def index
   
     respond_to do |format|
-      format.html { render layout: !request.xhr? }
+      format.html { render :layout => !request.xhr? }
       #format.html # index.html.erb
-      format.json { render json: @lists }
+      format.json { render :json => @lists }
     end
   end
 
@@ -18,7 +18,7 @@ class ListsController < ApplicationController
   def show
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @list }
+      format.json { render :json => @list }
     end
   end
 
@@ -27,15 +27,15 @@ class ListsController < ApplicationController
   def new
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @list }
+      format.json { render :json => @list }
     end
   end
 
   # GET /lists/1/edit
   def edit
     respond_to do |format|
-      format.html { render layout: !request.xhr? }
-      format.json { render json: @lists }
+      format.html { render :layout => !request.xhr? }
+      format.json { render :json => @lists }
     end
   end
 
@@ -46,11 +46,11 @@ class ListsController < ApplicationController
 
     respond_to do |format|
       if @list.save
-        format.html { redirect_to @list, notice: 'List was successfully created.' }
-        format.json { render json: @list, status: :created, location: @list }
+        format.html { redirect_to @list, :notice => 'List was successfully created.' }
+        format.json { render :json => @list, :status => :created, :location => @list }
       else
-        format.html { render action: "new" }
-        format.json { render json: @list.errors, status: :unprocessable_entity }
+        format.html { render :action => "new" }
+        format.json { render :json => @list.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -62,11 +62,11 @@ class ListsController < ApplicationController
 
     respond_to do |format|
       if @list.update_attributes(params[:list])
-        format.html { redirect_to @list, notice: 'List was successfully updated.' }
+        format.html { redirect_to @list, :notice => 'List was successfully updated.' }
         format.json { head :ok }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @list.errors, status: :unprocessable_entity }
+        format.html { render :action => "edit" }
+        format.json { render :json => @list.errors, :status => :unprocessable_entity }
       end
     end
   end

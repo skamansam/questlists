@@ -18,30 +18,30 @@ class ProgressesControllerTest < ActionController::TestCase
 
   test "should create progress" do
     assert_difference('Progress.count') do
-      post :create, progress: @progress.attributes
+      post :create, :progress => @progress.attributes
     end
 
     assert_redirected_to progress_path(assigns(:progress))
   end
 
   test "should show progress" do
-    get :show, id: @progress.to_param
+    get :show, :id => @progress.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @progress.to_param
+    get :edit, :id => @progress.to_param
     assert_response :success
   end
 
   test "should update progress" do
-    put :update, id: @progress.to_param, progress: @progress.attributes
+    put :update, :id => @progress.to_param, :progress => @progress.attributes
     assert_redirected_to progress_path(assigns(:progress))
   end
 
   test "should destroy progress" do
     assert_difference('Progress.count', -1) do
-      delete :destroy, id: @progress.to_param
+      delete :destroy, :id => @progress.to_param
     end
 
     assert_redirected_to progresses_path

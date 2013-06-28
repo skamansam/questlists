@@ -18,30 +18,30 @@ class HomesControllerTest < ActionController::TestCase
 
   test "should create home" do
     assert_difference('Home.count') do
-      post :create, home: @home.attributes
+      post :create, :home => @home.attributes
     end
 
     assert_redirected_to home_path(assigns(:home))
   end
 
   test "should show home" do
-    get :show, id: @home.to_param
+    get :show, :id => @home.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @home.to_param
+    get :edit, :id => @home.to_param
     assert_response :success
   end
 
   test "should update home" do
-    put :update, id: @home.to_param, home: @home.attributes
+    put :update, :id => @home.to_param, :home => @home.attributes
     assert_redirected_to home_path(assigns(:home))
   end
 
   test "should destroy home" do
     assert_difference('Home.count', -1) do
-      delete :destroy, id: @home.to_param
+      delete :destroy, :id => @home.to_param
     end
 
     assert_redirected_to homes_path

@@ -7,7 +7,7 @@ class ExternalLinksController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @external_links }
+      format.json { render :json => @external_links }
     end
   end
 
@@ -18,7 +18,7 @@ class ExternalLinksController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @external_link }
+      format.json { render :json => @external_link }
     end
   end
 
@@ -29,7 +29,7 @@ class ExternalLinksController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @external_link }
+      format.json { render :json => @external_link }
     end
   end
 
@@ -45,11 +45,11 @@ class ExternalLinksController < ApplicationController
 
     respond_to do |format|
       if @external_link.save
-        format.html { redirect_to @external_link, notice: 'External link was successfully created.' }
-        format.json { render json: @external_link, status: :created, location: @external_link }
+        format.html { redirect_to @external_link, :notice => 'External link was successfully created.' }
+        format.json { render :json => @external_link, :status => :created, :location => @external_link }
       else
-        format.html { render action: "new" }
-        format.json { render json: @external_link.errors, status: :unprocessable_entity }
+        format.html { render :action => "new" }
+        format.json { render :json => @external_link.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -61,11 +61,11 @@ class ExternalLinksController < ApplicationController
 
     respond_to do |format|
       if @external_link.update_attributes(params[:external_link])
-        format.html { redirect_to @external_link, notice: 'External link was successfully updated.' }
+        format.html { redirect_to @external_link, :notice => 'External link was successfully updated.' }
         format.json { head :ok }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @external_link.errors, status: :unprocessable_entity }
+        format.html { render :action => "edit" }
+        format.json { render :json => @external_link.errors, :status => :unprocessable_entity }
       end
     end
   end

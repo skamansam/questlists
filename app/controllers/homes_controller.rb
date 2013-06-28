@@ -7,7 +7,7 @@ class HomesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @homes }
+      format.json { render :json => @homes }
     end
   end
 

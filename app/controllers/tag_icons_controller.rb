@@ -6,7 +6,7 @@ class TagIconsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @tag_icons }
+      format.json { render :json => @tag_icons }
     end
   end
 
@@ -17,7 +17,7 @@ class TagIconsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @tag_icon }
+      format.json { render :json => @tag_icon }
     end
   end
 
@@ -28,7 +28,7 @@ class TagIconsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @tag_icon }
+      format.json { render :json => @tag_icon }
     end
   end
 
@@ -44,11 +44,11 @@ class TagIconsController < ApplicationController
 
     respond_to do |format|
       if @tag_icon.save
-        format.html { redirect_to @tag_icon, notice: 'Tag icon was successfully created.' }
-        format.json { render json: @tag_icon, status: :created, location: @tag_icon }
+        format.html { redirect_to @tag_icon, :notice => 'Tag icon was successfully created.' }
+        format.json { render :json => @tag_icon, :status => :created, :location => @tag_icon }
       else
-        format.html { render action: "new" }
-        format.json { render json: @tag_icon.errors, status: :unprocessable_entity }
+        format.html { render :action => "new" }
+        format.json { render :json => @tag_icon.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -60,11 +60,11 @@ class TagIconsController < ApplicationController
 
     respond_to do |format|
       if @tag_icon.update_attributes(params[:tag_icon])
-        format.html { redirect_to @tag_icon, notice: 'Tag icon was successfully updated.' }
+        format.html { redirect_to @tag_icon, :notice => 'Tag icon was successfully updated.' }
         format.json { head :ok }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @tag_icon.errors, status: :unprocessable_entity }
+        format.html { render :action => "edit" }
+        format.json { render :json => @tag_icon.errors, :status => :unprocessable_entity }
       end
     end
   end

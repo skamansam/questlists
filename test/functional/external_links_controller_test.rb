@@ -18,30 +18,30 @@ class ExternalLinksControllerTest < ActionController::TestCase
 
   test "should create external_link" do
     assert_difference('ExternalLink.count') do
-      post :create, external_link: @external_link.attributes
+      post :create, :external_link => @external_link.attributes
     end
 
     assert_redirected_to external_link_path(assigns(:external_link))
   end
 
   test "should show external_link" do
-    get :show, id: @external_link.to_param
+    get :show, :id => @external_link.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @external_link.to_param
+    get :edit, :id => @external_link.to_param
     assert_response :success
   end
 
   test "should update external_link" do
-    put :update, id: @external_link.to_param, external_link: @external_link.attributes
+    put :update, :id => @external_link.to_param, :external_link => @external_link.attributes
     assert_redirected_to external_link_path(assigns(:external_link))
   end
 
   test "should destroy external_link" do
     assert_difference('ExternalLink.count', -1) do
-      delete :destroy, id: @external_link.to_param
+      delete :destroy, :id => @external_link.to_param
     end
 
     assert_redirected_to external_links_path
