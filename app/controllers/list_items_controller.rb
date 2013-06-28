@@ -5,39 +5,20 @@ class ListItemsController < ApplicationController
   # GET /list_items
   # GET /list_items.json
   def index
-    @list_items = ListItem.all
-
-    respond_to do |format|
-      format.html { layout: !request.xhr? }
-      format.json { render :json => @list_items }
-    end
   end
 
   # GET /list_items/1
   # GET /list_items/1.json
   def show
-    @list_item = ListItem.find(params[:id])
-
-    respond_to do |format|
-      format.html { layout: !request.xhr? }
-      format.json { render :json => @list_item }
-    end
   end
 
   # GET /list_items/new
   # GET /list_items/new.json
   def new
-    @list_item = ListItem.new
-
-    respond_to do |format|
-      format.html { layout: !request.xhr? }
-      format.json { render :json => @list_item }
-    end
   end
 
   # GET /list_items/1/edit
   def edit
-    @list_item = ListItem.find(params[:id])
   end
 
   # POST /list_items
