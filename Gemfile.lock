@@ -175,7 +175,7 @@ GEM
       multi_json (~> 1.0, >= 1.0.2)
     warden (1.2.1)
       rack (>= 1.0)
-    yard (0.8.6.1)
+    yard (0.8.6.2)
 
 PLATFORMS
   ruby

@@ -20,7 +20,13 @@ Questlists::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
-  # Defaults to nil and saved in location specified by config.assets.prefix
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
+
+  # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
 
   # Specifies the header that your server uses for sending files

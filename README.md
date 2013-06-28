@@ -1,111 +1,30 @@
-# Rails Sample App on OpenShift #
-Quickstart rails application for openshift.
+== Quest Lists
 
-The easiest way to install this application is to use the [OpenShift
-Instant Application][template]. If you'd like to install it
-manually, follow [these directions](#manual-installation).
+QuestLists is a crowd-sourcing application that organizes lists of any sort. The
+crowd builds the lists, you say what you want to use from that list, and then 
+use it as a normal checklist. Essentially, this is a three-state checklist builder.
 
-## OpenShift Considerations ##
-These are some special considerations you may need to keep in mind when
-running your application on OpenShift.
+The intention is to use the crowd to build lists for games, inventories, shopping,
+music, videos, and more! Once the lists are built and created, you can add/remove
+your items from them. You don't even have to login to use it (only for the same devise)!
 
-### Database ###
-Your application is configured to use your OpenShift database in
-Production mode.
-Because it addresses these databases based on [OpenShift Environment
-Variables](http://red.ht/NvNoXC), you will need to change these if you
-want to use your application in Production mode outside of
-OpenShift.
+=== Demo
+This is the public code for http://questlists-rbe.rhcloud.com. The code is redeployed
+when I finish any feature or want to test something, so it may change a lot and 
+may break down  often. I will do my best not to disturb any data that is already 
+there, but be warned, your data may be a casualty of development!
 
-### Assets ###
-Your application is set to precompile the assets every time you push
-to OpenShift. Any assets you commit to your repo will be preserved
-alongside those which are generated during the build.
+=== Roadmap
 
-### Security ###
-Since these quickstarts are shared code, we had to take special
-consideration to ensure that security related configuration variables
-was unique across applications.
-To accomplish this, we modified some of the configuration files (shown
-in the table below).
-Now instead of using the same default values, your application will
-generate it's own value using the `initialize_secret` function from `lib/openshift_secret_generator.rb`.
+Questlists is originally intended for game quests, so will have the following 
+ideas implemented first:
 
-This function uses a secure environment variable that only exists on
-your deployed application and not in your code anywhere.
-You can then use the function to generate any variables you need.
-Each of them will be unique so `initialize_secret(:a)` will differ
-from `initialize_secret(:b)` but they will also be consistent, so any
-time your application uses them (even across reboots), you know they
-will be the same.
+1. Your progress in quests.
+2. Items collected
+3. Overall progress in the game
+4. Locations reached
+5. Information about any other object in the game
 
-##### Modified Files #####
-
-<table>
-  <tr>
-    <th>File</th>
-    <th>Variable</th>
-  </tr>
-  <tr>
-    <td>config/initializers/secret_token.rb</td> 
-    <td>Railsapp::Application.config.secret_token</td>
-  </tr>
-  <tr>
-    <td>config/initializers/session_store.rb</td>
-    <td>Railsapp::Application.config.session_store</td>
-  </tr>
-</table>
-
-## Manual Installation ##
-
-1. Create an account at http://openshift.redhat.com/
-
-1. Create a rails application
-
-    ```
-    rhc app create -a railsapp -t ruby-1.9
-    ```
-
-   **Note:** To support Ruby 1.8,
-   ```
-   +++ config/initializers/wrap_parameters.rb
-   @@ -5,7 +5,7 @@
-    
-     # Enable parameter wrapping for JSON. You can disable this by setting :format to an empty array.
-      ActiveSupport.on_load(:action_controller) do
-      -  wrap_parameters format: [:json]
-      +  wrap_parameters ({:format => [:json]})
-       end
-  ```
-
-
-
-1. Add mysql support to your application
-
-    ```
-    rhc cartridge add -a railsapp -c mysql-5.1
-    ```
-
-1. Add this upstream Rails quickstart repository
-
-    ```
-    cd railsapp
-    git remote add upstream -m master git://github.com/openshift/rails-example.git
-    git pull -s recursive -X theirs upstream master
-    ```
-
-1. Push your new code
-
-    ```
-    git push
-    ```
-
-1. That's it! Enjoy your new Rails application!
-
-
-[template]: https://openshift.redhat.com/app/console/application_types/rails
-
-License
--------
-
-This code is dedicated to the public domain to the maximum extent permitted by applicable law, pursuant to CC0 (http://creativecommons.org/publicdomain/zero/1.0/)
+I am sure you can generalize these ideas to fit any circumstance, so i will 
+eventually create a few demos of lists for everyday use, such as a shopping 
+list and various TODO lists.
