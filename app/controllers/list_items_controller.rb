@@ -8,7 +8,7 @@ class ListItemsController < ApplicationController
     @list_items = ListItem.all
 
     respond_to do |format|
-      format.html { layout=> !request.xhr? }
+      format.html { :layout=> !request.xhr? }
       format.json { render :json => @list_items }
     end
   end
@@ -19,7 +19,7 @@ class ListItemsController < ApplicationController
     @list_item = ListItem.find(params[:id])
 
     respond_to do |format|
-      format.html { layout=> !request.xhr? }
+      format.html { :layout=> !request.xhr? }
       format.json { render :json => @list_item }
     end
   end
@@ -30,7 +30,7 @@ class ListItemsController < ApplicationController
     @list_item = ListItem.new
 
     respond_to do |format|
-      format.html { layout=> !request.xhr? }
+      format.html { :layout=> !request.xhr? }
       format.json { render :json => @list_item }
     end
   end
