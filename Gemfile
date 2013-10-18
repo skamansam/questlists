@@ -1,59 +1,85 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'rails' #, '~> 3.2'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 4.0.1.rc1'
 
-# Bundle edge Rails instead:
-# gem 'rails',     :git => 'git://github.com/rails/rails.git'
+# Use sqlite3 as the database for Active Record
+gem 'sqlite3'
 
-#gem 'sqlite3'
-gem 'mysql2'
-gem 'pg'
-gem 'devise'
-gem 'devise-encryptable'
-gem 'haml'
-gem 'sass'
-gem 'acts_as_tree'
-gem 'simple_form'
-gem 'acts-as-taggable-on'
-gem 'paperclip'
-gem 'cancan'
-gem "therubyracer"
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
-gem "twitter-bootstrap-rails"
+# Use SCSS for stylesheets
+gem 'sass-rails'
+
+# Use HAML for html
+gem 'haml-rails'
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails'
+
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+gem 'therubyracer', platforms: :ruby
+gem 'therubyrhino', platforms: :jruby
+
+# Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem 'turbolinks'
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails'    #, "  ~> 3.1.0"
-  gem 'coffee-rails'  #, "~> 3.1.0"
-  gem 'uglifier'
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 1.2'
+
+# for authentication and roles
+gem 'devise', "3.1.0"
+gem 'cancan'
+gem 'omniauth'
+
+# use Bootstrap 3 for RAD
+gem 'twitter-bootswatch-rails', "~> 3.0.0.0"
+gem 'twitter-bootswatch-rails-helpers'
+
+# for attaching and uploading images
+gem 'paperclip'
+
+group :doc do
+  # bundle exec rake doc:rails generates the API under doc/api.
+  gem 'sdoc', require: false
 end
 
-gem 'jquery-rails'
-
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
+# Use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '~> 3.0.0'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
 
-# Deploy with Capistrano
-# gem 'capistrano'
+# Use Capistrano for deployment
+# gem 'capistrano', group: :development
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+# Use debugger
+gem 'debugger', group: [:development, :test]
 
-group :test do
-  # Pretty printed test output
-  gem 'turn', :require => false
+group :test, :development do
+  gem 'capybara', '~> 2.1.0'
+  gem 'database_cleaner', '~> 1.1.1'
+  gem 'factory_girl_rails', '~> 4.2.1'
+  gem 'forgery', '~> 0.5.0'
+  gem 'launchy', '~> 2.3.0'
+  gem 'rspec-rails', '~> 2.14.0'
+  gem 'spork', '~> 0.9.2'
   gem 'guard'
-end
-group :development do
-  gem 'railroady'
-  gem 'yard'
+  gem 'guard-rspec'
+  gem 'guard-spork', '~>1.5.1'
+  gem 'guard-bundler'
+  gem 'guard-rails', '~>0.4.7'
+  gem 'guard-coffeescript', '~>1.3.4'
+  gem 'guard-sass', '~>1.3.2', :require=>false
+  gem 'guard-migrate', '~>0.2.1'
+  gem 'guard-rake', '~>0.0.9'
+  gem 'mysql2', '~> 0.3.13'       # optional for local CRMS test.
+  gem 'poltergeist', '~> 1.4.1'   # need to install phantomjs for this.
+  gem 'simplecov', '~>0.7.1'
+  gem 'selenium-webdriver'
+  gem 'chromedriver-helper', '~>0.0.5'
 end

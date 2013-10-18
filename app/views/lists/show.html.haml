@@ -1,18 +1,29 @@
-.well
-  %h3
-    = @list.parent.name+" &gt; " if @list.parent
-    = @list.name
-    - if can? :edit, @list
-      = link_to 'Edit', edit_list_path(@list), :class=>'edit popup', :data=>{:toggle=>"modal",:target=>"#ajax-modal"}
+- model_class = List
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human
 
-  %p
-    = @list.info
-  %dl
-    - @list.list_items.each do |item|
-      %dt= item.title
-      %dd= item.description
+%p
+  %strong= model_class.human_attribute_name(:name) + ':'
+  %br
+  = @list.name
+%p
+  %strong= model_class.human_attribute_name(:description) + ':'
+  %br
+  = @list.description
+%p
+  %strong= model_class.human_attribute_name(:icon) + ':'
+  %br
+  = @list.icon
+%p
+  %strong= model_class.human_attribute_name(:created_by) + ':'
+  %br
+  = @list.created_by
+%p
+  %strong= model_class.human_attribute_name(:list_item) + ':'
+  %br
+  = @list.list_item
 
-%ul.nav.nav-list.login
-  %li.nav-header Links
-  %li= @list.link_list_id
-  
+.form-actions
+  = link_to t('.back', :default => t("helpers.links.back")), lists_path, :class => 'btn'
+  = link_to t('.edit', :default => t("helpers.links.edit")), edit_list_path(@list), :class => 'btn'
+  = link_to t('.destroy', :default => t("helpers.links.destroy")), list_path(@list), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

@@ -1,17 +1,20 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  layout :get_layout
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
 
-  layout 'application'
-  
+  # use CanCan for authorization on every action
+  check_authorization
+
+  #what to do when CanCan can't find authorization for the current action
   rescue_from CanCan::AccessDenied do |exception|
-    flash[:error] = exception.message
-    redirect_to root_url
+    redirect_to root_url, :alert => exception.message
   end
 
-  def after_sign_in_path_for(resource_or_scope)
-    #if resource.class==Home
-      return homes_path
-    #end
-    #return stored_location_for(resource)
+  private
+
+  def get_layout
+    return params[:layout]
   end
 end

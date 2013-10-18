@@ -1,27 +1,24 @@
-= simple_form_for(@list) do |f|
-  - if @list.errors.any?
-    #error_explanation
-      %h2 #{pluralize(@list.errors.count, "error")} prohibited this list from being saved:
-      %ul
-        - @list.errors.full_messages.each do |msg|
-          %li= msg
-
-  %h3
-    = f.input :name, :input_html=>{:class=>'name-edit inline-edit',:placeholder=>"Enter new name here"}
-  .field
-    = f.input :info, :input_html=>{:class=>'info-edit inline-edit',:placeholder=>"Enter a description here"}
-  .field
-    = f.association :template, :input_html=>{:class=>'template-edit inline-edit',:placeholder=>"Select a template"}
-  .field
-    = f.association :parent, :input_html=>{:class=>'parent-edit inline-edit',:placeholder=>"Enter new name here"}
-  -#.field
-    = f.association :external_links, :input_html=>{:class=>'link-edit-edit inline-edit'}
-  -# @list.list_items.each do |item|
-  =# render 'list_items/inline_form', :list=>@list, :f=>f
-  -#= f.simple_fields_for :list_items,@list.list_items.new do |itemform|
-    %p Items:
-    = itemform.input :title, :input_html=>{:class=>'name-edit inline-edit'
-    = itemform.input :description,:input_html=>{:class=>'info-edit inline-edit'
-  =# render 'list_items/inline_form', :f=>f,:list_item=>ListItem.new(:list=>@list), :list=>@list
-  .actions
-    = f.submit
+= form_for @list, :html => { :class => 'form-horizontal' } do |f|
+  .control-group
+    = f.label :name, :class => 'control-label'
+    .controls
+      = f.text_field :name, :class => 'text_field'
+  .control-group
+    = f.label :description, :class => 'control-label'
+    .controls
+      = f.text_area :description, :class => 'text_area'
+  .control-group
+    = f.label :icon, :class => 'control-label'
+    .controls
+      = f.text_field :icon, :class => 'text_field'
+  .control-group
+    = f.label :created_by, :class => 'control-label'
+    .controls
+      = f.number_field :created_by, :class => 'number_field'
+  .control-group
+    = f.label :list_item, :class => 'control-label'
+    .controls
+      = f.number_field :list_item, :class => 'number_field'
+  .form-actions
+    = f.submit nil, :class => 'btn btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), lists_path, :class => 'btn'

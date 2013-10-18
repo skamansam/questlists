@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b State for type:
+  = @user_state.state_for_type
+%p
+  %b State for:
+  = @user_state.state_for_id
+
+= link_to 'Edit', edit_user_state_path(@user_state)
+\|
+= link_to 'Back', user_states_path

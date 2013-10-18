@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @state.name
+%p
+  %b Description:
+  = @state.description
+%p
+  %b Type:
+  = @state.type
+
+= link_to 'Edit', edit_state_path(@state)
+\|
+= link_to 'Back', states_path

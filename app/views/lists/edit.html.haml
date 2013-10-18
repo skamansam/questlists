@@ -1,5 +1,4 @@
-%h2 Editing #{@list.name}
-
-= render 'form'
-
-= link_to 'Show', @list unless request.xhr?
+- model_class = List
+.page-header
+  %h1=t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human, :default => "Edit #{model_class.model_name.human}")
+= render :partial => "form"

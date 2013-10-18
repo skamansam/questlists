@@ -1,32 +1,27 @@
-!!!
-%html{:lang => "en"}
+!!! 5
+%html(lang="en")
   %head
-    %meta{:charset => "utf-8"}/
-    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
-    %title Questlists
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1")
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %link{rel: "shortcut icon", href: image_path("favicon.ico") }
+    %title= content_for?(:title) ? yield(:title) : "questlists"
     = csrf_meta_tags
+
     / Le HTML5 shim, for IE6-8 support of HTML elements
     /[if lt IE 9]
       = javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
+    = stylesheet_link_tag "themes/"+(params[:theme] || "amelia"), :media => "all", "data-turbolinks-track" => true
+    = yield(:page_stylesheet) if content_for?(:page_stylesheet)
 
-    = stylesheet_link_tag "application", :media => "all"
-    = javascript_include_tag "application"
-    %link{:href => "images/favicon.ico", :rel => "shortcut icon"}/
-    %link{:href => "images/apple-touch-icon.png", :rel => "apple-touch-icon"}/
-    %link{:href => "images/apple-touch-icon-72x72.png", :rel => "apple-touch-icon", :sizes => "72x72"}/
-    %link{:href => "images/apple-touch-icon-114x114.png", :rel => "apple-touch-icon", :sizes => "114x114"}/
+
   %body
-    = render 'toolbar'
-    .container
-      .row.main
-        .row
-          = render 'messages'
-          .span9
-            = yield
-          .span3
-            .well.sidebar-nav
-              = render (current_user ? "my_lists" : "login_form")
+    = render "shared/header"
+    = yield
 
-      =render 'footer'
-      
-    =render 'modal'
+    /
+      Javascripts
+      \==================================================
+    / Placed at the end of the document so the pages load faster
+    = javascript_include_tag "amelia","data-turbolinks-track" => true
+    = yield(:page_javascript) if content_for?(:page_javascript)
