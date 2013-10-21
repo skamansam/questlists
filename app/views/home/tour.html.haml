@@ -1,0 +1,31 @@
+.jumbotron
+  #carousel-example-generic.carousel.slide
+    / Indicators
+    %ol.carousel-indicators
+      %li.active{:data=> { :target=> "#carousel-example-generic", 'slide-to'=> 0 } }
+      %li.active{:data=> { :target=> "#carousel-example-generic", 'slide-to'=> 1 } }
+      %li.active{:data=> { :target=> "#carousel-example-generic", 'slide-to'=> 2 } }
+
+    / Wrapper for slides
+    .carousel-inner
+      .item.active
+        %h1 Lorem Ipsum
+        %p This is a text item
+        .carousel-caption
+          Planned Features
+      .item
+        %h1 Lorem Ipsum
+        %p This 2 is a text item
+        .carousel-caption
+          Planned Features
+      .item
+        %h1 Lorem Ipsum
+        %p This 3 is a text item
+        .carousel-caption
+          Planned Features
+
+    / Controls
+    / %a.left.carousel-control{href:"#carousel-example-generic", data: { slide:"prev"}}
+    /  %span.icon-prev
+    /%a.right.carousel-control{href:"#carousel-example-generic", data: { slide:"next"}}
+    /  %span.icon-next
