@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 20131018164427) do
   end
 
   create_table "lists", force: true do |t|
-    t.string   "name"
+    t.string   "title"
     t.text     "description"
     t.string   "icon"
     t.integer  "created_by"
@@ -73,7 +73,9 @@ ActiveRecord::Schema.define(version: 20131018164427) do
     t.datetime "updated_at"
   end
 
+  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["username"], name: "index_users_on_username", unique: true
 
 end
