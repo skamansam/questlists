@@ -1,3 +1,0 @@
-// Dog
-// Bootswatch
-// bootswatch.js
