@@ -32,7 +32,7 @@ class Ability
     user ||= User.new # guest user (not logged in)
     if user.admin?
       can :manage, :all
-    elsif user.registered?
+    elsif user.is_registered?
       can :manage, :all
       cannot :delete, :all
       can :delete, Object, :created_by=>user.id

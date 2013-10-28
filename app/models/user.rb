@@ -6,11 +6,15 @@ class User < ActiveRecord::Base
 
   has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
 
-  def guest?
+  # :info  is just random data about a user
+  serialize :info, Hash
+
+
+  def is_guest?
     !self.confirmed?
   end
 
-  def registered?
+  def is_registered?
     self.confirmed?
   end
 end

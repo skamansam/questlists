@@ -1,0 +1,51 @@
+#sign-up-dialog.modal.fade
+  = simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name),:html=>{:class=>'.form-horizontal'}) do |f|
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+          %h4.modal-title Please Sign Up
+        .modal-body
+          %p
+            Questlists is intended to be fully functional as a crowdsourced checklist application.
+            It should allow you to use one of many different lists which registered users create,
+            in complete privacy, on any of your devices. This data is stored in your browser,
+            and may not be accessible outside the specific browser adn computer you use this
+            site with.
+          %p
+            This being said, in order to keep malicious users out of the system (i.e. spammers
+            and bots), we require you to register your name and a comtact email in the system.
+          %p
+            span.bold As a bonus
+            \, you get to do all of these amazing things:
+            %ul
+              %li Create lists that others may use
+              %li Edit lists which other users have created
+              %li (Planned) Stay up-to-date with the newest features
+              %li (Planned) Get weekly and monthly updates in your inbox of the latest trends on Questlists
+              %li (Planned) Subscribe to lists so that you get emails when they change
+              %li (Planned) import lists you created as a non-registered user
+              %li (Planned) Schedule Lists and Items
+              %li
+                (Planned) Import lists from the following sites (in order, if possible!):
+                %ol
+                  %li Google Keep
+                  %li Remember the Milk
+                  %li Evernote
+                  %li Any.Do
+                  %li Toodledo
+                  %li Wunderlist
+                  %li Cozy
+                  %li Todo.ly
+                  %li And more!
+          %h1 Register Now
+          %p
+            = f.input :email, :as=>:email, :input_html=>{:size=>30}
+            = f.input :password, :as=>:password, :input_html=>{:size=>30}
+            = f.input :password_confirmtion, :as=>:password, :input_html=>{:size=>30}
+        .modal-footer
+          .form-group.pull-left
+            = check_box_tag "do_not_show_sign_up_dialog", "true", false, :data=>{'db-key'=>"do_not_show_sign_up_dialog"}
+            = label_tag "do_not_show_sign_up_dialog","Do not show this dialog again"
+          = f.submit "Sign up", :class=>"btn btn-default"
+          %button.btn{"data-dismiss" => "modal", type: "button"} Close
