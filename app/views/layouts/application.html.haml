@@ -12,16 +12,22 @@
     /[if lt IE 9]
       = javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
     = stylesheet_link_tag "themes/"+(params[:theme] || "amelia"), :media => "all", "data-turbolinks-track" => true
+    = stylesheet_link_tag "application", :media => "all", "data-turbolinks-track" => true
     = yield(:page_stylesheet) if content_for?(:page_stylesheet)
 
 
-  %body
+  %body{:class=>"theme-#{(params[:theme] || "amelia")}"}
     = render "shared/header"
-    = yield
+    .container
+      = render "shared/messages"
+      = yield
+
+    = render "shared/sign_up_modal"
 
     /
       Javascripts
       \==================================================
     / Placed at the end of the document so the pages load faster
+    = javascript_include_tag "application","data-turbolinks-track" => true
     = javascript_include_tag "amelia","data-turbolinks-track" => true
     = yield(:page_javascript) if content_for?(:page_javascript)
