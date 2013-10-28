@@ -4,4 +4,6 @@ class HomeController < ApplicationController
   end
   def tour
   end
+  def my_lists
+  end
 end

@@ -2,6 +2,8 @@ Questlists::Application.routes.draw do
 
   get "welcome" => "home#welcome"
   get "tour" => "home#tour"
+  get "my_lists" => "home#my_lists"
+  get "preferences" => "home#preferences"
 
   resources :states
 
