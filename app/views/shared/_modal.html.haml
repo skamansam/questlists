@@ -1,0 +1,8 @@
+#modal.modal.fade
+
+  .modal-footer
+    .form-group.pull-left
+      = check_box_tag "do_not_show_sign_up_dialog", "true", false, :data=>{'db-key'=>"do_not_show_sign_up_dialog"}
+      = label_tag "do_not_show_sign_up_dialog","Do not show this dialog again"
+    = f.submit "Sign up", :class=>"btn btn-default"
+    %button.btn{"data-dismiss" => "modal", type: "button"} Close
