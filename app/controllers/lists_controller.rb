@@ -1,11 +1,11 @@
 class ListsController < ApplicationController
-  before_action :set_list, only: [:show, :edit, :update, :destroy]
+  #before_action :set_list, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
 
   # GET /lists
   # GET /lists.json
   def index
-    @lists = List.all
+    #@lists = List.all
   end
 
   # GET /lists/1
@@ -15,7 +15,7 @@ class ListsController < ApplicationController
 
   # GET /lists/new
   def new
-    @list = List.new
+    #@list = List.new
   end
 
   # GET /lists/1/edit

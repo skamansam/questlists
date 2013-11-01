@@ -1,0 +1,16 @@
+= yield :form_tag
+.modal-header
+  %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+  %h4.modal-title
+    = yield :title
+.modal-body
+  = yield
+.modal-footer
+  - if content_for?(:dialog_buttons)
+    = yield :dialog_buttons
+  - else
+    - if content_for?(:dialog_checks)
+      .form-group.pull-left
+        = yield :dialog_checks
+    = f.submit (yield(:submit_text) || "Submit"), :class=>"btn btn-default"
+    %button.btn{"data-dismiss" => "modal", type: "button"}=yield(:close_text) || "Close"
