@@ -1,5 +1,7 @@
 Questlists::Application.routes.draw do
 
+  resources :images
+
   get "welcome" => "home#welcome"
   get "tour" => "home#tour"
   get "my_lists" => "home#my_lists"

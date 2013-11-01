@@ -11,12 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131018164427) do
+ActiveRecord::Schema.define(version: 20131031110435) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "images", force: true do |t|
+    t.integer  "created_by"
+    t.string   "image"
+    t.string   "name"
+    t.text     "description"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "list_items", force: true do |t|
     t.string   "name"
     t.text     "description"
-    t.string   "icon"
+    t.string   "icon_id"
     t.integer  "created_by"
     t.integer  "list_id"
     t.datetime "created_at"
@@ -26,7 +39,7 @@ ActiveRecord::Schema.define(version: 20131018164427) do
   create_table "lists", force: true do |t|
     t.string   "title"
     t.text     "description"
-    t.string   "icon"
+    t.string   "icon_id"
     t.integer  "created_by"
     t.integer  "list_item"
     t.datetime "created_at"
@@ -73,9 +86,9 @@ ActiveRecord::Schema.define(version: 20131018164427) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  add_index "users", ["username"], name: "index_users_on_username", unique: true
+  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
 end
