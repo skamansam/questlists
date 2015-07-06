@@ -1,3 +1,0 @@
-// Amelia
-// Bootswatch
-// bootswatch.js

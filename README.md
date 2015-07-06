@@ -1,53 +1,56 @@
-# Quest Lists
+# Questlists
+Questlists is yet another list application. However, its roots are not
+typical of most of its ilk. I really needed an application to handle
+lists for the following scenarios.
 
-QuestLists is a crowd-sourcing application that organizes lists of any sort. The
-crowd builds the lists, you say what you want to use from that list, and then
-use it as a normal checklist. Essentially, this is a three-state checklist builder.
+### Gaming
+I love playing RPGs and love to explore and map out the universes
+therein, and would like to keep some of that information around
+for others. There are many sites that have information on these
+games, but none have the information *and* allow you to keep track
+of, say,  whether you have the item and where you have it stashed
+in the game. For example, for Skyrim, I need to have a list that
+keeps track of the following:
+* items and where I have them stored in the game
+* locations and whether I have discovered them
+* ingredients I have (and how many)
+* potion, equipment, etc. recipes
+* potions I can make (based on ingredients I have)
+* equipment I can make (based on items I have)
 
-The intention is to use the crowd to build lists for games, inventories, shopping,
-music, videos, and more! Once the lists are built and created, you can add/remove
-your items from them. You don't even have to login to use it (only for the same devise)!
+### Chores
 
-## Demo
-This is the public code for http://questlists-rbe.rhcloud.com. The code is redeployed
-when I finish any feature or want to test something, so it may change a lot and
-may break down  often. I will do my best not to disturb any data that is already
-there, but be warned, your data may be a casualty of development!
+### Shopping
 
-## Roadmap
+# Previous Version
+The original Questlists was going to be an angular-sinatra app, but I decided I needed a completely new toolkit, one that I had never before worked with. So here is my second attempt at Questlists, usign Polymer elements and meteor.It is based on the [meteor-polymer-music](https://github.com/atoy40/meteor-polymer-music) project.
 
-Questlists is originally intended for game quests, so will have the following
-ideas implemented first:
+# Features
 
-  1. Your progress in quests.
-  2. Items collected
-  3. Overall progress in the game
-  4. Locations reached
-  5. Information about any other object in the game
+I have many features planned for this project. Here is a list of some of them.
 
-I am sure you can generalize these ideas to fit any circumstance, so i will
-eventually create a few demos of lists for everyday use, such as a shopping
-list and various TODO lists.
-
-
-#Help with Development
-
-If you wish to help with development, you must have a Pivotal Tracker account, and a GitHub account. Both of these are free for public use, and are excellent development tools.
-
-## Pivotal Tracker
-
-I use Pivotal tracker for issue tracking in Questlists. It can handle new features, bugs, and other tasks. In order to use this, you must sign up and email me, then I will add you to the project. I apologize for this convolution, but PT does not yet have a way to auto-join public repos.
-
-## GitHub
-
-If you would like to help with development of this project, follow these instructions:
-
-  1. fork this repo, and setup your Pivotal Tracker Service Hook (in Github: repo settings -> Service Hooks -> Pivotal Tracker)
-  2. create a new branch with your github username as the name of the new branch
-  3. Take an UNOWNED ticket from the public Pivotal Tracker repository (https://www.pivotaltracker.com/s/projects/857969). DO NOT TAKE SOMEONE ELSE"S TICKET! Make sure no one else is working on that ticket, by checking the OWNER field for that ticket (it will say "&lt;none&gt;" if no one is working on it).
-  4. If a ticket has not been entered for a feature you are implementing, please create one. I will most likely not accept git commits without a ticket number.
-  5. hack away, committing to the new branch, with each commit tagged for at least one specific ticket from Pivotal Tracker. see https://www.pivotaltracker.com/help/api?version=v3#scm_post_commit for what your commit messages should look like.
-  6. Make sure ALL rspec tests run successfully. This is to ensure you do not bug the application. I have set up simplecov for this project, so you can see how much of your code is tested. Your code should be at least 85% covered. If it is close, I may add some tests for you.
-  NOTE: I may, from time-to-time "look over your shoulder" at the commits you have made and make suggestions or ask about the code. Don't worry, I will not criticize, I just like learning new things!
-  7. send me a pull request once you are happy with your code
-  8. Wait for me to merge the changes I am very busy with my 9-5 and my new family, so this may take some time. I should email you within a few days or a week if I don't use GitHub's tools.
+* Lists for any occasion
+* Multi-state list items (per-list specification)
+  * Can specify whether to show or hide the items depending on state
+* Autocomplete most fields
+* Drag N Drop editor for lists, using state-based areas
+* Touch-compliance for all widgets
+* Item prerequisites and postrequisite
+  * Complex Rule DSL
+* Arbitrary fields for list items, type is dependent on widget existence
+  * google maps
+  * images
+  *
+* Can show only items that can be activated (prereq.s met)
+* User Management:
+  * Admins
+    * disable or delete users
+    * delete public lists
+  * Registered users
+    * create lists
+    * Update existing lists
+    * Receive and manage system notices (via email, system notification)
+    * Save progress/data to cloud
+  * Unregistered users
+    * Can create local lists (offline usage)
+    * Item state is saved per user or browser
