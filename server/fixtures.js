@@ -1,4 +1,5 @@
 var initDatabase = function() {
+  console.log(Questlists.find({}));
   if (Questlists.find({}).count() < 1) {
     var lorempixelcat = [
       'abstract', 'city', 'people', 'transport', 'animals', 'food', 'nature',
@@ -18,12 +19,14 @@ var initDatabase = function() {
         });
 
       var user = faker.lorem.words()[0];
-      var album = faker.lorem.words().slice(0,2).join(" ");
       var loremindex = Math.floor((Math.random() * 10) + 1);
+      var name = faker.lorem.words().slice(0,2).join(" ");
+
       Questlists.insert({
         user: user,
-        name: faker.lorem.words().slice(0,2).join(" "),
-        large_icon: "http://lorempixel.com/96/96/"+Random.choice(lorempixelcat)+"/"+loremindex+"/"+album.replace(/\s/g, "%20"),
+        name: name,
+        large_icon: "http://lorempixel.com/96/96/"+Random.choice(lorempixelcat)+"/"+loremindex+"/"+name.replace(/\s/g, "%20"),
+        type: 'todo',
         items: items
       });
     }

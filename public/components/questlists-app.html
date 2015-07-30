@@ -1,20 +1,26 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="/bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="/bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-connection.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-collection.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-subscribe.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-query.html">
-<link rel="import" href="music-list.html">
-<link rel="import" href="music-album-card.html">
+<link rel="import" href="questlists-page.html">
+<link rel="import" href="questlist-card.html">
 
-
-<dom-module id="music-app">
+<dom-module id="questlists-app">
 
   <style>
   paper-dialog paper-button {
@@ -23,62 +29,101 @@
   </style>
 
   <template>
-    <meteor-connection status="{{status}}" on-server-disconnected="_onDisconnect"></meteor-connection>
-    <meteor-subscribe name="albums" args="[]" isready="{{_subready}}"></meteor-subscribe>
-    <meteor-subscribe id="subalbum" name="album"></meteor-subscribe>
-    <meteor-collection id="collection" name="music" on-insert="_onInsert" on-error="_onError">
-      <meteor-query id="query" options="{{options}}" data="{{items}}" enable="{{_subready}}"></meteor-query>
+
+    <meteor-connection status="{{status}}" on-server-connected="_onConnect" on-server-disconnected="_onDisconnect"></meteor-connection>
+    <meteor-subscribe name="questlists" args="[]" isready="{{_subready}}"></meteor-subscribe>
+    <meteor-collection id="collection" name="questlists" on-insert="_onInsert" on-error="_onError">
+      <meteor-query id="query" options="{{options}}" data="{{all_questlists}}" enable></meteor-query>
     </meteor-collection>
 
-    <array-selector id="selector" items="{{items}}" selected="{{album}}"></array-selector>
+    <array-selector id="selector" items="{{all_questlists}}" selected="{{questlist}}"></array-selector>
 
-    <paper-toast class="capsule" id="toast1"></paper-toast>
-
-    <paper-dialog id="popup" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation" no-cancel-on-outside-click="true">
-      <h2>Add a new Album</h2>
-      <div class="layout vertical">
-        <paper-input id="newartist" label="Artist name" pattern="^.+$"></paper-input>
-        <paper-input id="newalbum" label="Album title" pattern="^.+$" on-change="_onAlbumChange"></paper-input>
-        <paper-input id="newart" label="Art URL" pattern="^http" error="An art URL is required"></paper-input>
-      </div>
-      <paper-button dialog-dismiss>Cancel</paper-button>
-      <paper-button on-tap="_createAlbum" dialog-confirm>Create album</paper-button>
-    </paper-dialog>
-
-    <neon-animated-pages selected="{{page}}" on-neon-animation-finish="_complete">
-      <music-list id="list" data="{{items}}" on-tap-album="_transition" on-new-album="_openPopup"></music-list>
-      <music-album-card album="{{album}}" on-delete="_deleteAlbum" on-back="_transition"></music-album-card>
-    </neon-animated-pages>
+    <paper-drawer-panel id='mainLayout'>
+      <paper-scroll-header-panel drawer>
+        <paper-toolbar>
+          <paper-icon-button icon="menu" on-tap="toggle_panel" paper-drawer-toggle></paper-icon-button>
+          <div>Menu</div>
+        </paper-toolbar>
+        <paper-menu id='main-menu'>
+          <template is="dom-repeat" items="{{all_questlists}}">
+            <paper-item >
+              <template if="{{item.icon}}">
+                <iron-icon icon="{{item.icon}}"></iron-icon>
+              </template>
+              <template if="{{!item.icon}}">
+                <iron-icon icon="view-list"></iron-icon>
+              </template>
+              <span class='item_name'><span>{{item.icon}}</span> : <span>{{item.name}}</span></span>
+            </paper-item>
+          </template>
+        </paper-menu>
+      </paper-scroll-header-panel>
+      <paper-scroll-header-panel main>
+        <paper-toolbar id="toolbar">
+          <div>Questlists</div>
+          <paper-icon-button icon="menu" on-tap="toggle_panel" paper-drawer-toggle></paper-icon-button>
+          <span class="flex"></span>
+          <paper-icon-button icon="add-circle-outline" on-tap="newList"></paper-icon-button>
+          <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
+          <paper-button style="margin-left: 15px; background: #FF5722;" on-tap="_goGithub">code on Github</paper-button>
+        </paper-toolbar>
+        <questlists-page id="list" class='fit' questlists="{{all_questlists}}" on-tap-album="_transition" on-new-list="_openPopup"></questlists-page>
+        <!--<neon-animated-pages id="pages" selected="{{selected}}" on-neon-animation-finish="complete">
+          <questlists-list-page id="page0"></questlists-list-page>
+        </neon-animated-pages>-->
+      </paper-scroll-header-panel>
+    </paper-drawer-panel>
+    <paper-toast class="capsule" id="toaster"></paper-toast>
 
   </template>
 </dom-module>
 
 <script>
   Polymer({
-    is: 'music-app',
+    is: 'questlists-app',
     properties: {
       _subready: {
         type: Boolean,
         value: false,
         observer: '_subreadyChanged'
       },
+      all_questlists: {
+        type: Array,
+        value: [],
+        observer: '_questlist_changed'
+      }
+    },
+    toggle_panel: function(){
+      console.log('TOGGLE!',this.$.mainLayout);
+      debugger;
+      this.$.mainLayout.closeDrawer();
+    },
+    _questlist_changed: function(ql){
+      console.log('List has changed!',ql)
+    },
+    _getStatusIcon: function(connected) {
+      return connected ? 'cloud-done' : 'cloud-off';
+    },
+    _onConnect: function() {
+      this.$.toaster.text = "Connected to meteor server";
+      this.$.toaster.show();
     },
     _onDisconnect: function() {
-      this.$.toast1.text = "Disconnected from meteor server";
-      this.$.toast1.show();
+      this.$.toaster.text = "Disconnected from meteor server";
+      this.$.toaster.show();
     },
     _onInsert: function(e) {
-      this.$.toast1.text = "Album created with ID "+e.detail.id+"";
-      this.$.toast1.show();
+      this.$.toaster.text = "List created with ID "+e.detail.id+"";
+      this.$.toaster.show();
     },
     _onError: function(e) {
-      this.$.toast1.text = "A problem occurs "+e.detail.error;
-      this.$.toast1.show();
+      this.$.toaster.text = "A problem occurs "+e.detail.error;
+      this.$.toaster.show();
     },
     _subreadyChanged: function(subready) {
-      // wait subscribtion ready state before querying
+      // wait subscription ready state before querying
       if (this._subready) {
-        //this.$.query.collection = this.$.collection.ref;
+        this.$.query.collection = this.$.collection.ref;
       }
     },
     _transition: function(e) {
@@ -92,19 +137,15 @@
         this.$.subalbum.args = []; // unsubscribe to album
       }
     },
-    _openPopup: function(e) {
-      this.$.popup.open();
-    },
-    _createAlbum: function(e) {
+    _createList: function(e) {
       if (this.status.connected) {
         this.$.collection.insert({
-          artist: this.$.newartist.value,
-          album: this.$.newalbum.value,
-          arturl: this.$.newart.value
+          title: 'New List',
+          type: 'todo'
         });
       }
     },
-    _deleteAlbum: function(e) {
+    _deleteList: function(e) {
       this.$.collection.remove(e.detail.id);
     },
     _complete: function() {
@@ -113,7 +154,7 @@
         this.$.list.disable = false;
       }
     },
-    _onAlbumChange: function(e) {
+    _onListChange: function(e) {
       var lorempixelcat = [
         'abstract', 'city', 'people', 'transport', 'animals', 'food', 'nature',
         'business', 'nightlife', 'sports', 'cats', 'fashion', 'technics'
@@ -122,7 +163,11 @@
     },
     ready: function() {
       this.page = 0;
-      this.options = { sort: { artist: 1 } };
+      this.options = { sort: { name: 1 } };
+    },
+    newList: function(){
+      this._createList();
+      console.log("New List!");
     }
   });
 </script>
