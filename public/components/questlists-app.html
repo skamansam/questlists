@@ -38,13 +38,13 @@
 
     <array-selector id="selector" items="{{all_questlists}}" selected="{{questlist}}"></array-selector>
 
-    <paper-drawer-panel id='mainLayout'>
+    <paper-drawer-panel id="mainLayout">
       <paper-scroll-header-panel drawer>
         <paper-toolbar>
           <paper-icon-button icon="menu" on-tap="toggle_panel" paper-drawer-toggle></paper-icon-button>
           <div>Menu</div>
         </paper-toolbar>
-        <paper-menu id='main-menu'>
+        <paper-menu id="main-menu">
           <template is="dom-repeat" items="{{all_questlists}}">
             <paper-item >
               <template if="{{item.icon}}">
@@ -53,7 +53,7 @@
               <template if="{{!item.icon}}">
                 <iron-icon icon="view-list"></iron-icon>
               </template>
-              <span class='item_name'><span>{{item.icon}}</span> : <span>{{item.name}}</span></span>
+              <span class="item_name"><span>{{item.icon}}</span> : <span>{{item.name}}</span></span>
             </paper-item>
           </template>
         </paper-menu>
@@ -67,7 +67,7 @@
           <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
           <paper-button style="margin-left: 15px; background: #FF5722;" on-tap="_goGithub">code on Github</paper-button>
         </paper-toolbar>
-        <questlists-page id="list" class='fit' questlists="{{all_questlists}}" on-tap-album="_transition" on-new-list="_openPopup"></questlists-page>
+        <questlists-page id="list" class="fit" questlists="{{all_questlists}}" on-tap-album="_transition" on-new-list="_openPopup"></questlists-page>
         <!--<neon-animated-pages id="pages" selected="{{selected}}" on-neon-animation-finish="complete">
           <questlists-list-page id="page0"></questlists-list-page>
         </neon-animated-pages>-->
@@ -76,98 +76,98 @@
     <paper-toast class="capsule" id="toaster"></paper-toast>
 
   </template>
-</dom-module>
 
-<script>
-  Polymer({
-    is: 'questlists-app',
-    properties: {
-      _subready: {
-        type: Boolean,
-        value: false,
-        observer: '_subreadyChanged'
+  <script>
+    Polymer({
+      is: 'questlists-app',
+      properties: {
+        _subready: {
+          type: Boolean,
+          value: false,
+          observer: '_subreadyChanged'
+        },
+        all_questlists: {
+          type: Array,
+          value: [],
+          observer: '_questlist_changed'
+        }
       },
-      all_questlists: {
-        type: Array,
-        value: [],
-        observer: '_questlist_changed'
-      }
-    },
-    toggle_panel: function(){
-      console.log('TOGGLE!',this.$.mainLayout);
-      debugger;
-      this.$.mainLayout.closeDrawer();
-    },
-    _questlist_changed: function(ql){
-      console.log('List has changed!',ql)
-    },
-    _getStatusIcon: function(connected) {
-      return connected ? 'cloud-done' : 'cloud-off';
-    },
-    _onConnect: function() {
-      this.$.toaster.text = "Connected to meteor server";
-      this.$.toaster.show();
-    },
-    _onDisconnect: function() {
-      this.$.toaster.text = "Disconnected from meteor server";
-      this.$.toaster.show();
-    },
-    _onInsert: function(e) {
-      this.$.toaster.text = "List created with ID "+e.detail.id+"";
-      this.$.toaster.show();
-    },
-    _onError: function(e) {
-      this.$.toaster.text = "A problem occurs "+e.detail.error;
-      this.$.toaster.show();
-    },
-    _subreadyChanged: function(subready) {
-      // wait subscription ready state before querying
-      if (this._subready) {
-        this.$.query.collection = this.$.collection.ref;
-      }
-    },
-    _transition: function(e) {
-      if (this.page === 0 && e.detail.album) {
-        this.$.selector.select(e.detail.album);
-        this.$.list.disable = true;
-        this.$.subalbum.args = [e.detail.album._id]; // set album subscribtion parameter
-        this.page = 1;
-      } else {
+      toggle_panel: function(){
+        console.log('TOGGLE!',this.$.mainLayout);
+        debugger;
+        this.$.mainLayout.togglePanel();
+      },
+      _questlist_changed: function(ql){
+        console.log('List has changed!',ql)
+      },
+      _getStatusIcon: function(connected) {
+        return connected ? 'cloud-done' : 'cloud-off';
+      },
+      _onConnect: function() {
+        this.$.toaster.text = "Connected to meteor server";
+        this.$.toaster.show();
+      },
+      _onDisconnect: function() {
+        this.$.toaster.text = "Disconnected from meteor server";
+        this.$.toaster.show();
+      },
+      _onInsert: function(e) {
+        this.$.toaster.text = "List created with ID "+e.detail.id+"";
+        this.$.toaster.show();
+      },
+      _onError: function(e) {
+        this.$.toaster.text = "A problem occurs "+e.detail.error;
+        this.$.toaster.show();
+      },
+      _subreadyChanged: function(subready) {
+        // wait subscription ready state before querying
+        if (this._subready) {
+          this.$.query.collection = this.$.collection.ref;
+        }
+      },
+      _transition: function(e) {
+        if (this.page === 0 && e.detail.album) {
+          this.$.selector.select(e.detail.album);
+          this.$.list.disable = true;
+          this.$.subalbum.args = [e.detail.album._id]; // set album subscribtion parameter
+          this.page = 1;
+        } else {
+          this.page = 0;
+          this.$.subalbum.args = []; // unsubscribe to album
+        }
+      },
+      _createList: function(e) {
+        if (this.status.connected) {
+          this.$.collection.insert({
+            title: 'New List',
+            type: 'todo'
+          });
+        }
+      },
+      _deleteList: function(e) {
+        this.$.collection.remove(e.detail.id);
+      },
+      _complete: function() {
+        if (this.page === 0) {
+          // reactivate animated changes
+          this.$.list.disable = false;
+        }
+      },
+      _onListChange: function(e) {
+        var lorempixelcat = [
+          'abstract', 'city', 'people', 'transport', 'animals', 'food', 'nature',
+          'business', 'nightlife', 'sports', 'cats', 'fashion', 'technics'
+        ];
+        this.$.newart.value = "http://lorempixel.com/480/480/"+Random.choice(lorempixelcat)+"/"+e.target.value.replace(/\s/g, "%20");
+      },
+      ready: function() {
         this.page = 0;
-        this.$.subalbum.args = []; // unsubscribe to album
+        this.options = { sort: { name: 1 } };
+      },
+      newList: function(){
+        this._createList();
+        console.log("New List!");
       }
-    },
-    _createList: function(e) {
-      if (this.status.connected) {
-        this.$.collection.insert({
-          title: 'New List',
-          type: 'todo'
-        });
-      }
-    },
-    _deleteList: function(e) {
-      this.$.collection.remove(e.detail.id);
-    },
-    _complete: function() {
-      if (this.page === 0) {
-        // reactivate animated changes
-        this.$.list.disable = false;
-      }
-    },
-    _onListChange: function(e) {
-      var lorempixelcat = [
-        'abstract', 'city', 'people', 'transport', 'animals', 'food', 'nature',
-        'business', 'nightlife', 'sports', 'cats', 'fashion', 'technics'
-      ];
-      this.$.newart.value = "http://lorempixel.com/480/480/"+Random.choice(lorempixelcat)+"/"+e.target.value.replace(/\s/g, "%20");
-    },
-    ready: function() {
-      this.page = 0;
-      this.options = { sort: { name: 1 } };
-    },
-    newList: function(){
-      this._createList();
-      console.log("New List!");
-    }
-  });
-</script>
+    });
+  </script>
+</dom-module>

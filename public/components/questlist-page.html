@@ -13,63 +13,6 @@
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 
-<dom-module id="questlists-page">
-  <style>
-  :host {
-    overflow: scroll;
-  }
-  .item-container {
-    padding: 25px;
-    text-align: left;
-    padding-top: 70px;
-  }
-  paper-fab#add-list {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-  }
-  </style>
-  <template>
-    <div class="item-container">
-      <template is="dom-repeat" items="{{questlists}}">
-        <questlist-card questlist="{{item}}" on-delete="_deleteList" on-back="_transition"></questlist-card>
-      </template>
-      <paper-fab id='add-list' icon='add' on-tap='newList'></paper-fab>
-    </div>
-  </template>
-</dom-module>
-
-<script>
-Polymer({
-  is: "questlists-page",
-  properties: {
-    questlists: {
-      type: Array,
-      value: [],
-      observer: '_questlists_changed'
-    },
-    animationConfig: {
-      value: function() {
-        return {
-          'entry': [],
-          'exit': []
-        }
-      }
-    },
-  },
-  behaviors: [ Polymer.NeonAnimatableBehavior ],
-  _questlists_changed: function(){
-    console.log('Queslilists Changed!');
-  },
-  newList: function(e) {
-    console.info("Creating New List");
-    this.fire('new-questlist');
-  },
-});
-</script>
-
-
-
 <dom-module id="questlist-page">
   <style>
   </style>
@@ -77,10 +20,7 @@ Polymer({
   <template>
 
     <paper-drawer-panel>
-      <div drawer></div>
-      <div drawer>
-        <questlists-list-page id="page0"></questlists-list-page>
-      </div>
+      <questlist-card questlsit-id="{{questlist-id}}"></questlist-card>
     </paper-drawer-panel>
 
   </template>
@@ -92,8 +32,8 @@ Polymer({
     is:'questlist-page',
     behaviors: [ Polymer.NeonSharedElementAnimatableBehavior ],
     properties: {
-      selected: {
-        value: 0,
+      questlistId: {
+        value: 1,
       },
       animationConfig: {
         value: function() {
