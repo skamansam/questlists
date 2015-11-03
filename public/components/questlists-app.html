@@ -17,9 +17,10 @@
 <link rel="import" href="/bower_components/meteor-elements/meteor-collection.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-subscribe.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-query.html">
-<link rel="import" href="questlists-page.html">
+<link rel="import" href="app-theme.html">
+<!--<link rel="import" href="questlists-page.html">
 <link rel="import" href="questlist-card.html">
-
+-->
 <dom-module id="questlists-app">
 
   <style>
@@ -30,22 +31,27 @@
 
   <template>
 
-    <meteor-connection status="{{status}}" on-server-connected="_onConnect" on-server-disconnected="_onDisconnect"></meteor-connection>
-    <meteor-subscribe name="questlists" args="[]" isready="{{_subready}}"></meteor-subscribe>
+    <meteor-connection status="{{status}}" on-server-disconnected="_onDisconnect"></meteor-connection>
+    <meteor-subscribe name="albums" args="[]" isready="{{_subready}}"></meteor-subscribe>
+    <meteor-subscribe id="subalbum" name="album"></meteor-subscribe>
     <meteor-collection id="collection" name="questlists" on-insert="_onInsert" on-error="_onError">
-      <meteor-query id="query" options="{{options}}" data="{{all_questlists}}" enable></meteor-query>
+      <meteor-query id="query" options="{{options}}" data="{{items}}" enable="{{_subready}}"></meteor-query>
     </meteor-collection>
 
-    <array-selector id="selector" items="{{all_questlists}}" selected="{{questlist}}"></array-selector>
-
-    <paper-drawer-panel id="mainLayout">
+    <array-selector id="selector" items="{{items}}" selected="{{album}}"></array-selector>
+    <ul>
+      <template is="dom-repeat" items="{{items}}">
+        <li>ITEM: {{item}}</li>
+      </template>
+    </ul>
+    <!--<paper-drawer-panel id="mainLayout">
       <paper-scroll-header-panel drawer>
         <paper-toolbar>
           <paper-icon-button icon="menu" on-tap="toggle_panel" paper-drawer-toggle></paper-icon-button>
           <div>Menu</div>
         </paper-toolbar>
         <paper-menu id="main-menu">
-          <template is="dom-repeat" items="{{all_questlists}}">
+          <template is="dom-repeat" items="{{questlists}}">
             <paper-item >
               <template if="{{item.icon}}">
                 <iron-icon icon="{{item.icon}}"></iron-icon>
@@ -67,16 +73,12 @@
           <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
           <paper-button style="margin-left: 15px; background: #FF5722;" on-tap="_goGithub">code on Github</paper-button>
         </paper-toolbar>
-        <questlists-page id="list" class="fit" questlists="{{all_questlists}}" on-tap-album="_transition" on-new-list="_openPopup"></questlists-page>
-        <!--<neon-animated-pages id="pages" selected="{{selected}}" on-neon-animation-finish="complete">
-          <questlists-list-page id="page0"></questlists-list-page>
-        </neon-animated-pages>-->
+        <questlists-page id="list" class="fit" questlists="{{items}}" on-tap-album="_transition" on-new-list="_openPopup"></questlists-page>
       </paper-scroll-header-panel>
     </paper-drawer-panel>
+  -->
     <paper-toast class="capsule" id="toaster"></paper-toast>
-
   </template>
-
   <script>
     Polymer({
       is: 'questlists-app',
@@ -85,11 +87,6 @@
           type: Boolean,
           value: false,
           observer: '_subreadyChanged'
-        },
-        all_questlists: {
-          type: Array,
-          value: [],
-          observer: '_questlist_changed'
         }
       },
       toggle_panel: function(){
@@ -122,7 +119,7 @@
       _subreadyChanged: function(subready) {
         // wait subscription ready state before querying
         if (this._subready) {
-          this.$.query.collection = this.$.collection.ref;
+          //this.$.query.collection = this.$.collection.ref;
         }
       },
       _transition: function(e) {

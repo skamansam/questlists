@@ -18,11 +18,15 @@
     "iron-elements": "PolymerElements/iron-elements#~1.0.1",
     "paper-elements": "PolymerElements/paper-elements#~1.0.1",
     "neon-elements": "PolymerElements/neon-elements#~1.0.0",
-    "meteor-elements": "atoy40/meteor-elements#~0.1.0"
+    "meteor-elements": "skamansam/meteor-elements#~0.1.0",
+    "jsdiff": "kpdecker/jsdiff#~2.0.2"
   },
   "overrides": {
     "webcomponentsjs": {
       "main": []
     }
+  },
+  "resolutions": {
+    "polymer": "^1.0.0"
   }
 }

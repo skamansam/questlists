@@ -45,7 +45,8 @@ Polymer({
   properties: {
     questlists: {
       type: Array,
-      value: [],
+      readOnly: false,
+      notify: true,
       observer: '_questlists_changed'
     },
     animationConfig: {
@@ -59,7 +60,8 @@ Polymer({
   },
   behaviors: [ Polymer.NeonAnimatableBehavior ],
   _questlists_changed: function(){
-    console.log('Queslilists Changed!');
+    console.log('Queslilists Changed!', this.questlists);
+
   },
   newList: function(e) {
     console.info("Creating New List");
