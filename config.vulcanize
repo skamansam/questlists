@@ -2,6 +2,6 @@
   "polyfill": "/bower_components/webcomponentsjs/webcomponents.min.js",
   "useShadowDom": false,
   "imports": [
-    "/components/questlists-app.html"
+    "/components/music-app.html"
   ]
 }

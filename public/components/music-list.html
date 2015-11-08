@@ -9,46 +9,32 @@
 <link rel="import" href="/bower_components/neon-animation/animations/transform-animation.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="/bower_components/neon-animation/animations/hero-animation.html">
-<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 
-<dom-module id="questlists-page">
+<dom-module id="music-list-page">
   <style>
-  :host {
-    overflow: scroll;
-  }
-  .item-container {
-    padding: 25px;
+  .chip-container {
+    position: absolute;
+    top: 75px;
+    right: 0;
+    left: 0;
+    margin-left: 50px;
     text-align: left;
-    padding-top: 70px;
-  }
-  paper-fab#add-list {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
   }
   </style>
   <template>
-    <div class="item-container">
-      <template is="dom-repeat" items="{{questlists}}">
-        <questlist-card questlist="{{item}}" on-delete="_deleteList" on-back="_transition"></questlist-card>
-      </template>
-      <paper-fab id='add-list' icon='add' on-tap='newList'></paper-fab>
+    <div class="chip-container">
+      <content></content>
     </div>
   </template>
 </dom-module>
 
 <script>
 Polymer({
-  is: "questlists-page",
+  is: "music-list-page",
   properties: {
-    questlists: {
-      type: Array,
-      readOnly: false,
-      notify: true,
-      observer: '_questlists_changed'
-    },
     animationConfig: {
       value: function() {
         return {
@@ -59,39 +45,82 @@ Polymer({
     },
   },
   behaviors: [ Polymer.NeonAnimatableBehavior ],
-  _questlists_changed: function(){
-    console.log('Queslilists Changed!', this.questlists);
-
-  },
-  newList: function(e) {
-    console.info("Creating New List");
-    this.fire('new-questlist');
-  },
 });
 </script>
 
 
 
-<dom-module id="questlist-page">
+<dom-module id="music-list">
   <style>
+  .chip {
+    display: inline-block;
+    position: relative;
+    border-radius: 3px;
+    margin: 4px;
+    overflow: hidden;
+    text-align: start;
+    background-color: #fff;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
+  }
+  .chip-top {
+    width: 200px;
+    height: 200px;
+  }
+  .chip-bottom {
+    padding: 8px;
+    line-height: 1.5;
+  }
+  .chip-album-title {
+    font-weight: bold;
+  }
   </style>
 
   <template>
 
-    <paper-drawer-panel>
-      <div drawer></div>
-      <div drawer>
-        <questlists-list-page id="page0"></questlists-list-page>
-      </div>
-    </paper-drawer-panel>
+    <meteor-connection connected="{{connected}}"></meteor-connection>
 
+    <paper-toolbar id="toolbar">
+      <div>MUSIC//LIBRARY</div>
+      <span class="flex"></span>
+      <paper-icon-button icon="add-circle-outline" on-tap="newAlbum"></paper-icon-button>
+      <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
+      <paper-button style="margin-left: 15px; background: #FF5722;" on-tap="_goGithub">code on Github</paper-button>
+    </paper-toolbar>
+
+    <neon-animated-pages id="pages" selected="{{selected}}" on-neon-animation-finish="complete">
+
+      <music-list-page id="page0">
+        <template is="dom-repeat" items="{{items1}}">
+          <div class="chip" hero-id$="{{item._id}}" on-tap="_onTapAlbum">
+            <div class="chip-top" style$="{{_computeChipStyle(item)}}"></div>
+            <div class="chip-bottom">
+              <div class="chip-album-title">{{item.album}}</div>
+              <div class="chip-artist">{{item.artist}}</div>
+            </div>
+          </div>
+        </template>
+      </music-list-page>
+
+      <music-list-page id="page1">
+        <template is="dom-repeat" items="{{items2}}">
+          <div class="chip" hero-id$="{{item._id}}" on-tap="_onTapAlbum">
+            <div class="chip-top" style$="{{_computeChipStyle(item)}}"></div>
+            <div class="chip-bottom">
+              <div class="chip-album-title">{{item.album}}</div>
+              <div class="chip-artist">{{item.artist}}</div>
+            </div>
+          </div>
+        </template>
+      </music-list-page>
+
+    </neon-animated-pages>
   </template>
 
 </dom-module>
 
 <script>
   Polymer({
-    is:'questlist-page',
+    is:'music-list',
     behaviors: [ Polymer.NeonSharedElementAnimatableBehavior ],
     properties: {
       selected: {
@@ -116,7 +145,7 @@ Polymer({
         value: false,
         observer: 'disableChanged'
       },
-      questlists: {
+      data: {
         type: Array,
       },
       items1: {
@@ -131,6 +160,9 @@ Polymer({
     ],
     _goGithub: function() {
       window.open("https://github.com/atoy40/meteor-polymer-music", '_blank');
+    },
+    _getStatusIcon: function(connected) {
+      return connected ? 'cloud-done' : 'cloud-off';
     },
     _computeChipStyle: function(item) {
       return "background: black url("+item.arturl+") 0 0/100% 100%;";
@@ -194,8 +226,8 @@ Polymer({
         });
       }
     },
-    newList: function(e) {
-      this.fire('new-questlist');
+    newAlbum: function(e) {
+      this.fire('new-album');
     },
     _dataChanged: function() {
       if (this.disable || Polymer.dom(this.$.pages).querySelectorAll('.neon-animating').length > 0) {
@@ -235,8 +267,8 @@ Polymer({
     _cascadePage: function(items) {
       var delay = 50;
       var chips =  Polymer.dom(this.$.page1).querySelectorAll("div.chip");
-      var titles =  Polymer.dom(this.$.page1).querySelectorAll("div.chip-title");
-      var authors =  Polymer.dom(this.$.page1).querySelectorAll("div.chip-author");
+      var titles =  Polymer.dom(this.$.page1).querySelectorAll("div.chip-album-title");
+      var artists =  Polymer.dom(this.$.page1).querySelectorAll("div.chip-artist");
 
       this.$.page1.animationConfig.entry = [
         {
@@ -354,7 +386,7 @@ Polymer({
     complete: function() {
       if (this.hasChanged) {
         this.debounce("swap", this.swapPage, 30);
-          this.hasChanged = false;
+        this.hasChanged = false;
       }
     }
   });
