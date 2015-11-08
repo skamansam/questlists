@@ -9,7 +9,7 @@ Meteor.publish 'album', (id)->
   else
     this.ready();
 
-Music.allow({
+Music._collection.allow({
   insert: (userId, doc)->
     Music.find({}).count() < 10;
   ,
