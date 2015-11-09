@@ -12,45 +12,9 @@
 <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="questlist-page.html">
 
-<dom-module id="music-list-page">
-  <style>
-  .chip-container {
-    position: absolute;
-    top: 75px;
-    right: 0;
-    left: 0;
-    margin-left: 50px;
-    text-align: left;
-  }
-  </style>
-  <template>
-    <div class="chip-container">
-      <content></content>
-    </div>
-  </template>
-</dom-module>
-
-<script>
-Polymer({
-  is: "music-list-page",
-  properties: {
-    animationConfig: {
-      value: function() {
-        return {
-          'entry': [],
-          'exit': []
-        }
-      }
-    },
-  },
-  behaviors: [ Polymer.NeonAnimatableBehavior ],
-});
-</script>
-
-
-
-<dom-module id="music-list">
+<dom-module id="questlist-pane">
   <style>
   .chip {
     display: inline-block;
@@ -80,16 +44,15 @@ Polymer({
     <meteor-connection connected="{{connected}}"></meteor-connection>
 
     <paper-toolbar id="toolbar">
-      <div>MUSIC//LIBRARY</div>
+      <div>Quest Lists</div>
       <span class="flex"></span>
       <paper-icon-button icon="add-circle-outline" on-tap="newAlbum"></paper-icon-button>
       <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
-      <paper-button style="margin-left: 15px; background: #FF5722;" on-tap="_goGithub">code on Github</paper-button>
     </paper-toolbar>
 
     <neon-animated-pages id="pages" selected="{{selected}}" on-neon-animation-finish="complete">
 
-      <music-list-page id="page0">
+      <questlist-page id="page0">
         <template is="dom-repeat" items="{{items1}}">
           <div class="chip" hero-id$="{{item._id}}" on-tap="_onTapAlbum">
             <div class="chip-top" style$="{{_computeChipStyle(item)}}"></div>
@@ -99,9 +62,9 @@ Polymer({
             </div>
           </div>
         </template>
-      </music-list-page>
+      </questlist-page>
 
-      <music-list-page id="page1">
+      <questlist-page id="page1">
         <template is="dom-repeat" items="{{items2}}">
           <div class="chip" hero-id$="{{item._id}}" on-tap="_onTapAlbum">
             <div class="chip-top" style$="{{_computeChipStyle(item)}}"></div>
@@ -111,7 +74,7 @@ Polymer({
             </div>
           </div>
         </template>
-      </music-list-page>
+      </questlist-page>
 
     </neon-animated-pages>
   </template>
@@ -120,7 +83,7 @@ Polymer({
 
 <script>
   Polymer({
-    is:'music-list',
+    is:'questlist-pane',
     behaviors: [ Polymer.NeonSharedElementAnimatableBehavior ],
     properties: {
       selected: {
@@ -158,9 +121,6 @@ Polymer({
     observers: [
       '_dataChanged(data.splices)',
     ],
-    _goGithub: function() {
-      window.open("https://github.com/atoy40/meteor-polymer-music", '_blank');
-    },
     _getStatusIcon: function(connected) {
       return connected ? 'cloud-done' : 'cloud-off';
     },

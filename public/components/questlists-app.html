@@ -10,16 +10,18 @@
 <link rel="import" href="/bower_components/meteor-elements/meteor-collection.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-subscribe.html">
 <link rel="import" href="/bower_components/meteor-elements/meteor-query.html">
-<link rel="import" href="music-list.html">
-<link rel="import" href="music-album-card.html">
+<link rel="import" href="app-theme.html">
+<link rel="import" href="questlist-pane.html">
+<link rel="import" href="questlist-card.html">
+<link rel="import" href="questlist-page.html">
 
 
-<dom-module id="music-app">
+<dom-module id="questlists-app">
 
   <style>
-  paper-dialog paper-button {
-    color: #1e88e5;
-  }
+    paper-dialog paper-button {
+      color: #1e88e5;
+    }
   </style>
 
   <template>
@@ -46,8 +48,8 @@
     </paper-dialog>
 
     <neon-animated-pages selected="{{page}}" on-neon-animation-finish="_complete">
-      <music-list id="list" data="{{items}}" on-tap-album="_transition" on-new-album="_openPopup"></music-list>
-      <music-album-card album="{{album}}" on-delete="_deleteAlbum" on-back="_transition"></music-album-card>
+      <questlist-pane id="list" data="{{items}}" on-tap-album="_transition" on-new-album="_openPopup"></questlist-pane>
+      <questlist-card album="{{album}}" on-delete="_deleteAlbum" on-back="_transition"></questlist-card>
     </neon-animated-pages>
 
   </template>
@@ -55,7 +57,7 @@
 
 <script>
   Polymer({
-    is: 'music-app',
+    is: 'questlists-app',
     properties: {
       _subready: {
         type: Boolean,
