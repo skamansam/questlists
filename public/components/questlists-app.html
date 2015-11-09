@@ -47,8 +47,12 @@
       <paper-button on-tap="_createAlbum" dialog-confirm>Create album</paper-button>
     </paper-dialog>
 
+    <paper-dialog id="login" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation" no-cancel-on-outside-click="true">
+      <content></content>
+    </paper-dialog>
+
     <neon-animated-pages selected="{{page}}" on-neon-animation-finish="_complete">
-      <questlist-pane id="list" data="{{items}}" on-tap-album="_transition" on-new-album="_openPopup"></questlist-pane>
+      <questlist-pane id="list" data="{{items}}" on-tap-album="_transition" on-user-login="_showLogin" on-new-album="_openPopup"></questlist-pane>
       <questlist-card album="{{album}}" on-delete="_deleteAlbum" on-back="_transition"></questlist-card>
     </neon-animated-pages>
 
@@ -96,6 +100,9 @@
     },
     _openPopup: function(e) {
       this.$.popup.open();
+    },
+    _showLogin: function(e) {
+      this.$.login.open();
     },
     _createAlbum: function(e) {
       if (this.status.connected) {
