@@ -13,7 +13,7 @@ initDatabase = ()->
       artist = faker.lorem.words()[0];
       album = faker.lorem.words().slice(0,2).join(" ");
       loremindex = Math.floor((Math.random() * 10) + 1);
-      Music.insert({
+      Music.create({
         artist: artist,
         album: faker.lorem.words().slice(0,2).join(" "),
         arturl: "http://lorempixel.com/480/480/"+Random.choice(lorempixelcat)+"/"+loremindex+"/"+album.replace(/\s/g, "%20"),
