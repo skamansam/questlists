@@ -30,3 +30,5 @@ accounts-google
 accounts-facebook
 useraccounts:polymer
 service-configuration
+cfs:standard-packages
+cfs:filesystem
