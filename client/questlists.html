@@ -3,7 +3,12 @@
 </head>
 
 <body>
-  <questlists-app>
-    <div id="loginForm">{{> atForm}}</div>
-  </questlists-app>
+  {{> questlistsApp}}
 </body>
+
+<template name="questlistsApp">
+  <questlists-app user-id="{{userId}}">
+    <div id="loginForm">{{> fullPageAtForm}}</div>
+    <div id="loginButtons"></div>
+  </questlists-app>
+</template>

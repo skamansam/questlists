@@ -47,12 +47,12 @@
       <paper-button on-tap="_createAlbum" dialog-confirm>Create album</paper-button>
     </paper-dialog>
 
-    <paper-dialog id="login" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation" no-cancel-on-outside-click="true">
+    <paper-dialog id="login" with-backdrop entry-animation="fade-in-animation" exit-animation="fade-out-animation" no-cancel-on-outside-click="false">
       <content></content>
     </paper-dialog>
 
     <neon-animated-pages selected="{{page}}" on-neon-animation-finish="_complete">
-      <questlist-pane id="list" data="{{items}}" on-tap-album="_transition" on-user-login="_showLogin" on-new-album="_openPopup"></questlist-pane>
+      <questlist-pane id="list" data="{{items}}" on-tap-album="_transition" user-id="{{userId}}" on-user-login="_showLogin" on-new-album="_openPopup"></questlist-pane>
       <questlist-card album="{{album}}" on-delete="_deleteAlbum" on-back="_transition"></questlist-card>
     </neon-animated-pages>
 
@@ -63,11 +63,20 @@
   Polymer({
     is: 'questlists-app',
     properties: {
+      userId: {
+        observer: '_userChanged'
+      },
       _subready: {
         type: Boolean,
         value: false,
         observer: '_subreadyChanged'
       },
+    },
+    _userChanged: function(uid){
+      logged_in = (uid != null)
+      if(logged_in){
+        this.$.login.close();
+      }
     },
     _onDisconnect: function() {
       this.$.toast1.text = "Disconnected from meteor server";

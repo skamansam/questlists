@@ -37,18 +37,35 @@
   .chip-album-title {
     font-weight: bold;
   }
+  .hidden {
+      display: none;
+  }
+  #login-button{
+    display: inline-block;
+  }
+  #logout-button{
+    display: none;
+  }
+  .logged_in #login-button{
+    display: none;
+  }
+  .logged_in #logout-button{
+    display: inline-block;
+  }
   </style>
 
   <template>
-
     <meteor-connection connected="{{connected}}"></meteor-connection>
 
     <paper-toolbar id="toolbar">
-      <div>Quest Lists</div>
+      <div>Quest Lists {{userId}}</div>
       <span class="flex"></span>
-      <paper-button on-tap="showLogin">Login?</paper-button>
-      <paper-icon-button icon="add-circle-outline" on-tap="newAlbum"></paper-icon-button>
-      <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
+      <span class$="{{_logged_in_class}}">
+        <paper-button id="login-button" on-tap="showLogin">Login/Register</paper-button>
+        <paper-button id="logout-button" on-tap="_log_out">Logout</paper-button>
+        <paper-icon-button icon="add-circle-outline" on-tap="newAlbum"></paper-icon-button>
+        <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
+      </span>
     </paper-toolbar>
 
     <neon-animated-pages id="pages" selected="{{selected}}" on-neon-animation-finish="complete">
@@ -87,6 +104,9 @@
     is:'questlist-pane',
     behaviors: [ Polymer.NeonSharedElementAnimatableBehavior ],
     properties: {
+      userId: {
+        observer: '_userChanged'
+      },
       selected: {
         value: 0,
       },
@@ -118,10 +138,35 @@
       items2: {
         type: Array
       },
+      logged_in: {
+        type: Boolean
+      },
+      logged_in_class:{
+        type: String,
+        value: 'logged_in'
+      },
+      logged_out_class:{
+        type: String,
+        value: 'logged_out'
+      },
+      _logged_in_class: String
     },
     observers: [
       '_dataChanged(data.splices)',
     ],
+    _userChanged: function(uid){
+      this.logged_in = (uid != null)
+      console.log('userChanged', uid, this.logged_in)
+      if (this.logged_in){
+        this._logged_in_class = this.logged_in_class
+      }else{
+        this._logged_in_class = this.logged_out_class
+      }
+    },
+    _log_out: function(){
+      Meteor.logout()
+      this.logged_in = false
+    },
     _getStatusIcon: function(connected) {
       return connected ? 'cloud-done' : 'cloud-off';
     },
