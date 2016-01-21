@@ -58,11 +58,11 @@
     <meteor-connection connected="{{connected}}"></meteor-connection>
 
     <paper-toolbar id="toolbar">
-      <div>Quest Lists {{userId}}</div>
+      <div>Quest Lists</div>
       <span class="flex"></span>
       <span class$="{{_logged_in_class}}">
         <paper-button id="login-button" on-tap="showLogin">Login/Register</paper-button>
-        <paper-button id="logout-button" on-tap="_log_out">Logout</paper-button>
+        <paper-button id="logout-button" on-tap="_log_out">Logout  {{login_name}}</paper-button>
         <paper-icon-button icon="add-circle-outline" on-tap="newAlbum"></paper-icon-button>
         <paper-icon-button icon="{{_getStatusIcon(connected)}}"></paper-icon-button>
       </span>
@@ -149,7 +149,10 @@
         type: String,
         value: 'logged_out'
       },
-      _logged_in_class: String
+      _logged_in_class: String,
+      user: {
+        value: Meteor.user
+      }
     },
     observers: [
       '_dataChanged(data.splices)',
@@ -162,6 +165,12 @@
       }else{
         this._logged_in_class = this.logged_out_class
       }
+      this.user = Meteor.user()
+      this._set_login_name()
+    },
+    _set_login_name: function(){
+      console.log(this.user)
+      this.login_name = this.user.firstname || this.user.login || this.user.emails[0].address
     },
     _log_out: function(){
       Meteor.logout()

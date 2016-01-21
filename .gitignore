@@ -86,3 +86,4 @@ SCCS
 _$*
 _svn
 public/assets
+/server/oauth/facebook-config.coffee
