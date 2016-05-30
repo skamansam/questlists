@@ -1,3 +1,0 @@
-// Cyborg
-// Bootswatch
-// bootswatch.js

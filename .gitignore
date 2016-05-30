@@ -86,3 +86,8 @@ SCCS
 _$*
 _svn
 public/assets
+node_modules
+dist
+bower_components
+.tmp
+.publish/
