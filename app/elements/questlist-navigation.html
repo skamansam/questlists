@@ -1,0 +1,111 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<!--
+  This element handles all navigation for the entire app. It will broadcast a navigation element you can use.
+-->
+
+<dom-module id="questlist-navigation">
+  <style>
+    paper-menu {
+      --paper-menu-selected-item: {
+        color: var(--dark-accent-color);
+        background-color: var(--light-accent-color);
+      }
+
+      --paper-menu-focused-item-after: {
+        background: var(--primary-color);
+      }
+    }
+
+    paper-menu iron-icon {
+      color: var(--menu-link-color);
+      margin-right: 33px;
+      opacity: 1.00;
+    }
+
+    paper-menu .iron-selected iron-icon {
+      color: var(--primary-color);
+    }
+
+    paper-menu .iron-selected {
+      color: var(--primary-color);
+    }
+
+    paper-menu a {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+
+      text-decoration: none;
+      color: var(--menu-link-color);
+      font-family: 'Roboto', 'Noto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      min-height: 48px;
+      padding: 0 16px;
+    }
+
+
+  </style>
+  <template>
+    <!-- Routing -->
+    <app-location route="{{route}}" use-hash-as-path></app-location>
+
+    <app-route route="{{route}}"
+              pattern="/:page"
+              data="{{currentRequest}}"
+              tail="{{currentRequestData}}"></app-route>
+
+    <!-- Drawer Content -->
+    <paper-menu class="app-menu" attr-for-selected="data-route" fallback-selection="home" selected="{{currentRequest.page}}">
+      <a data-route="home" href="{{baseUrl}}">
+        <iron-icon icon="dashboard"></iron-icon>
+        <span>Home</span>
+      </a>
+
+      <a data-route="favorites" href="{{baseUrl}}favorites">
+        <iron-icon icon="book"></iron-icon>
+        <span>Favorites</span>
+      </a>
+
+      <a data-route="browse" href="{{baseUrl}}browse">
+        <iron-icon icon="dashboard"></iron-icon>
+        <span>Browse</span>
+      </a>
+
+      <a data-route="users" href="{{baseUrl}}users">
+        <iron-icon icon="social-people"></iron-icon>
+        <span>Users</span>
+      </a>
+
+      <a data-route="about" href="{{baseUrl}}about">
+        <iron-icon icon="info"></iron-icon>
+        <span>About</span>
+      </a>
+
+    </paper-menu>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'questlist-navigation',
+    properties: {
+      route: {
+        type: Object,
+        notify: true
+      },
+      currentPage: {
+        type: Object,
+        notify: true
+      },
+      currentRequestData: {
+        type: Object,
+        notify: true
+      },
+    }
+  });
+</script>

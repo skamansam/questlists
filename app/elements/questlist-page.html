@@ -1,0 +1,37 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlist-page">
+  <style>
+  .chip-container {
+    position: absolute;
+    top: 75px;
+    right: 0;
+    left: 0;
+    margin-left: 50px;
+    text-align: left;
+  }
+  </style>
+  <template>
+    <div class="chip-container">
+      <content></content>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: "questlist-page",
+  properties: {
+    animationConfig: {
+      value: function() {
+        return {
+          'entry': [],
+          'exit': []
+        }
+      }
+    },
+  },
+  behaviors: [ Polymer.NeonAnimatableBehavior ],
+});
+</script>
