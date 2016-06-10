@@ -28,3 +28,9 @@ body {
   float:left;
   height: 80%;
 }
+paper-fab{
+  float: right;
+}
+#drawer{
+  background-color: #455A64 !important;
+}

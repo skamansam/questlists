@@ -65,20 +65,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- endbuild -->
 
   <!-- Handle Current User -->
-  <firebase-auth location="" data="{{users}}">
-
+  <!--<firebase-auth location="" data="{{users}}"></firebase-auth>
+-->
   <template is="dom-bind" id="app">
-
     <paper-drawer-panel id="paperDrawerPanel" responsive-width="840px">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
 
         <!-- Drawer Toolbar -->
         <paper-toolbar id="drawerToolbar">
-          <span class="menu-name">Menu</span>
+          <questlists-userMenu user="{{user}}" auth="{{auth_element()}}" user_id="{{user_id}}"></questlists-userMenu>
         </paper-toolbar>
 
-        <questlist-navigation current-page="{{page}}" current-request-data="{{requestData}}"></questlist-navigation>
+        <questlist-navigation current-request="{{page}}" current-request-data="{{requestData}}"></questlist-navigation>
 
       </paper-scroll-header-panel>
 
@@ -103,89 +102,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
         <!-- Main Content -->
-        <div class="content">
+        <div class="content" id="right_page">
+          <questlists-auth user_id="{{user_id}}" user="{{user}}" id="auth">
+          </questlists-auth>
+
           <iron-pages attr-for-selected="data-route"  fallback-selection="home" selected="{{page}}">
             <section data-route="home">
-              <paper-material elevation="1">
-                <h1>Home</h1>
-                <p>All your recent lists are here.</p>
-              </paper-material>
+              <questlists-home></questlists-home>
+            </section>
+
+            <section data-route="login">
+              <questlists-favorites></questlists-favorites>
             </section>
 
             <section data-route="favorites">
-              <paper-material elevation="1">
-                <h1>Favorites</h1>
-                <p>All your favorited lists are here.</p>
-              </paper-material>
+              <questlists-favorites></questlists-favorites>
             </section>
 
             <section data-route="browse">
-              <paper-material elevation="1">
-                <h1 class="page-title focus-target" tabindex="-1">Browse</h1>
-                <p>Lists created by the community.</p>
-              </paper-material>
+              <questlists-browser></questlists-browser>
             </section>
 
             <section data-route="users">
-              <paper-material elevation="1">
-                <h1 class="page-title focus-target" tabindex="-1">Users</h1>
-                <p>This is the users section</p>
-                <a href$="{{baseUrl}}users/Addy">Addy</a><br>
-                <a href$="{{baseUrl}}users/Rob">Rob</a><br>
-                <a href$="{{baseUrl}}users/Chuck">Chuck</a><br>
-                <a href$="{{baseUrl}}users/Sam">Sam</a>
-              </paper-material>
-            </section>
-
-            <section data-route="user-info">
-              <paper-material elevation="1">
-                <h1 class="page-title focus-target" tabindex="-1">User: {{params.name}}</h1>
-                <div>This is {{params.name}}'s section</div>
-              </paper-material>
+              <questlists-users></questlists-users>
             </section>
 
             <section data-route="about">
-              <paper-material elevation="1">
-                <h2>Welcome</h2>
-                <p>Questlists is a highly configurable list tracking application....</p>
-              </paper-material>
-
-              <paper-material elevation="1">
-                <h2>Things you can do ....</h2>
-                <p>You can create lists...</p>
-              </paper-material>
-
-              <paper-material elevation="1">
-                <h2>About / Copyright</h2>
-                <p>This application was created by Samuel Tyler, in January 2016, and is governed under a BSD license.</p>
-                <p class='license'>Copyright (c) 2016, Samuel Tyler<br/>
-                All rights reserved.</p>
-                <p>Redistribution and use in source and binary forms, with or without
-                modification, are permitted provided that the following conditions are met:
-                <ul>
-                    <li>Redistributions of source code must retain the above copyright
-                      notice, this list of conditions and the following disclaimer.</li>
-                    <li>Redistributions in binary form must reproduce the above copyright
-                      notice, this list of conditions and the following disclaimer in the
-                      documentation and/or other materials provided with the distribution.</li>
-                    <li>Neither the names of Rude Boy Enterprises, Samuel Tyler, nor Questlists, nor the
-                      names of its contributors may be used to endorse or promote products
-                      derived from this software without specific prior written permission.</li>
-                  </ul>
-                </p>
-                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-                ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-                WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-                DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-                DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-                (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-                LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-                ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-                (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-                SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-              </paper-material>
+              <questlists-about></questlists-about>
             </section>
 
+            <section data-route="settings">
+              <questlists-settings></questlists-settings>
+            </section>
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
@@ -212,6 +160,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </platinum-sw-cache>
     </platinum-sw-register>
     -->
+    <script>
+    </script>
 
   </template>
 

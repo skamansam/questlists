@@ -6,6 +6,7 @@
 -->
 
 <dom-module id="questlist-navigation">
+  <style include="shared-styles"></style>
   <style>
     paper-menu {
       --paper-menu-selected-item: {
@@ -60,14 +61,14 @@
               tail="{{currentRequestData}}"></app-route>
 
     <!-- Drawer Content -->
-    <paper-menu class="app-menu" attr-for-selected="data-route" fallback-selection="home" selected="{{currentRequest.page}}">
+    <paper-menu class="app-menu" attr-for-selected="data-route" fallback-selection="home" selected="{{currentRequest}}">
       <a data-route="home" href="{{baseUrl}}">
-        <iron-icon icon="dashboard"></iron-icon>
+        <iron-icon icon="home"></iron-icon>
         <span>Home</span>
       </a>
 
       <a data-route="favorites" href="{{baseUrl}}favorites">
-        <iron-icon icon="book"></iron-icon>
+        <iron-icon icon="star"></iron-icon>
         <span>Favorites</span>
       </a>
 
@@ -77,13 +78,18 @@
       </a>
 
       <a data-route="users" href="{{baseUrl}}users">
-        <iron-icon icon="social-people"></iron-icon>
+        <iron-icon icon="social:people"></iron-icon>
         <span>Users</span>
       </a>
 
       <a data-route="about" href="{{baseUrl}}about">
         <iron-icon icon="info"></iron-icon>
         <span>About</span>
+      </a>
+
+      <a data-route="settings" href="{{baseUrl}}settings">
+        <iron-icon icon="settings"></iron-icon>
+        <span>Settings</span>
       </a>
 
     </paper-menu>
@@ -103,6 +109,10 @@
         notify: true
       },
       currentRequestData: {
+        type: Object,
+        notify: true
+      },
+      currentRequest: {
         type: Object,
         notify: true
       },

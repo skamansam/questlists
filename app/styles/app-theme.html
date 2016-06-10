@@ -54,9 +54,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     --menu-link-color: var(--text-primary-color);
 
     /* paper-input */
-   --paper-input-container-color:       rgba(255, 255, 255, 0.64);
-   --paper-input-container-focus-color: rgba(255, 255, 255, 1);
-   --paper-input-container-input-color: #fff;
+   --paper-input-container-color:       var(--dark-primary-color);
+   --paper-input-container-focus-color: var(--primary-color);
+   --paper-input-container-input-color: var(--primary-text-color);
   }
 
   /* General styles */
@@ -120,14 +120,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   /* Height of the scroll area */
   .content {
     height: 900px;
-  }
-
-  section[data-route="home"] paper-material {
-    @apply(--paper-font-body2);
-  }
-
-  section[data-route="home"] paper-material .subhead {
-    @apply(--paper-font-subhead);
   }
 
   paper-material {

@@ -1,0 +1,108 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlists-userMenu">
+<style include="shared-styles"></style>
+<style>
+  :host{
+    height: 60px;
+  }
+  .menu-name {
+    @apply(--paper-font-title);
+    display: block;
+    float: right;
+    width: 160px;
+    margin-top: -25px;
+    padding-left: 15px;
+  }
+  .not_logged_in .menu-name{
+    float: none;
+    width: 100%;
+    margin-top: 15px;
+    padding-left: 20px;
+    cursor:pointer;
+  }
+  .avatar{
+    padding: 0px;
+    height: 50px;
+    border: 1px solid #000;
+    border-radius: 50%;
+  }
+  .avatar-small{
+    padding: 0px;
+    height: 30px;
+    margin-right: 5px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    float: right;
+  }
+  .small-icons{
+    float: right;
+    height: 48%;
+    width: 50%;
+  }
+  .hidden{
+    display: none;
+  }
+  </style>
+
+  <template>
+    <span class$="{{_compute_shown_username_class()}}">
+      <img class='avatar' src='{{icon}}'/>
+      <!--<div class='small-icons'>
+        <img class='avatar-small' src='{{icon}}'/>
+        <img class='avatar-small' src='{{icon}}'/>
+      </div>-->
+      <span class="menu-name">{{name}}</span>
+    </span>
+    <span class$="{{_compute_shown_login_class()}}">
+      <span class="menu-name" on-tap="login">
+          Log In / Sign Up
+      </span>
+    </span>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'questlists-userMenu',
+    properties: {
+      name: {
+        type: String,
+        value: 'unknown_user'
+      },
+      email: {
+        type: String
+      },
+      icon: {
+        type: String,
+        value: '/images/unknown_user.svg'
+      },
+      auth: {
+        type: Object
+      }
+    },
+    login: function(){
+      console.log('userMenu#login:', this.auth)
+      //console.log("LOGGING IN!", this.$.auth, this.target);
+      this.auth.login()
+    },
+    _compute_shown_login_class: function(){
+      cls = 'not_logged_in'
+      if(this.auth != undefined && this.auth.logged_in){
+        return cls + 'hidden'
+      }else{
+        return cls + ' shown'
+      }
+    },
+    _compute_shown_username_class: function(){
+      cls = 'name'
+      //if(this.auth.logged_in){
+      //  return cls + 'shown'
+      //}else{
+        return cls + ' hidden'
+      //}
+    }
+
+  });
+</script>

@@ -1,0 +1,33 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlists-users">
+  <style include="shared-styles"></style>
+  <style>
+  </style>
+
+  <template>
+    <paper-material elevation="1">
+      <h1 class="page-title focus-target" tabindex="-1">Users</h1>
+      <p>These are the users with the most contributions.</p>
+    </paper-material>
+    <template is="dom-repeat" items="{{users}}" as="user" >
+      <questlists-user name="{{user.name}}" icon="{{user.icon}}" email="{{user.email}}"></questlists-user>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'questlists-users',
+    properties: {
+      users: {
+        type: Array,
+        value: [
+          {name: 'User One',icon: '',email: 'user_one@email.com'},
+          {name: 'User Two',icon: '',email: 'user_two@email.com'},
+          {name: 'User Three',icon: '',email: 'user_three@email.com'}]
+      }
+    }
+  });
+</script>

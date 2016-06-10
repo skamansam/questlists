@@ -1,0 +1,23 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlists-favorites">
+  <style include="shared-styles"></style>
+  <style>
+  </style>
+  <template>
+    <paper-material elevation="1">
+      <h1 class="page-title focus-target" tabindex="-1">Favorites</h1>
+      <p>All your favorited lists are here.</p>
+    </paper-material>
+    <paper-fab icon="list" label="new" raised on-tap="_new_list"></paper-fab>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'questlists-favorites',
+    properties: {
+    }
+  });
+</script>

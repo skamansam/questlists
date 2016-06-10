@@ -1,0 +1,95 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlists-auth">
+  <style include="shared-styles"></style>
+  <style>
+  </style>
+  <template>
+    <firebase-auth
+      id="firebaseLogin"
+      user="{{user}}"
+      status-known="{{statusKnown}}"
+      location="https://questlists.firebaseio.com"
+      provider="password"
+      on-error="errorHandler"
+      on-user-created="userSuccessHandler"
+      on-password-changed="userSuccessHandler"
+      on-password-reset="userSuccessHandler"
+      on-user-removed="userSuccessHandler"
+      ref="{{fbInstance}}"></firebase-auth>
+    <paper-dialog id="loginDialog" modal on-iron-overlay-closed="_on_dialog_close">
+      <h2>Login</h2>
+      <paper-input label="username" id="username" required></paper-input>
+      <core-input type="password"></core-input>
+      <paper-input type="password" label="password" id="password" required></paper-input>
+      <div class='oauth-buttons'>
+        <paper-button on-tap="_handle_github_login">Github</paper-button>
+        <paper-button on-tap="_handle_google_login">Google</paper-button>
+        <paper-button on-tap="_handle_facebook_login">Facebook</paper-button>
+        <paper-button icon='' on-tap="_handle_twitter_login">Twitter</paper-button>
+      </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_handle_password_login">Login</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'questlists-auth',
+    properties: {
+      user: {
+        type: Object,
+        notify: true
+      },
+      user_id:{
+        type: String,
+        notify: true
+      },
+      logged_in:{
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      fbInstance:{
+        type: Object,
+        notify: true
+      }
+    },
+    login: function(){
+      this.$.loginDialog.open()
+      //user = {name: 'Samuel C Tyler'}
+    },
+    add_login: function(){
+    },
+    _handle_github_login: function(){
+      this.provider='github'
+      login()
+    },
+    _handle_password_login: function(event, results, c,d){
+      this.provider='password'
+      uname = this.$.username.value
+      pwd = this.$.password.value
+      params = {}
+      params.password = pwd
+      params.email = uname
+      //params.token = 'AIzaSyCFba6yCVUJJwh_-_8HZaZvVsvlnKOH0OQ'
+      debugger
+      this.$.firebaseLogin.login(params,{})
+    },
+    userSuccessHandler: function(e) {
+      alert(e.type + ' success!');
+      this.$.loginDialog.close()
+    },
+    errorHandler: function(e) {
+      alert('Error: ' + e.detail.message)
+    },
+    _handle_github_login: function(event, results, c,d){
+
+      this.$.loginDialog.close()
+    }
+  });
+</script>
