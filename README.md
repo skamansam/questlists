@@ -52,6 +52,8 @@ If you would like to help with development of this project, follow these instruc
   7. send me a pull request once you are happy with your code
   8. Wait for me to merge the changes I am very busy with my 9-5 and my new family, so this may take some time. I should email you within a few days or a week if I don't use GitHub's tools.
 ![](https://cloud.githubusercontent.com/assets/110953/7877439/6a69d03e-0590-11e5-9fac-c614246606de.png)
+
+
 ## Polymer Starter Kit
 
 > A starting point for building web applications with Polymer 1.0

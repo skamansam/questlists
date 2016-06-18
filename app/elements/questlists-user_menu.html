@@ -10,12 +10,19 @@
   .menu-name {
     @apply(--paper-font-title);
     display: block;
-    float: right;
-    width: 160px;
-    margin-top: -25px;
-    padding-left: 15px;
+    width: 170px;
+    margin-top: 25px;
+    padding-left: 65px;
   }
-  .not_logged_in .menu-name{
+  .user-menu{
+    float: right;
+    width: 23px;
+    margin-top: -55px;
+  }
+  .user_info .menu-name{
+    margin-top: -40px;
+  }
+  .login_links .menu-name{
     float: none;
     width: 100%;
     margin-top: 15px;
@@ -44,18 +51,30 @@
   .hidden{
     display: none;
   }
+  paper-item {
+    --paper-item: {
+      cursor: pointer;
+      background-color: var(--drawer-background-color);
+    };
+  }
+
   </style>
 
   <template>
-    <span class$="{{_compute_shown_username_class()}}">
+    <span class$="{{_user_info_class(user)}}">
       <img class='avatar' src='{{icon}}'/>
       <!--<div class='small-icons'>
         <img class='avatar-small' src='{{icon}}'/>
         <img class='avatar-small' src='{{icon}}'/>
       </div>-->
-      <span class="menu-name">{{name}}</span>
+      <span class="menu-name">[[_compute_user_name(user)]]</span>
+      <paper-dropdown-menu label="[[_compute_user_name(user)]]" class="user-menu">
+        <paper-listbox class="dropdown-content" class="menu-name">
+          <paper-item on-tap="logout">Log Out</paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
     </span>
-    <span class$="{{_compute_shown_login_class()}}">
+    <span class$="{{_login_links_class(user)}}">
       <span class="menu-name" on-tap="login">
           Log In / Sign Up
       </span>
@@ -80,29 +99,40 @@
       },
       auth: {
         type: Object
+      },
+      user:{
+        type: Object
       }
     },
     login: function(){
-      console.log('userMenu#login:', this.auth)
-      //console.log("LOGGING IN!", this.$.auth, this.target);
       this.auth.login()
     },
-    _compute_shown_login_class: function(){
-      cls = 'not_logged_in'
-      if(this.auth != undefined && this.auth.logged_in){
-        return cls + 'hidden'
-      }else{
-        return cls + ' shown'
+    logout: function(){
+      this.auth.logout()
+    },
+    _compute_user_name: function(user){
+      if(user != null)
+        if (user.displayName != null)
+          return user.displayName
+        else if (user.email != null)
+          return user.email.split('@')[0]
+        else
+          return "Anonymous"
+      else {
+        return "Not Logged In"
       }
     },
-    _compute_shown_username_class: function(){
-      cls = 'name'
-      //if(this.auth.logged_in){
-      //  return cls + 'shown'
-      //}else{
-        return cls + ' hidden'
-      //}
+    _login_links_class: function(user){
+      if(user == null || user == undefined)
+        return "login_links"
+      else
+        return "login_links hidden"
+    },
+    _user_info_class: function(user){
+      if(user != null || user != undefined)
+        return "user_info"
+      else
+        return "user_info hidden"
     }
-
   });
 </script>

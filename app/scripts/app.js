@@ -15,14 +15,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // and give it some initial binding values
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
-
   app._new_list=function(event,evtObject){
     console.log("new list", event, evtObject)
   }
 
   app.auth_element = function(){
     var obj = app.$.auth
-    console.log('main content: ',obj)
     return obj
   }
 
@@ -32,7 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   if (window.location.port === '') {  // if production
     // Uncomment app.baseURL below and
     // set app.baseURL to '/your-pathname/' if running from folder in production
-    // app.baseUrl = '/polymer-starter-kit/';
+    app.baseUrl = '/questlists/';
   }
 
   app.displayInstalledToast = function() {
@@ -51,6 +49,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // See https://github.com/Polymer/polymer/issues/1381
   window.addEventListener('WebComponentsReady', function() {
     // imports are loaded and elements have been registered
+    //console.log('SINGING IN')
+    //Polymer.dom(document).querySelector('#auth').signInAnonymously();
   });
 
   // Main area's paper-scroll-header-panel custom condensing transformation of

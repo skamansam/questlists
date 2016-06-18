@@ -6,33 +6,24 @@
   <style>
   </style>
   <template>
-    <firebase-auth
-      id="firebaseLogin"
-      user="{{user}}"
-      status-known="{{statusKnown}}"
-      location="https://questlists.firebaseio.com"
-      provider="password"
-      on-error="errorHandler"
-      on-user-created="userSuccessHandler"
-      on-password-changed="userSuccessHandler"
-      on-password-reset="userSuccessHandler"
-      on-user-removed="userSuccessHandler"
-      ref="{{fbInstance}}"></firebase-auth>
+    <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-error="errorHandler">
+    </firebase-auth>
     <paper-dialog id="loginDialog" modal on-iron-overlay-closed="_on_dialog_close">
       <h2>Login</h2>
-      <paper-input label="username" id="username" required></paper-input>
-      <core-input type="password"></core-input>
-      <paper-input type="password" label="password" id="password" required></paper-input>
-      <div class='oauth-buttons'>
-        <paper-button on-tap="_handle_github_login">Github</paper-button>
-        <paper-button on-tap="_handle_google_login">Google</paper-button>
-        <paper-button on-tap="_handle_facebook_login">Facebook</paper-button>
-        <paper-button icon='' on-tap="_handle_twitter_login">Twitter</paper-button>
-      </div>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button on-tap="_handle_password_login">Login</paper-button>
-      </div>
+      <form on-submit="_handle_password_login">
+        <paper-input label="email" id="email" autocomplete="email" required></paper-input>
+        <paper-input type="password" label="password" id="password" autocomplete="password" required></paper-input>
+        <div class='oauth-buttons'>
+          <paper-button on-tap="_handle_github_login">Github</paper-button>
+          <paper-button on-tap="_handle_google_login">Google</paper-button>
+          <paper-button on-tap="_handle_facebook_login">Facebook</paper-button>
+          <paper-button icon='' on-tap="_handle_twitter_login">Twitter</paper-button>
+        </div>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button type="submit" on-tap="_handle_password_login">Login</paper-button>
+        </div>
+      </form>
     </paper-dialog>
   </template>
 </dom-module>
@@ -57,11 +48,13 @@
       fbInstance:{
         type: Object,
         notify: true
-      }
+      },
     },
     login: function(){
       this.$.loginDialog.open()
-      //user = {name: 'Samuel C Tyler'}
+    },
+    logout: function(){
+      this.$.firebaseLogin.signOut()
     },
     add_login: function(){
     },
@@ -71,25 +64,24 @@
     },
     _handle_password_login: function(event, results, c,d){
       this.provider='password'
-      uname = this.$.username.value
+      email = this.$.email.value
       pwd = this.$.password.value
-      params = {}
-      params.password = pwd
-      params.email = uname
-      //params.token = 'AIzaSyCFba6yCVUJJwh_-_8HZaZvVsvlnKOH0OQ'
-      debugger
-      this.$.firebaseLogin.login(params,{})
+      this.$.firebaseLogin.signInWithEmailAndPassword(email, pwd)
+        .then(this.userSuccessHandler.call(this))
     },
-    userSuccessHandler: function(e) {
-      alert(e.type + ' success!');
+    userSuccessHandler: function(response) {
       this.$.loginDialog.close()
     },
     errorHandler: function(e) {
       alert('Error: ' + e.detail.message)
     },
     _handle_github_login: function(event, results, c,d){
-
       this.$.loginDialog.close()
+    },
+    signInAnonymously: function(){
+      if(this.user != undefined)
+        return true
+      this.$.firebaseLogin.signInAnonymously()
     }
   });
 </script>
