@@ -104,11 +104,20 @@
         type: Object
       }
     },
+    observers: [
+      '_set_with_gravatar(user.email)'
+    ],
     login: function(){
       this.auth.login()
     },
     logout: function(){
       this.auth.logout()
+    },
+    _set_with_gravatar: function(email){
+      if(!email)
+        return
+      console.log('setting gravatar: ', email)
+      this.icon = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=50"
     },
     _compute_user_name: function(user){
       if(user != null)
