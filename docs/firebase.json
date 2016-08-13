@@ -1,5 +1,5 @@
 {
-  "firebase": "polymer-starter-kit",
+  "firebase": "questlists",
   "public": "dist",
   "ignore": [
     "firebase.json",

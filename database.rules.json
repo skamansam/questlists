@@ -1,4 +1,16 @@
 {
-  ".read": true,
-  ".write": true
+  "users": {
+    "$uid": {
+      ".read": true,
+      ".write": "$uid === auth.uid"
+    }
+  },
+  "lists":{
+    ".read": true,
+    ".write": "auth.uid != null"
+  },
+  "list_configs":{
+    ".read": true,
+    ".write": "auth.uid != null"
+  }
 }
