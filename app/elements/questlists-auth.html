@@ -8,6 +8,7 @@
   <template>
     <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-error="errorHandler">
     </firebase-auth>
+    <firebase-document path='/users/{{user_id}}/info' data="{{user_data}}"></firebase-document>
     <paper-dialog id="loginDialog" modal on-iron-overlay-closed="_on_dialog_close">
       <h2>Login</h2>
       <form on-submit="_handle_password_login">
@@ -17,7 +18,7 @@
           <paper-button on-tap="_handle_github_login">Github</paper-button>
           <paper-button on-tap="_handle_google_login">Google</paper-button>
           <paper-button on-tap="_handle_facebook_login">Facebook</paper-button>
-          <paper-button icon='' on-tap="_handle_twitter_login">Twitter</paper-button>
+          <paper-button on-tap="_handle_twitter_login">Twitter</paper-button>
         </div>
         <div class="buttons">
           <paper-button dialog-dismiss>Cancel</paper-button>
@@ -76,12 +77,12 @@
       alert('Error: ' + e.detail.message)
     },
     _handle_github_login: function(event, results, c,d){
-      this.$.loginDialog.close()
     },
     signInAnonymously: function(){
       if(this.user != undefined)
         return true
       this.$.firebaseLogin.signInAnonymously()
+        .then(this.userSuccessHandler.call(this))
     }
   });
 </script>

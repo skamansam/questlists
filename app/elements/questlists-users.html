@@ -20,6 +20,7 @@
 <script>
   Polymer({
     is: 'questlists-users',
+    behaviors: [QuestlistsPageBehavior],
     properties: {
       users: {
         type: Array,
@@ -28,6 +29,11 @@
           {name: 'User Two',icon: '',email: 'user_two@email.com'},
           {name: 'User Three',icon: '',email: 'user_three@email.com'}]
       }
-    }
-  });
+    },
+    ready: function(){
+      this._pageName = 'users'
+    },
+    loadData: function(){
+      console.log('Loading Users...')
+    }  });
 </script>

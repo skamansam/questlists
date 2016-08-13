@@ -46,11 +46,29 @@
       SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </paper-material>
 
+    <paper-material elevation="1">
+      <h2>Changelog</h2>
+      <h3>Initial Release v0.1</h3>
+      <ul>
+        <li>Implement Structure of Application using Polymer</li>
+        <li>Authentication via username/password via Firebase</li>
+      </ul>
+    </paper-material>
+
   </template>
 </dom-module>
 
 <script>
   Polymer({
-    is: 'questlists-about'
+    is: 'questlists-about',
+    behaviors: [QuestlistsPageBehavior],
+    properties: {
+    },
+    ready: function(){
+      this._pageName = 'about'
+    },
+    loadData: function(){
+      console.log('Loading About...')
+    }
   });
 </script>

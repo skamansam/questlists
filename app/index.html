@@ -1,12 +1,8 @@
 <!doctype html>
 <!--
 @license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+Copyright (c) 2016 Skaman Sam Tyler. All rights reserved.
+This code may only be used under the BSD style license found at http://github.com/skamansam/questlists/LICENSE.txt
 -->
 
 <html lang="en">
@@ -64,9 +60,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <span id="browser-sync-binding"></span>
   <!-- endbuild -->
 
-  <!-- Handle Current User -->
-  <!--<firebase-auth location="" data="{{users}}"></firebase-auth>
--->
   <template is="dom-bind" id="app">
     <paper-drawer-panel id="paperDrawerPanel" responsive-width="840px">
       <!-- Drawer Scroll Header Panel -->
@@ -77,7 +70,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <questlists-userMenu user="[[user]]" auth="{{auth_element()}}" user_id="{{user_id}}"></questlists-userMenu>
         </paper-toolbar>
 
-        <questlist-navigation current-request="{{page}}" current-request-data="{{requestData}}"></questlist-navigation>
+        <questlists-navigation current-request="{{page}}" current-request-data="{{requestData}}"></questlists-navigation>
 
       </paper-scroll-header-panel>
 
@@ -111,33 +104,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <questlists-auth user_id="{{user_id}}" user="{{user}}" id="auth">
           </questlists-auth>
 
-          <iron-pages attr-for-selected="data-route"  fallback-selection="home" selected="{{page}}">
+          <iron-pages selected-attribute="active-page" attr-for-selected="data-route"  fallback-selection="home" selected="{{page}}">
             <section data-route="home">
-              <questlists-home></questlists-home>
-            </section>
-
-            <section data-route="login">
-              <questlists-favorites></questlists-favorites>
+              <questlists-home selected-page="[[page]]"></questlists-home>
             </section>
 
             <section data-route="favorites">
-              <questlists-favorites></questlists-favorites>
+              <questlists-favorites uid="[[user.uid]]" selected-page="[[page]]"></questlists-favorites>
             </section>
 
             <section data-route="browse">
-              <questlists-browser></questlists-browser>
+              <questlists-browser selected-page="[[page]]"></questlists-browser>
             </section>
 
             <section data-route="users">
-              <questlists-users></questlists-users>
+              <questlists-users selected-page="[[page]]"></questlists-users>
             </section>
 
             <section data-route="about">
-              <questlists-about></questlists-about>
+              <questlists-about selected-page="[[page]]"></questlists-about>
             </section>
 
             <section data-route="settings">
-              <questlists-settings uid="[[user.uid]]"></questlists-settings>
+              <questlists-settings uid="[[user.uid]]" selected-page="[[page]]"></questlists-settings>
             </section>
           </iron-pages>
         </div>

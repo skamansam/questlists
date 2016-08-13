@@ -1,0 +1,18 @@
+<script>
+    QuestlistsPageBehavior = {
+      properties: {
+        selectedPage: {
+          type: String,
+          observer: '_onselectedPageChanged'
+        }
+      },
+      loadData: function(){
+        console.warn("Please override onLoad() method for page ${this._pageName}")
+      },
+      _onselectedPageChanged: function(new_val, old_val){
+        if(new_val == this._pageName){
+          this.loadData()
+        }
+      }
+    }
+</script>

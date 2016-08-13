@@ -17,7 +17,14 @@
 <script>
   Polymer({
     is: 'questlists-favorites',
+    behaviors: [QuestlistsPageBehavior],
     properties: {
+    },
+    ready: function(){
+      this._pageName = 'favorites'
+    },
+    loadData: function(){
+      console.log('Loading Favorites...')
     }
   });
 </script>

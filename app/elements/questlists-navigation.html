@@ -5,7 +5,7 @@
   This element handles all navigation for the entire app. It will broadcast a navigation element you can use.
 -->
 
-<dom-module id="questlist-navigation">
+<dom-module id="questlists-navigation">
   <style include="shared-styles"></style>
   <style>
     paper-menu {
@@ -33,7 +33,7 @@
       color: var(--primary-color);
     }
 
-    paper-menu a {
+    paper-menu .menu-item {
       @apply(--layout-horizontal);
       @apply(--layout-center);
 
@@ -47,6 +47,7 @@
       line-height: 24px;
       min-height: 48px;
       padding: 0 16px;
+      cursor: pointer;
     }
 
 
@@ -61,44 +62,45 @@
               tail="{{currentRequestData}}"></app-route>
 
     <!-- Drawer Content -->
-    <paper-menu class="app-menu" attr-for-selected="data-route" fallback-selection="home" selected="{{currentRequest}}">
-      <a data-route="home" href="{{baseUrl}}">
+    <paper-menu class="app-menu" attr-for-selected="data-route" selected="{{currentRequest}}">
+      <div class="menu-item" data-route="home">
         <iron-icon icon="home"></iron-icon>
         <span>Home</span>
-      </a>
+      </div>
 
-      <a data-route="favorites" href="{{baseUrl}}favorites">
+      <div class="menu-item" data-route="favorites">
         <iron-icon icon="star"></iron-icon>
         <span>Favorites</span>
-      </a>
+      </div>
 
-      <a data-route="browse" href="{{baseUrl}}browse">
+      <div class="menu-item" data-route="browse">
         <iron-icon icon="dashboard"></iron-icon>
         <span>Browse</span>
-      </a>
+      </div>
 
-      <a data-route="users" href="{{baseUrl}}users">
+      <div class="menu-item" data-route="users">
         <iron-icon icon="social:people"></iron-icon>
         <span>Users</span>
-      </a>
+      </div>
 
-      <a data-route="about" href="{{baseUrl}}about">
+      <div class="menu-item" data-route="about">
         <iron-icon icon="info"></iron-icon>
         <span>About</span>
-      </a>
+      </div>
 
-      <a data-route="settings" href="{{baseUrl}}settings">
+      <div class="menu-item" data-route="settings">
         <iron-icon icon="settings"></iron-icon>
         <span>Settings</span>
-      </a>
+      </div>
 
     </paper-menu>
   </template>
 </dom-module>
 
 <script>
+window.addEventListener('WebComponentsReady', function() {
   Polymer({
-    is: 'questlist-navigation',
+    is: 'questlists-navigation',
     properties: {
       route: {
         type: Object,
@@ -115,7 +117,21 @@
       currentRequest: {
         type: Object,
         notify: true
-      },
+      }
+    },
+    observers: [
+      'pageChanged(currentRequest.page)'
+    ],
+    pageChanged: function(selectedPage){
+      console.log('Route changed:', this.currentRequest)
+      //this.currentPage = selectedPage
+    },
+    ready: function(){
+      //console.log(this.baseUrl, this.route, this.currentPage, this.currentRequest, this.currentRequestData)
+      if (!this.route.path) {
+        this.set('route.path', '/');
+      }
     }
   });
+});
 </script>

@@ -17,7 +17,13 @@
 <script>
   Polymer({
     is: 'questlists-browser',
+    behaviors: [QuestlistsPageBehavior],
     properties: {
-    }
-  });
+    },
+    ready: function(){
+      this._pageName = 'browse'
+    },
+    loadData: function(){
+      console.log('Loading Browser...')
+    }  });
 </script>

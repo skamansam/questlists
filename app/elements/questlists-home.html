@@ -16,6 +16,14 @@
 
 <script>
   Polymer({
-    is: 'questlists-home'
-  });
+    is: 'questlists-home',
+    behaviors: [QuestlistsPageBehavior],
+    properties: {
+    },
+    ready: function(){
+      this._pageName = 'home'
+    },
+    loadData: function(){
+      console.log('Loading Home...')
+    }  });
 </script>

@@ -4,6 +4,12 @@
 <dom-module id="questlists-settings">
   <style include="shared-styles"></style>
   <style>
+    paper-card {
+      width: 100%;
+      margin-bottom: 32px;
+      padding-left: 30px;
+      padding-right: 30px;
+    }
   </style>
   <template>
     <paper-material elevation="1">
@@ -11,17 +17,53 @@
       <p>You can configure your Questlists here.</p>
     </paper-material>
 
-    <paper-material elevation="1">
-      <h2>User Info</h2>
-      <p>User info</p>
-    </paper-material>
+    <paper-card id="user_info" elevation="1" heading="User Info">
+      <div class="card-content">
+        <firebase-document log path='/users/{{uid}}/info' id="user_doc" data="{{user_data}}"></firebase-document>
+        <paper-input label="user id" id="user_id" value="[[uid]]" disabled></paper-input>
+        <paper-input label="username" id="username" value="{{user_data.username}}"></paper-input>
+        <paper-input label="email" type="email" id="email" value="{{user_data.email}}"></paper-input>
+        <paper-input type="password" label="password" id="password"></paper-input>
+      </div>
+      <div class='card-actions'>
+        <paper-button on-tap="" type="reset">Reset</paper-button>
+        <paper-button on-tap="_save_user_data">Submit</paper-button>
+      </div>
+
+    </paper-card>
 
 
   </template>
 </dom-module>
 
 <script>
+(function() {
   Polymer({
-    is: 'questlists-settings'
+    is: 'questlists-settings',
+    behaviors: [QuestlistsPageBehavior],
+    properties: {
+      uid: String,
+      user_data: {
+        type: Object,
+        value: {username: '', email: ''}
+      }
+    },
+
+    ready: function(){
+      this._pageName = 'settings'
+    },
+
+    loadData: function(){
+      console.log('Loading Settings...')
+      this.$.user_doc.getStoredValue(this.$.user_doc.path)
+    },
+
+    _save_user_data: function(){
+      console.log(this.user_data)
+
+      let doc = this.$.user_doc
+      doc.setStoredValue(doc.path, this.user_data)
+    }
   });
+  })();
 </script>
