@@ -106,7 +106,7 @@ This code may only be used under the BSD style license found at http://github.co
 
           <iron-pages selected-attribute="active-page" attr-for-selected="data-route"  fallback-selection="home" selected="{{page}}">
             <section data-route="home">
-              <questlists-home selected-page="[[page]]"></questlists-home>
+              <questlists-home uid="[[user.uid]]" selected-page="[[page]]"></questlists-home>
             </section>
 
             <section data-route="favorites">
@@ -114,15 +114,15 @@ This code may only be used under the BSD style license found at http://github.co
             </section>
 
             <section data-route="browse">
-              <questlists-browser selected-page="[[page]]"></questlists-browser>
+              <questlists-browser uid="[[user.uid]]" selected-page="[[page]]"></questlists-browser>
             </section>
 
             <section data-route="users">
-              <questlists-users selected-page="[[page]]"></questlists-users>
+              <questlists-users uid="[[user.uid]]" selected-page="[[page]]"></questlists-users>
             </section>
 
             <section data-route="about">
-              <questlists-about selected-page="[[page]]"></questlists-about>
+              <questlists-about uid="[[user.uid]]" selected-page="[[page]]"></questlists-about>
             </section>
 
             <section data-route="settings">
