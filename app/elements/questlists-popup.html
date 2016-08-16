@@ -1,0 +1,79 @@
+<dom-module id="questlists-popup">
+
+  <style>
+  </style>
+
+  <template>
+    <paper-toast id="toast">
+      <span class="toast-hide-button" duration="{{duration}}" role="button" tabindex="0" onclick="this.$.toast.hide()">{{message}}</span>
+    </paper-toast>
+  </template>
+</dom-module>
+
+<script>
+window.addEventListener('WebComponentsReady', function() {
+  Polymer({
+    is: 'questlists-popup',
+    properties: {
+      online: {
+        type: Boolean,
+        observer: 'onlineChanged'
+      },
+      message: {
+        type: String,
+        value: "OK",
+        observer: 'messageChanged'
+      },
+      duration: {
+        type: Number,
+        value: 10
+      },
+      _use_desktop: Boolean,
+      _notifications: {
+        type: Array,
+        value: []
+      }
+    },
+    onlineChanged: function(new_val){
+      this.message = 'New Online Status: ${new_val}'
+      console.info("ONLINE: ", this.online)
+    },
+    messageChanged: function(message){
+      if(this._use_desktop){
+        console.info("showing desktop notification")
+        this._notifications.push(new Notification(message,{icon: '/images/questlists.png', body: message}))
+      } else {
+        console.info("showing toast")
+        this.$.toast.show()
+      }
+      console.info(this.message)
+    },
+    ready: function() {
+      if(this.online)
+        this.message = 'Questlists is online! Items will be saved to the remote server.'
+      else
+        this.message = 'Questlists is currently offline. We will update the remote server when we are connected.'
+
+      if(!window.Notification){
+        this.message = "Desktop Notifications not supported. Broadcasting messages here."
+        this._use_desktop = false
+      } else {
+        if(Notification.permission === 'granted'){
+          this._use_desktop = true
+          this.message = "Desktop Notifications enabled!"
+        } else
+        Notification.requestPermission(function(){
+          if(Notification.permission === 'granted'){
+            this._use_desktop = true
+            this.message = "Desktop Notifications enabled!"
+          }else{
+            this._use_desktop = false
+            this.message = "Desktop Notifications disabled!"
+          }
+        })
+      }
+
+    }
+  });
+});
+</script>

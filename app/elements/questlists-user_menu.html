@@ -116,7 +116,6 @@
     _set_with_gravatar: function(email){
       if(!email)
         return
-      console.log('setting gravatar: ', email)
       this.icon = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=50"
     },
     _compute_user_name: function(user){

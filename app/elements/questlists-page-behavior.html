@@ -4,7 +4,8 @@
         selectedPage: {
           type: String,
           observer: '_onselectedPageChanged'
-        }
+        },
+        online: Boolean
       },
       loadData: function(){
         console.warn("Please override onLoad() method for page ${this._pageName}")
