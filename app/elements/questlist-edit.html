@@ -1,0 +1,104 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlist-edit">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <firebase-document path='/questlists/{{list_id}}/config' id="config_doc" log disable data="{{config_data}}"></firebase-document>
+    <paper-dialog id="dialog"
+      always-on-top modal
+      entry-animation="scale-up-animation"
+      on-iron-overlay-opened="_opened"
+      on-iron-overlay-closed="_closed"
+    >
+      <h2><span>{{config.name}}</span> List</h2>
+      <paper-dialog-scrollable>
+        <paper-input label="List ID" id="list_id" value="[[list_id]]" disabled></paper-input>
+        <paper-input label="Title" id="title" value="{{config.title}}"></paper-input>
+        <paper-input label="Description" type="text" id="description" value="{{config.description}}"></paper-input>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Accept</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'questlist-edit',
+      properties:{
+        config: {
+          type: Object,
+          notify: true,
+          value: {
+            config: {
+              name: "New",
+              description: '',
+              color: '#00ccff',
+              states: {
+                active: {
+                  hidden: false,
+                  style: 'font-weight: bold;'
+                },
+                inactive: {
+                  hidden: true,
+                  style: 'font-weight: bold;'
+                },
+                completed: {
+                  hidden: false,
+                  style: 'font-weight: normal;'
+                },
+                partial: {
+                  hidden: false,
+                  style: 'font-weight: bold; font-style: italics;'
+                }
+              }
+            }
+          }
+        },
+        path: {
+          type: String,
+          value: "/questlists/"
+        }
+      },
+      observers: ['config_data_changed(config_data)'],
+      config_data_changed: function(data){
+        console.info("Config Changed")
+        if(data.config)
+          this.config = data
+        else
+          this.config = { config: data }
+      },
+      show: function(){
+        if(this.list_id)
+          this.$.config_doc.path = "/config/{{list_id}}"
+        else
+          this.$.config_doc.path = "/config/"
+        this.$.config_doc.removeAttribute('disabled')
+        this.$.config_doc.getStoredValue(this.$.config_doc.path)
+        this.$.dialog.open()
+      },
+      _closed: function(evt){
+        if(evt.detail.confirmed){
+          if(this.list_id)
+            this.$.config_doc.setStoredValue(this.$.config_doc.path, this.config)
+          else
+            this.$.config_doc.save(this.$.config_doc.path).then(function(val,a,b,c){
+              console.log("RESOLVED: ", val,a,b,c)
+            })
+          this.fire('confirmed')
+        } else
+          this.fire('canceled')
+
+      },
+      _opened: function(evt){
+        this.fire('opened', evt)
+      }
+    });
+  </script>
+</dom-module>
