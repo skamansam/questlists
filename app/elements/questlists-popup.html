@@ -28,51 +28,60 @@ window.addEventListener('WebComponentsReady', function() {
         type: Number,
         value: 10
       },
-      _use_desktop: Boolean,
+      _use_desktop: {
+        type: Boolean,
+        reflectPropertyToAttribute: true,
+        observer: '_permission_changed'
+      },
       _notifications: {
         type: Array,
         value: []
       }
     },
     onlineChanged: function(new_val){
-      this.message = 'New Online Status: ${new_val}'
-      console.info("ONLINE: ", this.online)
-    },
-    messageChanged: function(message){
-      if(this._use_desktop){
-        console.info("showing desktop notification")
-        this._notifications.push(new Notification(message,{icon: '/images/questlists.png', body: message}))
-      } else {
-        console.info("showing toast")
-        this.$.toast.show()
-      }
-      console.info(this.message)
-    },
-    ready: function() {
-      if(this.online)
+      if(new_val)
         this.message = 'Questlists is online! Items will be saved to the remote server.'
       else
         this.message = 'Questlists is currently offline. We will update the remote server when we are connected.'
+    },
+    messageChanged: function(message){
+      if(this._use_desktop){
+        let note = new Notification('Questlists',{icon: '/images/questlists.png', body: message})
+      } else {
+        this.$.toast.show()
+      }
+      console.info("Notify: ", message)
+    },
+    ready: function() {
+      this._setup_permission()
 
+      //show online status on startup
+      //this.onlineChanged(window.navigator.onLine)
+    },
+    _setup_permission: function(){
       if(!window.Notification){
         this.message = "Desktop Notifications not supported. Broadcasting messages here."
         this._use_desktop = false
       } else {
         if(Notification.permission === 'granted'){
           this._use_desktop = true
-          this.message = "Desktop Notifications enabled!"
+          //this.message = "Desktop Notifications enabled!"
         } else
-        Notification.requestPermission(function(){
-          if(Notification.permission === 'granted'){
-            this._use_desktop = true
-            this.message = "Desktop Notifications enabled!"
-          }else{
-            this._use_desktop = false
-            this.message = "Desktop Notifications disabled!"
-          }
-        })
+          Notification.requestPermission(this._set_permission)
       }
-
+    },
+    _set_permission: function(val){
+      if(result === 'granted'){
+        this._use_desktop = true
+      }else{
+        this._use_desktop = false
+      }
+    },
+    _permission_changed: function(val){
+      if(val)
+        this.message = "Desktop Notifications enabled!"
+      else
+        this.message = "Desktop Notifications disabled. Broadcasting messages here."
     }
   });
 });
