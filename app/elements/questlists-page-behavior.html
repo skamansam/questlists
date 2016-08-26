@@ -5,15 +5,32 @@
           type: String,
           observer: '_onselectedPageChanged'
         },
-        online: Boolean
+        online: Boolean,
+        active: {
+          type: Boolean,
+          observer: 'activeChanged'
+        },
+        notification: {
+          type: String,
+          notify: true
+        }
+      },
+      activeChanged: function(val){
+        if(val)
+          this.loadData()
+        else
+          this.unloadData()
       },
       loadData: function(){
-        console.warn("Please override onLoad() method for page ${this._pageName}")
+        console.warn(`Please override loadData() method for page '${this._pageName}'`)
+      },
+      unloadData: function(){
+        console.warn(`Please override unloadData() method for page ${this._pageName}`)
       },
       _onselectedPageChanged: function(new_val, old_val){
-        if(new_val == this._pageName){
-          this.loadData()
-        }
+        //if(new_val == this._pageName){
+        //  this.loadData()
+        //}
       }
     }
 </script>

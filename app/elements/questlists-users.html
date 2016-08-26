@@ -7,33 +7,49 @@
   </style>
 
   <template>
-    <paper-material elevation="1">
-      <h1 class="page-title focus-target" tabindex="-1">Users</h1>
-      <p>These are the users with the most contributions.</p>
-    </paper-material>
-    <template is="dom-repeat" items="{{users}}" as="user" >
-      <questlists-user name="{{user.name}}" icon="{{user.icon}}" email="{{user.email}}"></questlists-user>
-    </template>
+    <section>
+      <firebase-document path='/users/' id="users_doc" log disable data="{{users}}"></firebase-document>
+      <paper-material elevation="1">
+        <h1 class="page-title focus-target" tabindex="-1">Users</h1>
+        <p>These are the users with the most contributions.</p>
+      </paper-material>
+      <template is="dom-repeat" items="[[users]]" as="user" >
+        <questlists-user name="{{user.username}}" icon="{{user.icon}}" email="{{user.email}}"></questlists-user>
+      </template>
+    </section>
   </template>
 </dom-module>
 
 <script>
+window.addEventListener('WebComponentsReady', function() {
   Polymer({
     is: 'questlists-users',
     behaviors: [QuestlistsPageBehavior],
     properties: {
       users: {
         type: Array,
-        value: [
-          {name: 'User One',icon: '',email: 'user_one@email.com'},
-          {name: 'User Two',icon: '',email: 'user_two@email.com'},
-          {name: 'User Three',icon: '',email: 'user_three@email.com'}]
+        value: [],
+        observer: 'dataChanged'
       }
+    },
+    dataChanged: function(val){
+      console.log('users changed: ',this.$.users)
     },
     ready: function(){
       this._pageName = 'users'
     },
     loadData: function(){
-      console.log('Loading Users...')
-    }  });
+      console.log('Loading users data...')
+      this.$.users_doc.getStoredValue(this.$.users_doc.path).then(function(users){
+        new_users = new Array
+        for(uid in users){
+          info = users[uid].info
+          info[uid] = uid
+          new_users.push(info)
+        }
+        this.set('users', new_users)
+      }.bind(this)) // you need to do this for promises!
+    }
+  });
+});
 </script>

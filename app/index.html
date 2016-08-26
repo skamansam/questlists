@@ -61,6 +61,12 @@ This code may only be used under the BSD style license found at http://github.co
   <!-- endbuild -->
 
   <template is="dom-bind" id="app">
+    <!--
+      Ensure we are on a secure site! Comment or remove for hosting on a
+      site not hosted on a https-enabled server
+    -->
+    <platinum-https-redirect></platinum-https-redirect>
+
     <paper-drawer-panel id="paperDrawerPanel" responsive-width="840px">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
@@ -70,7 +76,7 @@ This code may only be used under the BSD style license found at http://github.co
           <questlists-userMenu user="[[user]]" auth="{{auth_element()}}" online="{{online}}" user_id="{{user_id}}"></questlists-userMenu>
         </paper-toolbar>
 
-        <questlists-navigation current-request="{{page}}" current-request-data="{{requestData}}"></questlists-navigation>
+        <questlists-navigation current-request="{{page}}" current-request-data="{{requestData}}" current-subrequest="{{subpage}}"></questlists-navigation>
 
       </paper-scroll-header-panel>
 
@@ -100,46 +106,26 @@ This code may only be used under the BSD style license found at http://github.co
             database-url="https://questlists.firebaseio.com/"
             api-key="AIzaSyCFba6yCVUJJwh_-_8HZaZvVsvlnKOH0OQ"
             online="{{online}}"
-            on-online-changed="_show_online_status"
             id="firebaseApp">
           </firebase-app>
 
-          <questlists-auth user_id="{{user_id}}" user="{{user}}" id="auth">
-          </questlists-auth>
+          <questlists-auth user_id="{{user_id}}" user="{{user}}" id="auth"></questlists-auth>
 
-          <iron-pages selected-attribute="active-page" attr-for-selected="data-route"  fallback-selection="home" selected="{{page}}">
-            <section data-route="home">
-              <questlists-home uid="[[user.uid]]" selected-page="[[page]]"></questlists-home>
-            </section>
-
-            <section data-route="favorites">
-              <questlists-favorites uid="[[user.uid]]" selected-page="[[page]]"></questlists-favorites>
-            </section>
-
-            <section data-route="browse">
-              <questlists-browser uid="[[user.uid]]" selected-page="[[page]]"></questlists-browser>
-            </section>
-
-            <section data-route="users">
-              <questlists-users uid="[[user.uid]]" selected-page="[[page]]"></questlists-users>
-            </section>
-
-            <section data-route="about">
-              <questlists-about uid="[[user.uid]]" selected-page="[[page]]"></questlists-about>
-            </section>
-
-            <section data-route="settings">
-              <questlists-settings uid="[[user.uid]]" selected-page="[[page]]"></questlists-settings>
-            </section>
+          <iron-pages selected-attribute="active" attr-for-selected="data-route"  fallback-selection="home" selected="{{page}}">
+            <questlists-home      data-route="home"      uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-home>
+            <questlists-favorites data-route="favorites" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-favorites>
+            <questlists-browser   data-route="browse"    uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-browser>
+            <questlists-users     data-route="users"     uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-users>
+            <questlists-about     data-route="about"     uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-about>
+            <questlists-settings  data-route="settings"  uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-settings>
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
     </paper-drawer-panel>
 
-    <questlists-popup id="toast" online="{{online}}"></questlists-popup>
+    <questlists-popup id="toast" online="{{online}}" message="{{notification}}"></questlists-popup>
 
     <!-- Uncomment next block to enable Service Worker support (1/2) -->
-    <!--
     <paper-toast id="caching-complete"
                  duration="6000"
                  text="Caching complete! This app will work offline.">
@@ -150,11 +136,11 @@ This code may only be used under the BSD style license found at http://github.co
                           skip-waiting
                           base-uri="bower_components/platinum-sw/bootstrap"
                           on-service-worker-installed="displayInstalledToast">
+      <platinum-sw-offline-analytics></platinum-sw-offline-analytics>
       <platinum-sw-cache default-cache-strategy="fastest"
                          cache-config-file="cache-config.json">
       </platinum-sw-cache>
     </platinum-sw-register>
-    -->
     <script>
     </script>
 

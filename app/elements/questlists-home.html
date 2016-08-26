@@ -6,11 +6,14 @@
   <style>
   </style>
   <template>
-    <paper-material elevation="1">
-      <h1 class="page-title focus-target" tabindex="-1">Home</h1>
-      <h3 class='subhead'>All your recent lists are here.</h3>
-    </paper-material>
-    <paper-fab icon="list" label="new" raised on-tap="_new_list"></paper-fab>
+    <section>
+      <paper-material elevation="1">
+        <h1 class="page-title focus-target" tabindex="-1">Home</h1>
+        <h3 class='subhead'>All your recent lists are here.</h3>
+      </paper-material>
+      <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
+      <questlist-edit id="newItem"></questlist-edit>
+    </section>
   </template>
 </dom-module>
 
@@ -24,6 +27,10 @@
       this._pageName = 'home'
     },
     loadData: function(){
-      console.log('Loading Home...')
-    }  });
+      console.debug('Loading Home...')
+    },
+    new_questlist: function(){
+      this.$.newItem.show()
+    }
+  });
 </script>

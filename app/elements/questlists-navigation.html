@@ -122,12 +122,12 @@ window.addEventListener('WebComponentsReady', function() {
     observers: [
       'pageChanged(currentRequest.page)'
     ],
+
+    /** Fired when the top-level route has changed.
+    */
     pageChanged: function(selectedPage){
-      console.log('Route changed:', this.currentRequest)
-      //this.currentPage = selectedPage
     },
     ready: function(){
-      //console.log(this.baseUrl, this.route, this.currentPage, this.currentRequest, this.currentRequestData)
       if (!this.route.path) {
         this.set('route.path', '/');
       }
