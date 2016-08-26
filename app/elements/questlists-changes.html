@@ -1,0 +1,56 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="questlists-changes">
+  <template>
+    <style>
+      :host {
+        display: block;
+      },
+      #scroller {
+        padding: 30px
+      }
+      #versions{
+        list-style-type: none
+      }
+    </style>
+
+    <paper-dialog id="dlg" always-on-top with-backdrop
+      entry-animation="scale-up-animation"
+      exit-animation="scale-down-animation"
+    >
+      <h2>What's New in Questlists</h2>
+      <div>
+      <paper-dialog-scrollable id="scroller">
+        <ul id="versions">
+          <li><h3>Pre-release Alpha (Tech Demo)</h3>
+            <p>This release will focus on getting a scaffold and tech demo out for
+            users to start using.</p>
+            <ul>
+              <li>Can Create User and Login with email and password</li>
+              <li>Uses Firebase as a storage backend.</li>
+              <li>Can store Favorites for later use. </li>
+              <li>Lists you create will automatically be favorited.</li>
+              <li>Show a _What's New_ dialog for app changes</li>
+              <li>Can create a new list with some preferences on color, etc.</li>
+              <li>Can create list items for lists</li>
+              <li>Lists can have items with multiple states. This is the crux of Questlists!</li>
+            </ul>
+          </li>
+        </ul>
+      </paper-dialog-scrollable>
+      </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Got It!</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'questlists-changes',
+      show: function(){
+        this.$.dlg.open()
+      }
+    });
+  </script>
+</dom-module>

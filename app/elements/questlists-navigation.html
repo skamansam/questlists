@@ -62,28 +62,28 @@
               tail="{{currentRequestData}}"></app-route>
 
     <!-- Drawer Content -->
-    <paper-menu class="app-menu" attr-for-selected="data-route" selected="{{currentRequest}}">
-      <div class="menu-item" data-route="home">
+    <paper-menu class="app-menu" attr-for-selected="data-route" selectable="selectable" selected="{{currentRequest}}">
+      <div class="menu-item selectable" data-route="home">
         <iron-icon icon="home"></iron-icon>
         <span>Home</span>
       </div>
 
-      <div class="menu-item" data-route="favorites">
+      <div class="menu-item selectable" data-route="favorites">
         <iron-icon icon="star"></iron-icon>
         <span>Favorites</span>
       </div>
 
-      <div class="menu-item" data-route="browse">
+      <div class="menu-item selectable" data-route="browse">
         <iron-icon icon="dashboard"></iron-icon>
         <span>Browse</span>
       </div>
 
-      <div class="menu-item" data-route="users">
+      <div class="menu-item selectable" data-route="users">
         <iron-icon icon="social:people"></iron-icon>
         <span>Users</span>
       </div>
 
-      <div class="menu-item" data-route="about">
+      <div class="menu-item selectable" data-route="about">
         <iron-icon icon="info"></iron-icon>
         <span>About</span>
       </div>
@@ -93,7 +93,13 @@
         <span>Settings</span>
       </div>
 
+      <div class="menu-item" on-tap="show_changes">
+        <iron-icon icon="grade"></iron-icon>
+        <span>What's New?</span>
+      </div>
+
     </paper-menu>
+    <questlists-changes id="changes"></questlists-changes>
   </template>
 </dom-module>
 
@@ -122,11 +128,12 @@ window.addEventListener('WebComponentsReady', function() {
     observers: [
       'pageChanged(currentRequest.page)'
     ],
-
+    show_changes: function(){
+      this.$.changes.show()
+    },
     /** Fired when the top-level route has changed.
     */
-    pageChanged: function(selectedPage){
-    },
+    pageChanged: function(selectedPage){},
     ready: function(){
       if (!this.route.path) {
         this.set('route.path', '/');

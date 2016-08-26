@@ -2,17 +2,20 @@
 
 QuestLists is a crowd-sourcing application that organizes lists of any sort. The
 crowd builds the lists, you say what you want to use from that list, and then
-use it as a normal checklist. Essentially, this is a three-state checklist builder.
+use it as a normal checklist. At its heart, this is an _n_-state checklist application.
 
 The intention is to use the crowd to build lists for games, inventories, shopping,
 music, videos, and more! Once the lists are built and created, you can add/remove
-your items from them. You don't even have to login to use it (only for the same devise)!
+your items from them. It uses the browser's caching for data, so you don't even have to login to use it (only for the same devise)!
 
 ## Demo
-This is the public code for http://questlists-rbe.rhcloud.com. The code is redeployed
+This is the public code for http://skamansam.github.io/questlists. The code is redeployed
 when I finish any feature or want to test something, so it may change a lot and
 may break down  often. I will do my best not to disturb any data that is already
 there, but be warned, your data may be a casualty of development!
+
+Once everything is stable, it will become a REAL application, and all the
+notices about the demo will be removed.
 
 ## Roadmap
 

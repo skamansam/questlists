@@ -76,7 +76,7 @@ This code may only be used under the BSD style license found at http://github.co
           <questlists-userMenu user="[[user]]" auth="{{auth_element()}}" online="{{online}}" user_id="{{user_id}}"></questlists-userMenu>
         </paper-toolbar>
 
-        <questlists-navigation current-request="{{page}}" current-request-data="{{requestData}}" current-subrequest="{{subpage}}"></questlists-navigation>
+        <questlists-navigation id="nav" current-request="{{page}}" current-request-data="{{requestData}}" current-subrequest="{{subpage}}"></questlists-navigation>
 
       </paper-scroll-header-panel>
 
@@ -126,11 +126,6 @@ This code may only be used under the BSD style license found at http://github.co
     <questlists-popup id="toast" online="{{online}}" message="{{notification}}"></questlists-popup>
 
     <!-- Uncomment next block to enable Service Worker support (1/2) -->
-    <paper-toast id="caching-complete"
-                 duration="6000"
-                 text="Caching complete! This app will work offline.">
-    </paper-toast>
-
     <platinum-sw-register auto-register
                           clients-claim
                           skip-waiting
