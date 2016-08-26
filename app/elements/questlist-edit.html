@@ -7,20 +7,27 @@
       :host {
         display: block;
       }
+      #dialog{
+        padding:
+      }
     </style>
-    <firebase-document path='/questlists/{{list_id}}/config' id="config_doc" log disable data="{{config_data}}"></firebase-document>
+    <firebase-document sequentialTransactions log disable
+      path='/questlists/config/{{list_id}}'
+      id="config_doc"
+      data="{{config}}">
+    </firebase-document>
     <paper-dialog id="dialog"
       always-on-top modal
       entry-animation="scale-up-animation"
       on-iron-overlay-opened="_opened"
       on-iron-overlay-closed="_closed"
     >
-      <h2><span>{{config.name}}</span> List</h2>
-      <paper-dialog-scrollable>
+      <h2><span>{{config.config.name}}</span> List</h2>
+      <div id='dlg-content'>
         <paper-input label="List ID" id="list_id" value="[[list_id]]" disabled></paper-input>
         <paper-input label="Title" id="title" value="{{config.title}}"></paper-input>
         <paper-input label="Description" type="text" id="description" value="{{config.description}}"></paper-input>
-      </paper-dialog-scrollable>
+      </div>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button dialog-confirm autofocus>Accept</paper-button>
@@ -32,12 +39,18 @@
     Polymer({
       is: 'questlist-edit',
       properties:{
+        list_id: {
+          type: String,
+          notify: true,
+          observer: 'listIdChanged'
+        },
         config: {
           type: Object,
           notify: true,
+          observer: 'config_data_changed',
           value: {
             config: {
-              name: "New",
+              title: "New",
               description: '',
               color: '#00ccff',
               states: {
@@ -66,22 +79,23 @@
           value: "/questlists/"
         }
       },
-      observers: ['config_data_changed(config_data)'],
+      //observers: ['config_data_changed(config_data)'],
       config_data_changed: function(data){
-        console.info("Config Changed")
-        if(data.config)
+        /*console.info("Config Changed", data)
+        if(data.config == null)
           this.config = data
         else
           this.config = { config: data }
+        console.log(this.config)*/
       },
       show: function(){
-        if(this.list_id)
-          this.$.config_doc.path = "/config/{{list_id}}"
-        else
-          this.$.config_doc.path = "/config/"
+        this.$.config_doc.path = "/config/{{list_id}}"
         this.$.config_doc.removeAttribute('disabled')
         this.$.config_doc.getStoredValue(this.$.config_doc.path)
         this.$.dialog.open()
+      },
+      listIdChanged: function(new_val){
+        console.info("List ID updated to: ", new_val)
       },
       _closed: function(evt){
         if(evt.detail.confirmed){
