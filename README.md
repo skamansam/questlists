@@ -42,7 +42,6 @@ TL;DR - Fork repo and create a new branch for each issue, then create a new pull
   6. Make sure ALL tests run successfully by running `gulp test`. This is to ensure you do not bug the application.
   7. Create a new pull request against the develop branch once you are happy with your code
   8. Wait for me to merge the changes I am very busy with my 9-5 and my new family, so this may take some time.
-![](https://cloud.githubusercontent.com/assets/110953/7877439/6a69d03e-0590-11e5-9fac-c614246606de.png)
 
 ## Polymer Starter Kit
 
@@ -59,3 +58,30 @@ Just run the `bin/start` script from the repo's directory.
 ## Deploying Questlists
 
 You can deploy to your own repo's github page by running the `bin/deploy` script from the repo's directory.
+
+## Code Style Guide
+Having a style guide really helps code readability and lessens cognitive overhead when developing software. I will use the style guidelines set forth in the [Polymer Guide](https://www.polymer-project.org/1.0/docs/devguide/feature-overview)'s section on [Documenting your elements](https://www.polymer-project.org/1.0/docs/tools/documentation), with the following addendums:
+
+1. Method Names
+  1. Public methods are camel-case
+  2. private methods should be snake-case and start with an underscore
+  3. Special Cases: Public methods that may not be part of a public API should be snake-case. This includes alias or router methods. You should say why in the comments.
+2. HTML Element Attributes
+  If your element decalaration is very long, and uses a lot of attributes, do the following:
+  1. Put the id attribute first, on the same line as the element declaration.
+  2. Put any boolean attributes on a line of their own
+  3. Put the rest of the attributes each on a line of their own.
+  4. the closing bracket aligns with the opening bracket, and the closing tag aligns with the opening tag.
+
+  Example:
+  ```HTML
+    <my-element id="my_elem"
+      isCool hasFoo isBar reallyNeat
+      message="this is a text thing"
+      config="{some: {js: {'obj'}}}"
+    >
+      <p>
+        Here is a test element!
+      </p>
+    </my-element>
+  ```
