@@ -21,7 +21,7 @@ if [[ SUCCESS -ne 0 ]]; then
   SUCCESS=$?
   if [[ SUCCESS -ne 0 ]]; then
     echo -e "${RED}[FAILED]\nThere was a problem installing gulp.\n Try installing it mannually:${RESET}";
-    echo `echo RESULT > tail -n 100`
+    echo $RESULT | tail -n 100
     exit;
   fi
 fi
@@ -36,32 +36,41 @@ if [[ SUCCESS -ne 0 ]]; then
   SUCCESS=$?
   if [[ SUCCESS -ne 0 ]]; then
     echo -e "${RED}[FAILED]\nThere was a problem installing bower.\n Try installing it mannually:${RESET}";
-    echo `echo RESULT > tail -n 100`
+    echo $RESULT | tail -n 100
     exit;
   fi
 fi
-echo -e "${GREEN}[ PASSED ]${RESET}"
-
+echo -e "${GREEN}[PASSED]${RESET}"
 
 echo -n "Installing Node modules..."
 RESULT=`npm install`
 SUCCESS=$?
 if [[ SUCCESS -ne 0 ]]; then
   echo -e "${RED}[FAILED]\nThere was a problem installing Node modules.\n Try installing them mannually:${RESET}";
-  echo `echo RESULT > tail -n 100`
+  echo $RESULT | tail -n 100
   exit;
 fi
-echo -e "${GREEN}[ PASSED ]${RESET}"
+echo -e "${GREEN}[PASSED]${RESET}"
 
 echo -n "Installing Bower modules..."
 RESULT=`bower install`
 SUCCESS=$?
 if [[ SUCCESS -ne 0 ]]; then
   echo -e "${RED}[FAILED]\nThere was a problem installing Bower modules.\n Try installing them mannually:${RESET}";
-  echo `echo RESULT > tail -n 100`
+  echo $RESULT | tail -n 100
   exit;
 fi
-echo -e "${GREEN}[ PASSED ]${RESET}"
+echo -e "${GREEN}[PASSED]${RESET}"
+
+echo -n "Running tests..."
+RESULT=`gulp test:local`
+SUCCESS=$?
+if [[ SUCCESS -ne 0 ]]; then
+  echo -e "${YELLOW}[WARNING]\nThere was a problem  with the tests.\n Please run them mannually:${RESET}";
+  echo $RESULT | tail -n 100
+else
+  echo -e "${GREEN}[ PASSED ]${RESET}"
+fi
 
 echo -e "\n${GREEN}SUCCESS!\nRunning the server now so you can see your work!${RESET}"
 
