@@ -1,16 +1,46 @@
 {
-  "users": {
-    "$uid": {
-      ".read": true,
-      ".write": "$uid === auth.uid"
+  "rules": {
+    "users": {
+      "$uid": {
+        "info": {
+          ".read": true,
+          ".write": "$uid === auth.uid",
+          "name":{
+            ".read": true,
+            ".write": "$uid === auth.uid",
+            ".validate": "newData.isString()"
+          },
+          "email":{
+            ".read": true,
+            ".write": "$uid === auth.uid",
+            ".validate": "newData.isString()"
+          },
+          "$other":{
+            ".read": false,
+            ".write": false
+          },
+        },
+      },
+    },
+    "lists":{
+      "$list_id": {
+        ".read": true,
+        ".write": "data.val() == auth.id",
+        "created_by":{
+          ".read": true,
+          ".write": "data.val() == auth.id"
+        },
+        "$other":{
+          ".read": true,
+          ".write": "auth.uid != null"
+        }
+      }
+    },
+    "list_configs":{
+      "$list_id": {
+        ".read": true,
+        ".write": "auth.uid != null"
+      }
     }
-  },
-  "lists":{
-    ".read": true,
-    ".write": "auth.uid != null"
-  },
-  "list_configs":{
-    ".read": true,
-    ".write": "auth.uid != null"
   }
 }

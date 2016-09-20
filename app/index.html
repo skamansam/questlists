@@ -76,7 +76,7 @@ This code may only be used under the BSD style license found at http://github.co
           <questlists-userMenu user="[[user]]" auth="{{auth_element()}}" online="{{online}}" user_id="{{user_id}}"></questlists-userMenu>
         </paper-toolbar>
 
-        <questlists-navigation id="nav" current-request="{{page}}" current-request-data="{{requestData}}" current-subrequest="{{subpage}}"></questlists-navigation>
+        <questlists-navigation id="nav" current-request="{{currentRequest}}" current-request-data="{{requestData}}" current-subrequest="{{subpage}}"></questlists-navigation>
 
       </paper-scroll-header-panel>
 
@@ -91,7 +91,7 @@ This code may only be used under the BSD style license found at http://github.co
           <!-- Application name -->
           <div class="middle middle-container">
             <img class='logo' src="images/questlists.png" alt='logo'/>
-            <div class="app-name">Questlists</div>
+            <div class="app-name">Questlists :: <span>[[page]]</span></div>
           </div>
 
           <!-- Application sub title -->
@@ -111,7 +111,7 @@ This code may only be used under the BSD style license found at http://github.co
 
           <questlists-auth user_id="{{user_id}}" user="{{user}}" id="auth"></questlists-auth>
 
-          <iron-pages selected-attribute="active" attr-for-selected="data-route"  fallback-selection="home" selected="{{page}}">
+          <iron-pages selected-attribute="active" attr-for-selected="data-route"  fallback-selection="home" selected="[[currentRequest.page]]">
             <questlists-home      data-route="home"      uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-home>
             <questlists-favorites data-route="favorites" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-favorites>
             <questlists-browser   data-route="browse"    uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-browser>

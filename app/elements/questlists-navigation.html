@@ -62,7 +62,7 @@
               tail="{{currentRequestData}}"></app-route>
 
     <!-- Drawer Content -->
-    <paper-menu class="app-menu" attr-for-selected="data-route" selectable=".selectable" selected="{{currentRequest}}">
+    <paper-menu class="app-menu" attr-for-selected="data-route" selectable=".selectable" selected="{{currentRequest.page}}">
       <div class="menu-item selectable" data-route="home">
         <iron-icon icon="home"></iron-icon>
         <span>Home</span>
@@ -126,17 +126,18 @@ window.addEventListener('WebComponentsReady', function() {
       }
     },
     observers: [
-      'pageChanged(currentRequest.page)'
+      'pageChanged(currentRequest)'
     ],
     show_changes: function(){
       this.$.changes.show()
     },
     /** Fired when the top-level route has changed.
     */
-    pageChanged: function(selectedPage){},
+    pageChanged: function(selectedPage){
+    },
     ready: function(){
       if (!this.route.path) {
-        this.set('route.path', '/');
+        this.set('route.path', '/home');
       }
     }
   });

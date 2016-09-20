@@ -12,7 +12,7 @@
         <h3 class='subhead'>All your recent lists are here.</h3>
       </paper-material>
       <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
-      <questlist-edit id="newItem"></questlist-edit>
+      <questlist-edit id="newItem" uid="[[uid]]"></questlist-edit>
     </section>
   </template>
 </dom-module>
@@ -22,6 +22,7 @@
     is: 'questlists-home',
     behaviors: [QuestlistsPageBehavior],
     properties: {
+      uid: String
     },
     ready: function(){
       this._pageName = 'home'

@@ -1,6 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<!--
+`<questlist-edit>` handles editing the preferences for lists. Also creates a new list
+if no `list_id` is given. Handles shwing the dialog and getting/setting the prefs.
+Use the `config` attribute to get the prefs.
 
+The config data is stored in Firebase at /questlists/config/{{list_id}}
+-->
 <dom-module id="questlist-edit">
   <template>
     <style>
@@ -12,9 +18,14 @@
       }
     </style>
     <firebase-document sequentialTransactions log disable
-      path='/questlists/config/{{list_id}}'
+      path='/list_configs/{{list_id}}'
       id="config_doc"
       data="{{config}}">
+    </firebase-document>
+    <firebase-document sequentialTransactions log disable
+      path='/lists/{{list_id}}'
+      id="list_doc"
+      data="{{init_list_data}}">
     </firebase-document>
     <paper-dialog id="dialog"
       always-on-top modal
@@ -22,7 +33,7 @@
       on-iron-overlay-opened="_opened"
       on-iron-overlay-closed="_closed"
     >
-      <h2><span>{{config.config.name}}</span> List</h2>
+      <h2><span>{{config.name}}</span> List</h2>
       <div id='dlg-content'>
         <paper-input label="List ID" id="list_id" value="[[list_id]]" disabled></paper-input>
         <paper-input label="Title" id="title" value="{{config.title}}"></paper-input>
@@ -39,64 +50,72 @@
     Polymer({
       is: 'questlist-edit',
       properties:{
+        /** The Firebase ID of the config. */
         list_id: {
           type: String,
           notify: true,
-          observer: 'listIdChanged'
+          observer: '_list_id_changed'
         },
+        uid: String,
+        /** The config object. */
         config: {
           type: Object,
           notify: true,
-          observer: 'config_data_changed',
+          observer: '_config_changed',
           value: {
-            config: {
-              title: "New",
-              description: '',
-              color: '#00ccff',
-              states: {
-                active: {
-                  hidden: false,
-                  style: 'font-weight: bold;'
-                },
-                inactive: {
-                  hidden: true,
-                  style: 'font-weight: bold;'
-                },
-                completed: {
-                  hidden: false,
-                  style: 'font-weight: normal;'
-                },
-                partial: {
-                  hidden: false,
-                  style: 'font-weight: bold; font-style: italics;'
-                }
+            title: "New",
+            description: '',
+            color: '#00ccff',
+            states: {
+              active: {
+                hidden: false,
+                style: 'font-weight: bold;'
+              },
+              inactive: {
+                hidden: true,
+                style: 'font-weight: bold;'
+              },
+              completed: {
+                hidden: false,
+                style: 'font-weight: normal;'
+              },
+              partial: {
+                hidden: false,
+                style: 'font-weight: bold; font-style: italics;'
               }
             }
           }
         },
-        path: {
-          type: String,
-          value: "/questlists/"
-        }
+        init_list_data: {
+          type: Object,
+          notify: true,
+          value: {
+            title: '',
+            created_by: ''
+          }
+        },
       },
-      //observers: ['config_data_changed(config_data)'],
-      config_data_changed: function(data){
-        /*console.info("Config Changed", data)
-        if(data.config == null)
-          this.config = data
-        else
-          this.config = { config: data }
-        console.log(this.config)*/
-      },
+
+
+      /** Show the settings window. */
       show: function(){
-        this.$.config_doc.path = "/config/{{list_id}}"
+        //this.$.config_doc.path = `/list_configs/${list_id}`
         this.$.config_doc.removeAttribute('disabled')
         this.$.config_doc.getStoredValue(this.$.config_doc.path)
         this.$.dialog.open()
       },
-      listIdChanged: function(new_val){
+
+      /** event handler that fires when config data is changed*/
+      _config_changed: function(new_val){
+        console.info("Config Changed: ", new_val)
+      },
+
+      /** event handler that fires when config data is changed*/
+      _list_id_changed: function(new_val){
         console.info("List ID updated to: ", new_val)
       },
+      /** What happens when the dialog is closed. Updates the config in Firebase.
+      Also fires two events: `canceled` and `confirmed`. */
       _closed: function(evt){
         if(evt.detail.confirmed){
           if(this.list_id)
@@ -105,7 +124,7 @@
             this.$.config_doc.save(this.$.config_doc.path).then(function(val,a,b,c){
               console.log("RESOLVED: ", val,a,b,c)
             })
-          this.fire('confirmed')
+          this.fire('confirmed', this.config)
         } else
           this.fire('canceled')
 
