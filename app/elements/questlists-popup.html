@@ -3,7 +3,8 @@
   <style>
   </style>
 
-  <template>
+  <template>1
+    <app-localstorage-document key="notifications_shown" data="{{_notifications_shown}}"></app-localstorage-document>
     <paper-toast id="toast">
       <span class="toast-hide-button" duration="{{duration}}" role="button" tabindex="0" onclick="this.$.toast.hide()">{{message}}</span>
     </paper-toast>
@@ -36,7 +37,8 @@ window.addEventListener('WebComponentsReady', function() {
       _notifications: {
         type: Array,
         value: []
-      }
+      },
+      _notifications_shown: Boolean
     },
     onlineChanged: function(new_val){
       if(new_val)
@@ -68,6 +70,7 @@ window.addEventListener('WebComponentsReady', function() {
           //this.message = "Desktop Notifications enabled!"
         } else
           Notification.requestPermission(this._set_permission)
+          this.notifications_shown = true
       }
     },
     _set_permission: function(val){
@@ -78,10 +81,13 @@ window.addEventListener('WebComponentsReady', function() {
       }
     },
     _permission_changed: function(val){
-      if(val)
-        this.message = "Desktop Notifications enabled!"
-      else
-        this.message = "Desktop Notifications disabled. Broadcasting messages here."
+      if(this._notifications_shown != true){
+        this._notifications_shown = true
+        if(val)
+          this.message = "Desktop Notifications enabled!"
+        else
+          this.message = "Desktop Notifications disabled. Broadcasting messages here."
+    }
     }
   });
 });

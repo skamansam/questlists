@@ -91,8 +91,12 @@ This code may only be used under the BSD style license found at http://github.co
           <!-- Application name -->
           <div class="middle middle-container">
             <img class='logo' src="images/questlists.png" alt='logo'/>
-            <div class="app-name">Questlists :: <span>[[page]]</span></div>
+            <div class="app-name">Questlists</div>
           </div>
+          <span class="space"></span>
+
+          <iron-icon icon="cloud-download" hidden="[[!online]]"></iron-icon>
+          <iron-icon icon="cloud-off" hidden="[[online]]"></iron-icon>
 
           <!-- Application sub title -->
           <div class="bottom bottom-container">

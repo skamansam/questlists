@@ -17,6 +17,8 @@ This code may only be used under the BSD style license found at http://polymer.g
     return obj
   }
 
+  app.online = false
+
   // Sets app default base URL
   app.baseUrl = '/';
   if (window.location.port === '') {  // if production
@@ -69,7 +71,7 @@ This code may only be used under the BSD style license found at http://polymer.g
     Polymer.Base.transform('translate3d(0,' + yRatio * 100 + '%,0)', middleContainer);
 
     // Scale bottomContainer and bottom sub title to nothing and back
-    Polymer.Base.transform('scale(' + scaleBottom + ') translateZ(0)', bottomContainer);
+    Polymer.Base.transform('scale(' + scaleBottom + ') translateX('+ ( yRatio * 400 ) + 'px)', bottomContainer);
 
     // Scale middleContainer appName
     Polymer.Base.transform('scale(' + scaleMiddle + ') translateZ(0)', appName);

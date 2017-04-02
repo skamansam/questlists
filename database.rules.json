@@ -18,9 +18,9 @@
           "$other":{
             ".read": false,
             ".write": false
-          },
-        },
-      },
+          }
+        }
+      }
     },
     "lists":{
       "$list_id": {

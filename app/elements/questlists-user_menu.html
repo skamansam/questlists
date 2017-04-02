@@ -128,8 +128,8 @@
     },
     _compute_user_name: function(user){
       if(user != null)
-        if (user.displayName != null)
-          return user.displayName
+        if (user.name != null)
+          return user.name
         else if (user.email != null)
           return user.email.split('@')[0]
         else

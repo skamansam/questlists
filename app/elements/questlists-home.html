@@ -4,15 +4,33 @@
 <dom-module id="questlists-home">
   <style include="shared-styles"></style>
   <style>
+  paper-fab{
+    position: fixed;
+    bottom: 30px;
+    right: 50px;
+  }
   </style>
   <template>
     <section>
-      <paper-material elevation="1">
+      <paper-material elevation="0">
         <h1 class="page-title focus-target" tabindex="-1">Home</h1>
         <h3 class='subhead'>All your recent lists are here.</h3>
       </paper-material>
+
+      <firebase-query disabled
+        id='configs_doc'
+        limit-to-first='10'
+        path="/list_configs"
+        data="{{lists}}"
+        data-changed='data_changed'
+      >
+      </firebase-query>
+
+      <template is="dom-repeat" items="[[lists]]" as="list">
+        <questlist-card uid="[[uid]]" list-id="[[list.$key]]" config="{{list}}"></questlist-card>
+      </template>
       <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
-      <questlist-edit id="newItem" uid="[[uid]]"></questlist-edit>
+      <questlist-edit id="newItem" uid="[[uid]]" config="{{list_config}}" on-confirmed="data_changed" disabled></questlist-edit>
     </section>
   </template>
 </dom-module>
@@ -22,13 +40,38 @@
     is: 'questlists-home',
     behaviors: [QuestlistsPageBehavior],
     properties: {
-      uid: String
+      uid: String,
+      lists: {
+        type: Object,
+        value: [],
+        observer: 'listsChanged'
+      },
+      active: Boolean
     },
+
+    /**
+      happens after the DOM has loaded.
+      set _pageName here for QuestlistsPageBehavior
+    */
     ready: function(){
       this._pageName = 'home'
     },
+
+    data_changed: function(config_data){
+      //console.log('data changed',config_data)
+    },
+
+    listsChanged: function(new_lists){
+      //console.log('lists changed: ', new_lists)
+    },
+
+    /** runs when switching to this page. load data from firebase here
+    */
     loadData: function(){
-      console.debug('Loading Home...')
+      this.toggleAttribute('disabled', false, this.$.configs_doc)
+    },
+    unloadData: function(){
+      this.toggleAttribute('disabled', true, this.$.configs_doc)
     },
     new_questlist: function(){
       this.$.newItem.show()
