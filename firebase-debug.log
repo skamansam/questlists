@@ -1,0 +1,10 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      /home/sam/.nvm/versions/node/v7.4.0/bin/node /home/sam/.nvm/versions/node/v7.4.0/bin/firebase serve
+[debug] CLI Version:  3.5.0
+[debug] Platform:     linux
+[debug] Node Version: v7.4.0
+[debug] Time:         Sat Mar 11 2017 19:02:44 GMT-0500 (EST)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[error] 
+[error] Error: Not in a Firebase app directory (could not locate firebase.json)

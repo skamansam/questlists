@@ -1,0 +1,35 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/questlists-app.html",
+  "fragments": [
+    "src/questlist-card.html",
+    "src/questlist-edit.html",
+    "src/questlists-about.html",
+    "src/questlists-auth.html",
+    "src/questlists-browser.html",
+    "src/questlists-changes.html",
+    "src/questlists-favorites.html",
+    "src/questlists-home.html",
+    "src/questlists-navigation.html",
+    "src/questlists-page-behavior.html",
+    "src/questlists-popup.html",
+    "src/questlists-settings.html",
+    "src/questlists-user-menu.html",
+    "src/questlists-user.html",
+    "src/questlists-users.html",
+    "src/questlists-shared-styles.html",
+    "src/my-view404.html"
+  ],
+  "sources": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/*.js"
+  ],
+  "lint": {
+    "rules": ["polymer-2"]
+  }
+}

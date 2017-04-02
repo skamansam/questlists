@@ -1,53 +1,97 @@
-# Quest Lists
+# Polymer App Toolbox - Starter Kit
 
-QuestLists is a crowd-sourcing application that organizes lists of any sort. The
-crowd builds the lists, you say what you want to use from that list, and then
-use it as a normal checklist. Essentially, this is a three-state checklist builder.
+[![Build Status](https://travis-ci.org/PolymerElements/polymer-starter-kit.svg?branch=master)](https://travis-ci.org/PolymerElements/polymer-starter-kit)
 
-The intention is to use the crowd to build lists for games, inventories, shopping,
-music, videos, and more! Once the lists are built and created, you can add/remove
-your items from them. You don't even have to login to use it (only for the same devise)!
+This template is a starting point for building apps using a drawer-based
+layout. The layout is provided by `app-layout` elements.
 
-## Demo
-This is the public code for http://questlists-rbe.rhcloud.com. The code is redeployed
-when I finish any feature or want to test something, so it may change a lot and
-may break down  often. I will do my best not to disturb any data that is already
-there, but be warned, your data may be a casualty of development!
+This template, along with the `polymer-cli` toolchain, also demonstrates use
+of the "PRPL pattern" This pattern allows fast first delivery and interaction with
+the content at the initial route requested by the user, along with fast subsequent
+navigation by pre-caching the remaining components required by the app and
+progressively loading them on-demand as the user navigates through the app.
 
-## Roadmap
+The PRPL pattern, in a nutshell:
 
-Questlists is originally intended for game quests, so will have the following
-ideas implemented first:
+* **Push** components required for the initial route
+* **Render** initial route ASAP
+* **Pre-cache** components for remaining routes
+* **Lazy-load** and progressively upgrade next routes on-demand
 
-  1. Your progress in quests.
-  2. Items collected
-  3. Overall progress in the game
-  4. Locations reached
-  5. Information about any other object in the game
+### Migrating from Polymer Starter Kit v1?
 
-I am sure you can generalize these ideas to fit any circumstance, so i will
-eventually create a few demos of lists for everyday use, such as a shopping
-list and various TODO lists.
+[Check out our blog post that covers what's changed in PSK2 and how to migrate!](https://www.polymer-project.org/1.0/blog/2016-08-18-polymer-starter-kit-or-polymer-cli.html)
 
+### Quickstart
 
-#Help with Development
+We've recorded a Polycast to get you up and running with PSK2 fast!
 
-If you wish to help with development, you must have a Pivotal Tracker account, and a GitHub account. Both of these are free for public use, and are excellent development tools.
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=HgJ0XCyBwzY&list=PLNYkxOF6rcIDdS7HWIC_BYRunV6MHs5xo&index=10">
+    <img src="https://img.youtube.com/vi/HgJ0XCyBwzY/0.jpg" alt="Polymer Starter Kit 2 video">
+  </a>
+</p>
 
-## Pivotal Tracker
+### Setup
 
-I use Pivotal tracker for issue tracking in Questlists. It can handle new features, bugs, and other tasks. In order to use this, you must sign up and email me, then I will add you to the project. I apologize for this convolution, but PT does not yet have a way to auto-join public repos.
+##### Prerequisites
 
-## GitHub
+First, install [Polymer CLI](https://github.com/Polymer/polymer-cli) using
+[npm](https://www.npmjs.com) (we assume you have pre-installed [node.js](https://nodejs.org)).
 
-If you would like to help with development of this project, follow these instructions:
+    npm install -g polymer-cli
 
-  1. fork this repo, and setup your Pivotal Tracker Service Hook (in Github: repo settings -> Service Hooks -> Pivotal Tracker)
-  2. create a new branch with your github username as the name of the new branch
-  3. Take an UNOWNED ticket from the public Pivotal Tracker repository (https://www.pivotaltracker.com/s/projects/857969). DO NOT TAKE SOMEONE ELSE"S TICKET! Make sure no one else is working on that ticket, by checking the OWNER field for that ticket (it will say "&lt;none&gt;" if no one is working on it).
-  4. If a ticket has not been entered for a feature you are implementing, please create one. I will most likely not accept git commits without a ticket number.
-  5. hack away, committing to the new branch, with each commit tagged for at least one specific ticket from Pivotal Tracker. see https://www.pivotaltracker.com/help/api?version=v3#scm_post_commit for what your commit messages should look like.
-  6. Make sure ALL rspec tests run successfully. This is to ensure you do not bug the application. I have set up simplecov for this project, so you can see how much of your code is tested. Your code should be at least 85% covered. If it is close, I may add some tests for you.
-  NOTE: I may, from time-to-time "look over your shoulder" at the commits you have made and make suggestions or ask about the code. Don't worry, I will not criticize, I just like learning new things!
-  7. send me a pull request once you are happy with your code
-  8. Wait for me to merge the changes I am very busy with my 9-5 and my new family, so this may take some time. I should email you within a few days or a week if I don't use GitHub's tools.
+##### Initialize project from template
+
+    mkdir my-app
+    cd my-app
+    polymer init starter-kit
+
+### Start the development server
+
+This command serves the app at `http://localhost:8080` and provides basic URL
+routing for the app:
+
+    polymer serve --open
+
+### Build
+
+This command performs HTML, CSS, and JS minification on the application
+dependencies, and generates a service-worker.js file with code to pre-cache the
+dependencies based on the entrypoint and fragments specified in `polymer.json`.
+The minified files are output to the `build/unbundled` folder, and are suitable
+for serving from a HTTP/2+Push compatible server.
+
+In addition the command also creates a fallback `build/bundled` folder,
+generated using fragment bundling, suitable for serving from non
+H2/push-compatible servers or to clients that do not support H2/Push.
+
+    polymer build
+
+### Preview the build
+
+This command serves the minified version of the app at `http://localhost:8080`
+in an unbundled state, as it would be served by a push-compatible server:
+
+    polymer serve build/unbundled
+
+This command serves the minified version of the app at `http://localhost:8080`
+generated using fragment bundling:
+
+    polymer serve build/bundled
+
+### Run tests
+
+This command will run [Web Component Tester](https://github.com/Polymer/web-component-tester)
+against the browsers currently installed on your machine:
+
+    polymer test
+
+### Adding a new view
+
+You can extend the app by adding more views that will be demand-loaded
+e.g. based on the route, or to progressively render non-critical sections of the
+application. Each new demand-loaded fragment should be added to the list of
+`fragments` in the included `polymer.json` file. This will ensure those
+components and their dependencies are added to the list of pre-cached components
+and will be included in the `bundled` build.

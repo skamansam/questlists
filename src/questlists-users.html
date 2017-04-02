@@ -1,0 +1,71 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlists-users">
+  <style include="shared-styles"></style>
+  <style>
+  </style>
+
+  <template>
+    <section>
+      <firebase-document path='/users/' id="users_doc" disabled data="{{users}}"></firebase-document>
+      <paper-material elevation="1">
+        <h1 class="page-title focus-target" tabindex="-1">Users</h1>
+        <p>These are the users with the most contributions.</p>
+      </paper-material>
+      <template is="dom-repeat" items="[[users]]" as="user" >
+        <questlists-user name="{{user.username}}" icon="{{user.icon}}" email="{{user.email}}"></questlists-user>
+      </template>
+    </section>
+  </template>
+</dom-module>
+
+<script>
+window.addEventListener('WebComponentsReady', function() {
+    class QuestlistsUsers extends Polymer.Element {
+      static get is() { return  'questlists-users'; }
+
+      static get properties() {
+        return  {
+          users: {
+            type: Array,
+            value: [],
+            observer: 'dataChanged'
+          }
+        }
+      }
+
+      static get observers() { return  []; }
+
+    }
+  Polymer({
+    is: 'questlists-users',
+    behaviors: [QuestlistsPageBehavior],
+    properties: {
+      users: {
+        type: Array,
+        value: [],
+        observer: 'dataChanged'
+      }
+    },
+    dataChanged: function(val){
+      console.log('users changed: ',this.$.users)
+    },
+    ready: function(){
+      this._pageName = 'users'
+    },
+    loadData: function(){
+      console.log('Loading users data...')
+      this.$.users_doc.getStoredValue(this.$.users_doc.path).then(function(users){
+        new_users = new Array
+        for(uid in users){
+          info = users[uid].info
+          info[uid] = uid
+          new_users.push(info)
+        }
+        this.set('users', new_users)
+      }.bind(this)) // you need to do this for promises!
+    }
+  });
+});
+</script>
