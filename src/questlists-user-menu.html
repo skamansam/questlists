@@ -1,0 +1,183 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+<dom-module id="questlists-user-menu">
+  <template>
+    <style include="questlists-theme"></style>
+    <style include="shared-styles"></style>
+    <style>
+      :host{
+        height: 60px;
+        --iron-image-placeholder: {
+          background-size: 100%;
+        }
+      }
+
+      .menu-name {
+        @apply --paper-font-title;
+        display: block;
+        width: 170px;
+        margin-top: -42px;
+        padding-left: 75px;
+      }
+      .user-menu{
+        float: right;
+        width: 23px;
+        margin-top: -35px;
+      }
+      .login_links .menu-name{
+        float: none;
+        width: 100%;
+        margin-top: 15px;
+        padding-left: 20px;
+        cursor:pointer;
+      }
+      .avatar{
+        padding: 0px;
+        height: 50px;
+        width: 50px;
+        border: 1px solid #000;
+        border-radius: 50%;
+        background-color: var(--dark-accent-color)
+      }
+      .avatar-small{
+        padding: 0px;
+        height: 30px;
+        margin-right: 5px;
+        border: 1px solid #000;
+        border-radius: 50%;
+        float: right;
+      }
+      .small-icons{
+        float: right;
+        height: 48%;
+        width: 50%;
+      }
+      paper-item {
+        --paper-item: {
+          cursor: pointer;
+          background-color: var(--drawer-background-color);
+        };
+      }
+    </style>
+
+    <iron-image preload fade
+      class='avatar'
+      src='{{icon}}'
+      error="{{err}}"
+      alt="avatar"
+      placeholder="/images/unknown_user.svg">
+    </iron-image>
+
+    <span class$="login_links">
+      <span class="menu-name" on-tap="login">
+          {{display_name}}
+      </span>
+    </span>
+
+    <paper-dropdown-menu label$="{{display_name}}" class="user-menu" no-label-float>
+      <paper-listbox class="dropdown-content" class="menu-name" slot="dropdown-content" >
+        <paper-item on-tap="logout" hidden$="{{!_logged_in()}}">Log Out</paper-item>
+        <paper-item on-tap="login" hidden$="{{_logged_in()}}">Log IN</paper-item>
+      </paper-listbox>
+    </paper-dropdown-menu>
+
+  </template>
+</dom-module>
+
+<script>
+  class QuestlistsUserMenu extends Polymer.Element {
+    static get is() { return 'questlists-user-menu'; }
+
+    static get properties() {
+      return {
+        icon: String,
+        display_name: {
+          type: String,
+          value: 'unknown_user'
+        },
+        email: {
+          type: String
+        },
+        auth: {
+          type: Object
+        },
+        err: String,
+        user: {
+          type: Object,
+          observer: '_userChanged',
+          value: {
+            name: "",
+            email: ""
+          }
+        }
+      }
+    }
+
+    static get observers() {
+      return [
+        '_set_gravatar(user.email)',
+        '_set_user_name(user.name, user.email)'
+      ];
+    }
+
+    connectedCallback(){
+      super.connectedCallback()
+    }
+
+    login(){
+      if(this._logged_in())
+        this.auth.login();
+    }
+
+    logout(){
+      this.auth.logout()
+    }
+
+    _userChanged(new_user){
+      console.info("User Changed", new_user)
+      this._set_user_name(new_user.name, new_user.email)
+      this._set_gravatar(new_user.email)
+    }
+
+    _set_gravatar(email){
+      if(!email)
+        return
+      this.icon = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=50"
+    }
+
+    _set_user_name(new_name, new_email){
+      console.info("user name changed")
+      if(this._logged_in()){
+        console.info("logged in")
+        if (new_name != "" && new_name != null) {
+          console.info("has new name", new_name)
+          this.set('display_name', new_name)
+        } else if (new_email != "" && new_email != null) {
+          console.info("has new email")
+          this.set('display_name', new_email.split('@')[0])
+        } else {
+          console.info("no new info")
+          this.set('display_name', "Anonymous")
+          debugger
+        }
+      } else {
+        console.info("not logged in")
+        this.set('display_name', "Log In / Sign Up")
+      }
+      return this.display_name
+    }
+
+    _logged_in(user_obj){
+      let user = user_obj || this.user;
+      return (user != null && user != undefined && user.email != "" && user.email != null);
+    }
+  }
+
+  window.customElements.define(QuestlistsUserMenu.is, QuestlistsUserMenu);
+
+</script>

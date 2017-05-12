@@ -1,0 +1,288 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="my-icons.html">
+<link rel="import" href="questlists-user-menu.html">
+<link rel="import" href="questlists-navigation.html">
+<link rel="import" href="questlists-home.html">
+<link rel="import" href="questlists-favorites.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+
+<link rel="import" href="questlists-home.html">
+
+
+<dom-module id="questlists-app">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+      *[hidden] {
+        display: none;
+      }
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
+      app-header, app-drawer {
+        color: var(--primary-text-color);
+        background-color: var(--primary-background-color);
+        border-color: var(--drawer-border-color);
+      }
+      app-drawer {
+        --app-drawer-content-container: {
+          background-color: var(--primary-background-color)
+        }
+      }
+      .focus-target {
+        outline: none;
+      }
+
+      app-drawer-layout:not([narrow]) #mainToolbar {
+        height: calc(64px * 3);
+      }
+      app-drawer-layout[narrow] #mainToolbar {
+        height: calc(64px);
+      }
+      app-drawer-layout app-header [condensed-title] {
+        opacity: 1;
+      }
+
+      app-drawer-layout:not([narrow]) app-header [condensed-title] {
+        display: none;
+      }
+      app-header [main-title] .app-name {
+        font-size: 40px;
+        font-weight: 300;
+        /* Required for main area's paper-scroll-header-panel custom condensing transformation */
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+      }
+      app-drawer-layout[narrow] app-header [main-title] {
+        display: none;
+      }
+      app-header [condensed-title] .app-name {
+        font-size: 20px;
+        font-weight: 300;
+        /* Required for main area's paper-scroll-header-panel custom condensing transformation */
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+      }
+
+      app-header .middle-container,
+      app-header .bottom-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      app-header .middle-container  {
+        height: 100%;
+        margin-left: 48px;
+      }
+
+      #mainToolbar:not(.tall) .middle-container {
+        font-size: 18px;
+        padding-bottom: 0;
+      }
+
+      #mainToolbar .bottom-container {
+        @apply(--paper-font-subhead);
+        margin-left: 48px;
+        /* Required for main area's paper-scroll-header-panel custom condensing transformation */
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+      }
+
+      app-drawer-layout:not([narrow]) app-header .logo {
+        float:left;
+        height: 100px;
+      }
+
+      app-drawer-layout[narrow] app-header .logo {
+        float:left;
+        height: 58px;
+      }
+
+      app-drawer-layout[narrow] app-header .logo {
+        float:left;
+        height: 58px;
+      }
+
+      paper-fab{
+        float: right;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+    </style>
+
+    <!--
+      Ensure we are on a secure site! Comment or remove for hosting on a
+      site not hosted on a https-enabled server
+    -->
+    <!--<platinum-https-redirect></platinum-https-redirect>-->
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer" slot="drawer">
+        <app-toolbar>
+          <questlists-user-menu user="[[user]]" auth="{{auth_element()}}" online="{{online}}" user_id="{{user_id}}">
+          </questlists-user-menu>
+        </app-toolbar>
+
+        <questlists-navigation id="nav" selected-page="{{page}}" current-request="{{currentRequest}}" current-request-data="{{requestData}}" current-subrequest="{{subpage}}"></questlists-navigation>
+
+<!--<iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="home" href="#view1">View One</a>
+          <a name="home" href="#view2">View Two</a>
+          <a name="view3" href="#view3">View Three</a>
+        </iron-selector>-->
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header
+          slot="header"
+          condenses reveals
+          effects="waterfall"
+        >
+          <app-toolbar id="mainToolbar">
+            <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+
+            <span class="space"></span>
+
+            <!-- Application name -->
+            <div class="middle middle-container">
+              <div id="main-title" main-title>
+                <img class='logo' src="images/questlists.png" alt='logo'/>
+                <div class="app-name">Questlists</div>
+                <div class="app-slogan">Keep track of stuff - in games or IRL.</div>
+              </div>
+              <div id="condensed-title" condensed-title>
+                <img class='logo' src="images/questlists.png" alt='logo'/>
+                <div class="app-name">Questlists</div>
+                <div class="app-slogan">Keep track of stuff - in games or IRL.</div>
+              </div>
+            </div>
+            <span class="space"></span>
+
+            <iron-icon icon="cloud-download" hidden="[[!online]]"></iron-icon>
+            <iron-icon icon="cloud-off" hidden="[[online]]"></iron-icon>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            selected-attribute="active"
+            role="main">
+            <questlists-home      name="home"      uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-home>
+            <questlists-favorites name="favorites" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-favorites>
+            <questlists-browser   name="browser"    uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-browser>
+            <questlists-users     name="users"     uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-users>
+            <questlists-about     name="about"     uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-about>
+            <questlists-settings  name="settings"  uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-settings>
+            <my-view404 name="view404"></my-view404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    class QuestlistsApp extends Polymer.Element {
+
+      static get is() { return 'questlists-app'; }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          online: {
+            type: Boolean,
+            reflectToAttributes: true,
+            value: false
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      _routePageChanged(page) {
+        // Polymer 2.0 will call with `undefined` on initialization.
+        // Ignore until we are properly called with a string.
+        if (page === undefined) {
+          return;
+        }
+
+        // If no page was found in the route data, page will be an empty string.
+        // Deault to 'view1' in that case.
+        this.page = page || 'home';
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('questlists-' + page + '.html');
+        Polymer.importHref(
+            resolvedPageUrl,
+            null,
+            this._showPage404.bind(this),
+            true);
+      }
+
+      _showPage404() {
+        this.page = 'view404';
+      }
+    }
+
+    window.customElements.define(QuestlistsApp.is, QuestlistsApp);
+  </script>
+</dom-module>

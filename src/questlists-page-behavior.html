@@ -1,0 +1,72 @@
+<script>
+  /** Use QuestlistsPageBehaviorMixin to implement actions and properties that a questlist page has.
+   *
+   * @polymerBehavior
+   */
+  const QuestlistsPageBehaviorMixin = subclass => class extends subclass {
+    static get mixinProperties() {
+      return {
+        online: Boolean,
+        active: {
+          type: Boolean,
+          observer: 'activeChanged'
+        },
+        notification: {
+          type: String,
+          notify: true
+        }
+      };
+    }
+    activeChanged(val){
+      if(val)
+        this.loadData()
+      else
+        this.unloadData()
+    }
+    loadData(){
+      console.warn(`Please override loadData() method for page '${this._pageName}'`)
+    }
+    unloadData(){
+      console.warn(`Please override unloadData() method for page ${this._pageName}`)
+    }
+  }
+
+  /** Use QuestlistsPageBehavior to implement actions and properties that a questlist page has.
+   *
+   * @polymerBehavior
+   */
+  QuestlistsPageBehavior = {
+    properties: {
+      selectedPage: {
+        type: String,
+        observer: '_onselectedPageChanged'
+      },
+      online: Boolean,
+      active: {
+        type: Boolean,
+        observer: 'activeChanged'
+      },
+      notification: {
+        type: String,
+        notify: true
+      }
+    },
+    activeChanged: function(val){
+      if(val)
+        this.loadData()
+      else
+        this.unloadData()
+    },
+    loadData: function(){
+      console.warn(`Please override loadData() method for page '${this._pageName}'`)
+    },
+    unloadData: function(){
+      console.warn(`Please override unloadData() method for page ${this._pageName}`)
+    },
+    _onselectedPageChanged: function(new_val, old_val){
+      //if(new_val == this._pageName){
+      //  this.loadData()
+      //}
+    }
+  }
+</script>
