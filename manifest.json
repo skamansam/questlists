@@ -2,9 +2,9 @@
   "name": "Questlists",
   "short_name": "Questlists",
   "start_url": "/",
-  "display": "standalone",
-  "theme_color": "#03A9F4",
-  "background_color": "#303F9F",
+  "display": "fullscreen",
+  "theme_color": "#9b0000",
+  "background_color": "#000a12",
   "icons": [
       {
         "src": "images/touch/icon-72x72.png",

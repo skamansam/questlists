@@ -18,7 +18,7 @@
     "src/questlists-user.html",
     "src/questlists-users.html",
     "src/shared-styles.html",
-    "src/my-view404.html"
+    "src/questlists-view404.html"
   ],
   "sources": [
     "src/**/*",
