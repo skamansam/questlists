@@ -3,6 +3,11 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="questlists-page-behavior.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
 
 <!--
 `<questlist-edit>` handles editing the preferences for lists. Also creates a new list
@@ -37,9 +42,8 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
     </paper-dialog>
 
   </template>
-</dom-module>
 <script>
-  class QuestlistsEdit extends Polymer.Element {
+ class QuestlistsEdit extends Mixin(Polymer.Element).with() {
       static get is() { return 'questlist-edit'; }
 
       static get properties() {
@@ -153,6 +157,7 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
 
   }
 
-  window.customElements.define(QuestlistsHome.is, QuestlistsHome);
+  window.customElements.define(QuestlistsEdit.is, QuestlistsEdit);
 
 </script>
+</dom-module>

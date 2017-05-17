@@ -14,7 +14,7 @@
     <style include="questlists-theme"></style>
     <style include="shared-styles"></style>
     <style>
-      paper-fab{
+      paper-fab {
         position: fixed;
         bottom: 30px;
         right: 50px;
@@ -24,13 +24,7 @@
       <h1 class="page-title focus-target" tabindex="-1">Home</h1>
       <h3 class='subhead'>All your recent lists are here.</h3>
     </div>
-    <firebase-query disabled
-      id='configs_doc'
-      limit-to-first='10'
-      path="/list_configs"
-      data="{{lists}}"
-      data-changed='data_changed'
-    >
+    <firebase-query disabled id='configs_doc' limit-to-first='10' path="/list_configs" data="{{lists}}" data-changed='data_changed'>
     </firebase-query>
     <template is="dom-repeat" items="[[lists]]" as="list">
       <questlist-card uid="[[uid]]" list-id="[[list.$key]]" config="{{list}}"></questlist-card>
@@ -39,56 +33,60 @@
     <questlist-edit id="newItem" uid="[[uid]]" config="{{list_config}}" on-confirmed="data_changed" disabled></questlist-edit>
 
   </template>
+
+  <script>
+    class QuestlistsHome extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-home'; }
+
+      static get properties() {
+        let props = Object.assign({}, this.mixinProperties, {
+          uid: String,
+          lists: {
+            type: Object,
+            value: [],
+            observer: 'listsChanged'
+          },
+        })
+        return props
+      }
+
+      static get observers() {
+        return [
+          'listsChanged(lists)'
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback()
+      }
+
+      data_changed(config_data) {
+        console.log('data changed', config_data)
+      }
+
+      listsChanged(new_lists) {
+        console.log('lists changed: ', new_lists)
+      }
+
+      /** runs when switching to this page. load data from firebase here
+      */
+      loadData() {
+        console.info('home data loaded')
+
+        this.$.configs_doc.removeAttribute('disabled')
+      }
+
+      unloadData() {
+        console.info('home data unloaded')
+      }
+
+      new_questlist() {
+        this.$.newItem.show()
+      }
+
+    }
+
+    window.customElements.define(QuestlistsHome.is, QuestlistsHome);
+
+  </script>
 </dom-module>
-
-<script>
- class QuestlistsHome extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
-    static get is() { return 'questlists-home'; }
-
-    static get properties() {
-      let props = Object.assign({},this.mixinProperties, {
-        uid: String,
-        lists: {
-          type: Object,
-          value: [],
-          observer: 'listsChanged'
-        },
-      })
-      return props
-    }
-
-    static get observers() {
-      return [
-        'listsChanged(lists)'
-      ];
-    }
-
-    data_changed(config_data){
-      console.log('data changed',config_data)
-    }
-
-    listsChanged(new_lists){
-      console.log('lists changed: ', new_lists)
-    }
-
-    /** runs when switching to this page. load data from firebase here
-    */
-    loadData(){
-      console.info('home data loaded')
-
-      this.$.configs_doc.removeAttribute('disabled')
-    }
-
-    unloadData(){
-      console.info('home data unloaded')
-    }
-
-    new_questlist(){
-      this.$.newItem.show()
-    }
-
-  }
-
-  window.customElements.define(QuestlistsHome.is, QuestlistsHome);
-
-</script>

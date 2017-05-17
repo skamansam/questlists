@@ -1,11 +1,17 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 
 <dom-module id="questlists-auth">
-  <style include="shared-styles"></style>
-  <style>
-  </style>
   <template>
+    <style include="shared-styles"></style>
+    <style>
+
+    </style>
     <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-error="errorHandler">
     </firebase-auth>
     <firebase-document path='/users/{{user_id}}/info' data="{{user_data}}"></firebase-document>
@@ -27,62 +33,84 @@
       </form>
     </paper-dialog>
   </template>
-</dom-module>
 
-<script>
-  Polymer({
-    is: 'questlists-auth',
-    properties: {
-      user: {
-        type: Object,
-        notify: true
-      },
-      user_id:{
-        type: String,
-        notify: true
-      },
-      logged_in:{
-        type: Boolean,
-        value: false,
-        notify: true
-      },
-      fbInstance:{
-        type: Object,
-        notify: true
-      },
-    },
-    login: function(){
-      this.$.loginDialog.open()
-    },
-    logout: function(){
-      this.$.firebaseLogin.signOut()
-    },
-    add_login: function(){
-    },
-    _handle_github_login: function(){
-      this.provider='github'
-      login()
-    },
-    _handle_password_login: function(event, results, c,d){
-      this.provider='password'
-      email = this.$.email.value
-      pwd = this.$.password.value
-      this.$.firebaseLogin.signInWithEmailAndPassword(email, pwd)
-        .then(this.userSuccessHandler.call(this))
-    },
-    userSuccessHandler: function(response) {
-      this.$.loginDialog.close()
-    },
-    errorHandler: function(e) {
-      alert('Error: ' + e.detail.message)
-    },
-    _handle_github_login: function(event, results, c,d){
-    },
-    signInAnonymously: function(){
-      if(this.user != undefined)
-        return true
-      this.$.firebaseLogin.signInAnonymously()
-        .then(this.userSuccessHandler.call(this))
+  <script>
+    class QuestlistsAuth extends Mixin(Polymer.Element).with() {
+      static get is() { return 'questlists-auth'; }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            notify: true
+          },
+          user_id: {
+            type: String,
+            notify: true
+          },
+          logged_in: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          fbInstance: {
+            type: Object,
+            notify: true
+          },
+        }
+      }
+
+      static get observers() {
+        return [
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback()
+      }
+      login() {
+        this.$.loginDialog.open()
+      }
+      logout() {
+        this.$.firebaseLogin.signOut()
+      }
+
+      add_login() {
+      }
+
+      _handle_github_login() {
+        this.provider = 'github'
+        login()
+      }
+
+      _handle_password_login(event, results, c, d) {
+        this.provider = 'password'
+        email = this.$.email.value
+        pwd = this.$.password.value
+        this.$.firebaseLogin.signInWithEmailAndPassword(email, pwd)
+          .then(this.userSuccessHandler.call(this))
+      }
+
+      userSuccessHandler(response) {
+        this.$.loginDialog.close()
+      }
+
+      errorHandler(e) {
+        alert('Error: ' + e.detail.message)
+      }
+
+      _handle_github_login(event, results, c, d) {
+      }
+
+      signInAnonymously() {
+        if (this.user != undefined)
+          return true
+        this.$.firebaseLogin.signInAnonymously()
+          .then(this.userSuccessHandler.call(this))
+      }
     }
-  });
-</script>
+
+    window.customElements.define(QuestlistsAuth.is, QuestlistsAuth);
+
+  </script>
+</dom-module>
