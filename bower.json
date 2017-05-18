@@ -36,7 +36,8 @@
     "marked-element": "PolymerElements/marked-element#2.0",
     "polymer": "Polymer/polymer#^2.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
-    "polymerfire": "2.0"
+    "polymerfire": "2.0",
+    "web-animations-js": "^2.2.5"
   },
   "devDependencies": {
     "web-component-tester": "6.0.0-prerelease.7"

@@ -4,6 +4,9 @@
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="questlists-auth.html">
 
 <dom-module id="questlists-user-menu">
   <template>
@@ -65,6 +68,8 @@
       }
     </style>
 
+    <questlists-auth user_id="{{user_id}}" user="{{user}}" id="auth"></questlists-auth>
+
     <iron-image preload fade
       class='avatar'
       src='{{icon}}'
@@ -103,9 +108,6 @@
         email: {
           type: String
         },
-        auth: {
-          type: Object
-        },
         err: String,
         user: {
           type: Object,
@@ -130,15 +132,16 @@
     }
 
     login(){
-      if(this._logged_in())
-        this.auth.login();
+      if(!this._logged_in())
+        this.$.auth.login();
     }
 
     logout(){
-      this.auth.logout()
+      this.$.auth.logout()
     }
 
     _userChanged(new_user){
+      if(new_user == null) return
       console.info("User Changed", new_user)
       this._set_user_name(new_user.name, new_user.email)
       this._set_gravatar(new_user.email)

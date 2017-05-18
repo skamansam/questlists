@@ -19,6 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="questlists-user-menu.html">
 <link rel="import" href="questlists-navigation.html">
 <link rel="import" href="shared-styles.html">
@@ -87,8 +88,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       app-header .middle-container,
       app-header .bottom-container {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       app-header .middle-container  {
@@ -102,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #mainToolbar .bottom-container {
-        @apply(--paper-font-subhead);
+        @apply --paper-font-subhead;
         margin-left: 48px;
         /* Required for main area's paper-scroll-header-panel custom condensing transformation */
         -webkit-transform-origin: left center;
@@ -151,12 +152,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       site not hosted on a https-enabled server
     -->
     <!--<platinum-https-redirect></platinum-https-redirect>-->
+    <firebase-app auth-domain="questlists.firebaseapp.com"
+            database-url="https://questlists.firebaseio.com/"
+            api-key="AIzaSyCFba6yCVUJJwh_-_8HZaZvVsvlnKOH0OQ"
+            online="{{online}}"
+            id="firebaseApp">
+          </firebase-app>
 
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>
-          <questlists-user-menu user="[[user]]" auth="{{auth_element()}}" online="{{online}}" user_id="{{user_id}}">
+          <questlists-user-menu user="{{user}}" online="{{online}}">
           </questlists-user-menu>
         </app-toolbar>
 
