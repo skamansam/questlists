@@ -6,10 +6,13 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="util.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
 
 <dom-module id="questlists-auth">
   <template>
-    <style include="shared-styles"></style>
+    <link rel="import" href="shared-styles.html">
+    <link rel="import" href="questlists-theme.html">
     <style>
 
     </style>
@@ -112,6 +115,5 @@
     }
 
     window.customElements.define(QuestlistsAuth.is, QuestlistsAuth);
-
   </script>
 </dom-module>

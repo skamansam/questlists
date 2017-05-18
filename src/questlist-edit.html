@@ -18,17 +18,21 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
 -->
 <dom-module id="questlist-edit">
   <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
     <style>
-      :host {
+       :host {
         display: block;
       }
+
       #dialog {
         padding: 0px;
       }
     </style>
     <firebase-document sequentialtransactions="" log="" disabled="" path="/list_configs/[[listId]]" id="config_doc" data="{{config}}">
     </firebase-document>
-    <paper-dialog id="dialog" always-on-top="" modal="" entry-animation="scale-up-animation" on-iron-overlay-opened="_opened" on-iron-overlay-closed="_closed">
+    <paper-dialog id="dialog" always-on-top="" modal="" entry-animation="scale-up-animation" on-iron-overlay-opened="_opened"
+      on-iron-overlay-closed="_closed">
       <h2><span>{{config.name}}</span> List</h2>
       <div id="dlg-content">
         <paper-input label="List ID" id="list_id" value="[[listId]]" disabled=""></paper-input>
@@ -42,8 +46,8 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
     </paper-dialog>
 
   </template>
-<script>
- class QuestlistsEdit extends Mixin(Polymer.Element).with() {
+  <script>
+    class QuestlistsEdit extends Mixin(Polymer.Element).with() {
       static get is() { return 'questlist-edit'; }
 
       static get properties() {
@@ -96,68 +100,67 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
         }
       }
 
-    /** Show the settings window. */
-    show(id) {
-      //this.$.config_doc.path = `/list_configs/${this.listId}`
-      //if(!this.config){
-      console.log(this.$.config_doc.path);
-      this.$.config_doc.removeAttribute('disabled');
-      //this.$.config_doc.getStoredValue(this.$.config_doc.path)
-      //}
-      //console.log(this.$.config_doc.path)
-      this.$.dialog.open();
+      /** Show the settings window. */
+      show(id) {
+        //this.$.config_doc.path = `/list_configs/${this.listId}`
+        //if(!this.config){
+        console.log(this.$.config_doc.path);
+        this.$.config_doc.removeAttribute('disabled');
+        //this.$.config_doc.getStoredValue(this.$.config_doc.path)
+        //}
+        //console.log(this.$.config_doc.path)
+        this.$.dialog.open();
+      }
+
+      /** event handler that fires when config data is changed*/
+      _config_changed(new_val) {
+        console.info("Config Changed: ", new_val);
+      }
+
+      /** event handler that fires when config data is changed*/
+      _list_id_changed(new_val) {
+        console.info("List ID updated to: ", new_val);
+      }
+
+      /** What happens when the dialog is closed. Updates the config in Firebase.
+      Also fires two events: `canceled` and `confirmed`. */
+      _closed(evt) {
+        if (evt.detail.confirmed) this.onConfirmed(); else this.onCanceled();
+      }
+
+      /* Called when dialog is confirmed. Saves data. Fires 'confirmed' event after successfully saving.*/
+      onConfirmed() {
+        //this.$.config_doc.removeAttribute('disabled')
+        console.info(this.$.config_doc.path, this.listId, this.config);
+        this.$.config_doc.setStoredValue(this.$.config_doc.path, this.config).then(function (config) {
+          console.info("SAVING: ", config);
+        }.bind(this), function (reason) {
+          console.error("ERROR SAVING: ", reason);
+        }.bind(this));
+        /*if(this.listId){
+          this.config.$key = this.listId
+        } else {
+          this.$.config_doc.save('/list_configs', this.listId).then(function(val){
+            console.info("RESOLVED: ", val)
+          },function(reason){
+            console.error("FAILED: ", reason)
+          })
+          this.fire('confirmed', this.config)
+        }*/
+      }
+
+      /* Called when dialog is open. Fires `canceled` event */
+      onCanceled() {
+        this.fire('canceled');
+      }
+
+      /* Called when dialog is open. Fires `opened` event */
+      _opened(evt) {
+        this.fire('opened', evt);
+      }
+
     }
 
-    /** event handler that fires when config data is changed*/
-    _config_changed(new_val) {
-      console.info("Config Changed: ", new_val);
-    }
-
-    /** event handler that fires when config data is changed*/
-    _list_id_changed(new_val) {
-      console.info("List ID updated to: ", new_val);
-    }
-
-    /** What happens when the dialog is closed. Updates the config in Firebase.
-    Also fires two events: `canceled` and `confirmed`. */
-    _closed(evt) {
-      if (evt.detail.confirmed) this.onConfirmed();else this.onCanceled();
-    }
-
-    /* Called when dialog is confirmed. Saves data. Fires 'confirmed' event after successfully saving.*/
-    onConfirmed() {
-      //this.$.config_doc.removeAttribute('disabled')
-      console.info(this.$.config_doc.path, this.listId, this.config);
-      this.$.config_doc.setStoredValue(this.$.config_doc.path, this.config).then(function (config) {
-        console.info("SAVING: ", config);
-      }.bind(this), function (reason) {
-        console.error("ERROR SAVING: ", reason);
-      }.bind(this));
-      /*if(this.listId){
-        this.config.$key = this.listId
-      } else {
-        this.$.config_doc.save('/list_configs', this.listId).then(function(val){
-          console.info("RESOLVED: ", val)
-        },function(reason){
-          console.error("FAILED: ", reason)
-        })
-        this.fire('confirmed', this.config)
-      }*/
-    }
-
-    /* Called when dialog is open. Fires `canceled` event */
-    onCanceled() {
-      this.fire('canceled');
-    }
-
-    /* Called when dialog is open. Fires `opened` event */
-    _opened(evt) {
-      this.fire('opened', evt);
-    }
-
-  }
-
-  window.customElements.define(QuestlistsEdit.is, QuestlistsEdit);
-
-</script>
+    window.customElements.define(QuestlistsEdit.is, QuestlistsEdit);
+  </script>
 </dom-module>
