@@ -1,4 +1,5 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-changelog/app-changelog.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
@@ -8,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
 
 <!--
   This element handles all navigation for the entire app. It will broadcast a navigation element you can use.
@@ -15,60 +17,55 @@
 
 <dom-module id="questlists-navigation">
   <template>
-  <style include="shared-styles"></style>
-  <style include="questlists-theme"></style>
-  <style>
-    paper-listbox {
-      --paper-menu-selected-item: {
-        color: var(--dark-accent-color);
-        background-color: var(--light-accent-color);
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style>
+      paper-listbox {
+        --paper-menu-selected-item: {
+          color: var(--dark-accent-color);
+          background-color: var(--light-accent-color);
+        }
+
+        --paper-listbox-focused-item-after: {
+          background: var(--primary-color);
+        }
       }
 
-      --paper-listbox-focused-item-after: {
-        background: var(--primary-color);
+      paper-listbox iron-icon {
+        color: var(--menu-link-color);
+        margin-right: 33px;
+        opacity: 1.00;
       }
-    }
 
-    paper-listbox iron-icon {
-      color: var(--menu-link-color);
-      margin-right: 33px;
-      opacity: 1.00;
-    }
+      paper-listbox .iron-selected iron-icon {
+        color: var(--primary-color);
+      }
 
-    paper-listbox .iron-selected iron-icon {
-      color: var(--primary-color);
-    }
+      paper-listbox .iron-selected {
+        color: var(--primary-color);
+      }
 
-    paper-listbox .iron-selected {
-      color: var(--primary-color);
-    }
+      paper-listbox .menu-item {
+        @apply --layout-horizontal;
+        @apply --layout-center;
 
-    paper-listbox .menu-item {
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-
-      text-decoration: none;
-      color: var(--menu-link-color);
-      font-family: 'Roboto', 'Noto', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 24px;
-      min-height: 48px;
-      padding: 0 16px;
-      cursor: pointer;
-    }
-
-
-  </style>
+        text-decoration: none;
+        color: var(--menu-link-color);
+        font-family: 'Roboto', 'Noto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24px;
+        min-height: 48px;
+        padding: 0 16px;
+        cursor: pointer;
+      }
+    </style>
     <!-- Routing -->
     <app-location route="{{route}}" use-hash-as-path></app-location>
 
-    <app-route route="{{route}}"
-              pattern="/:page"
-              data="{{currentRequest}}"
-              tail="{{currentRequestData}}"></app-route>
+    <app-route route="{{route}}" pattern="/:page" data="{{currentRequest}}" tail="{{currentRequestData}}"></app-route>
 
     <!-- Drawer Content -->
     <paper-listbox class="app-menu" attr-for-selected="data-route" selectable=".selectable" selected="{{currentRequest.page}}">
@@ -112,50 +109,60 @@
       <div class="markdown-html"></div>
     </app-changelog>
   </template>
-</dom-module>
 
-<script>
-window.addEventListener('WebComponentsReady', function() {
-  Polymer({
-    is: 'questlists-navigation',
-    properties: {
-      route: {
-        type: Object,
-        notify: true
-      },
-      currentPage: {
-        type: Object,
-        notify: true
-      },
-      currentRequestData: {
-        type: Object,
-        notify: true
-      },
-      currentRequest: {
-        type: Object,
-        notify: true
-      },
-      selectedPage: {
-        type: String,
-        notify: true
+  <script>
+    class QuestlistsNavigation extends Mixin(Polymer.Element).with() {
+      static get is() { return 'questlists-navigation'; }
+
+      static get properties() {
+        return {
+          route: {
+            type: Object,
+            notify: true
+          },
+          currentPage: {
+            type: Object,
+            notify: true
+          },
+          currentRequestData: {
+            type: Object,
+            notify: true
+          },
+          currentRequest: {
+            type: Object,
+            notify: true
+          },
+          selectedPage: {
+            type: String,
+            notify: true
+          }
+        }
       }
-    },
-    observers: [
-      'pageChanged(currentRequest)'
-    ],
-    show_changes: function(){
-      this.$.changes.show()
-    },
-    /** Fired when the top-level route has changed.
-    */
-    pageChanged: function(request){
-      this._setProperty('selectedPage', request.page)
-    },
-    ready: function(){
-      if (!this.route.path) {
-        this.set('route.path', '/home');
+
+      static get observers() {
+        return [
+          'pageChanged(currentRequest)'
+        ];
       }
+
+      connectedCallback() {
+        super.connectedCallback()
+        if (!this.route.path) {
+          this.set('route.path', '/home');
+        }
+      }
+
+      show_changes() {
+        this.$.changes.show()
+      }
+
+      /** Fired when the top-level route has changed.
+      */
+      pageChanged(request) {
+        this._setProperty('selectedPage', request.page)
+      }
+
     }
-  });
-});
-</script>
+    window.customElements.define(QuestlistsNavigation.is, QuestlistsNavigation);
+  </script>
+</dom-module>

@@ -1,94 +1,107 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <dom-module id="questlists-popup">
+  <template>
+    <style>
 
-  <style>
-  </style>
+    </style>
 
-  <template>1
     <app-localstorage-document key="notifications_shown" data="{{_notifications_shown}}"></app-localstorage-document>
     <paper-toast id="toast">
       <span class="toast-hide-button" duration="{{duration}}" role="button" tabindex="0" onclick="this.$.toast.hide()">{{message}}</span>
     </paper-toast>
   </template>
-</dom-module>
 
-<script>
-window.addEventListener('WebComponentsReady', function() {
-  Polymer({
-    is: 'questlists-popup',
-    properties: {
-      online: {
-        type: Boolean,
-        observer: 'onlineChanged'
-      },
-      message: {
-        type: String,
-        value: "OK",
-        observer: 'messageChanged'
-      },
-      duration: {
-        type: Number,
-        value: 10
-      },
-      _use_desktop: {
-        type: Boolean,
-        reflectPropertyToAttribute: true,
-        observer: '_permission_changed'
-      },
-      _notifications: {
-        type: Array,
-        value: []
-      },
-      _notifications_shown: Boolean
-    },
-    onlineChanged: function(new_val){
-      if(new_val)
-        this.message = 'Questlists is online! Items will be saved to the remote server.'
-      else
-        this.message = 'Questlists is currently offline. We will update the remote server when we are connected.'
-    },
-    messageChanged: function(message){
-      if(this._use_desktop){
-        let note = new Notification('Questlists',{icon: '/images/questlists.png', body: message})
-      } else {
-        this.$.toast.show()
-      }
-      console.info("Notify: ", message)
-    },
-    ready: function() {
-      this._setup_permission()
+  <script>
+    class QuestlistsPopup extends Mixin(Polymer.Element).with() {
+      static get is() { return 'questlists-popup'; }
 
-      //show online status on startup
-      //this.onlineChanged(window.navigator.onLine)
-    },
-    _setup_permission: function(){
-      if(!window.Notification){
-        this.message = "Desktop Notifications not supported. Broadcasting messages here."
-        this._use_desktop = false
-      } else {
-        if(Notification.permission === 'granted'){
-          this._use_desktop = true
-          //this.message = "Desktop Notifications enabled!"
-        } else
-          Notification.requestPermission(this._set_permission)
-          this.notifications_shown = true
+      static get properties() {
+        return {
+          online: {
+            type: Boolean,
+            observer: 'onlineChanged'
+          },
+          message: {
+            type: String,
+            value: "OK",
+            observer: 'messageChanged'
+          },
+          duration: {
+            type: Number,
+            value: 10
+          },
+          _use_desktop: {
+            type: Boolean,
+            reflectPropertyToAttribute: true,
+            observer: '_permission_changed'
+          },
+          _notifications: {
+            type: Array,
+            value: []
+          },
+          _notifications_shown: Boolean
+        }
       }
-    },
-    _set_permission: function(val){
-      if(result === 'granted'){
-        this._use_desktop = true
-      }else{
-        this._use_desktop = false
+
+      static get observers() {
+        return [
+        ];
       }
-    },
-    _permission_changed: function(val){
-      if(this._notifications_shown != true){
-        this._notifications_shown = true
-        if(val)
-          this.message = "Desktop Notifications enabled!"
+
+      connectedCallback() {
+        super.connectedCallback()
+        this._setup_permission()
+
+        //show online status on startup
+        //this.onlineChanged(window.navigator.onLine)
+      }
+      onlineChanged(new_val) {
+        if (new_val)
+          this.message = 'Questlists is online! Items will be saved to the remote server.'
         else
-          this.message = "Desktop Notifications disabled. Broadcasting messages here."
+          this.message = 'Questlists is currently offline. We will update the remote server when we are connected.'
+      }
+      messageChanged(message) {
+        if (this._use_desktop) {
+          let note = new Notification('Questlists', { icon: '/images/questlists.png', body: message })
+        } else {
+          this.$.toast.show()
+        }
+        console.info("Notify: ", message)
+      }
+      _setup_permission() {
+        if (!window.Notification) {
+          this.message = "Desktop Notifications not supported. Broadcasting messages here."
+          this._use_desktop = false
+        } else {
+          if (Notification.permission === 'granted') {
+            this._use_desktop = true
+            //this.message = "Desktop Notifications enabled!"
+          } else
+            Notification.requestPermission(this._set_permission)
+          this.notifications_shown = true
+        }
+      }
+      _set_permission(val) {
+        if (result === 'granted') {
+          this._use_desktop = true
+        } else {
+          this._use_desktop = false
+        }
+      }
+      _permission_changed(val) {
+        if (this._notifications_shown != true) {
+          this._notifications_shown = true
+          if (val)
+            this.message = "Desktop Notifications enabled!"
+          else
+            this.message = "Desktop Notifications disabled. Broadcasting messages here."
+        }
+      }
+
     }
-    }
-  });
-});
-</script>
+    window.customElements.define(QuestlistsPopup.is, QuestlistsPopup);
+  </script>
+</dom-module>

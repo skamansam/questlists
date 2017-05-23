@@ -1,9 +1,18 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="questlists-page-behavior.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
 
 <dom-module id="questlists-settings">
+  <template>
   <style include="shared-styles"></style>
+  <style include="questlists-theme"></style>
   <style>
     paper-card {
       width: 100%;
@@ -11,31 +20,32 @@
       padding-left: 30px;
       padding-right: 30px;
     }
+
     #avatar {
       height: 150px;
       width: 150px;
       float: left;
       margin-right: 20px;
     }
+
     #avatar_pane {
       clear: both;
       height: 160px;
     }
   </style>
-  <template>
     <section>
-      <paper-material elevation="1">
+      <div paper-material elevation="1">
         <h1 class="page-title focus-target" tabindex="-1">Settings</h1>
         <p>You can configure your Questlists here.</p>
-      </paper-material>
+      </div>
 
       <paper-card id="user_info" elevation="1" heading="Your User Card">
         <div class="card-content">
           <div id="avatar_pane">
-            <img id="avatar" src="{{avatar}}"/>
-            <p>This is the info displayed on your user card. Your gravatar is used as your user image. If you
-            want to change that image or create a new one, go to <a href="https://www.gravatar.com">the Gravatar website</a>
-            and sign up for a global avatar now!</p>
+            <img id="avatar" src="{{avatar}}" />
+            <p>This is the info displayed on your user card. Your gravatar is used as your user image. If you want to change
+              that image or create a new one, go to <a href="https://www.gravatar.com">the Gravatar website</a> and sign
+              up for a global avatar now!</p>
           </div>
           <firebase-document path='/users/[[uid]]/info' id="user_doc" disabled data="{{user_data}}"></firebase-document>
           <paper-input label="user id" id="user_id" value="[[uid]]" disabled></paper-input>
@@ -53,47 +63,55 @@
 </dom-module>
 
 <script>
-window.addEventListener('WebComponentsReady', function() {
-  Polymer({
-    is: 'questlists-settings',
-    behaviors: [QuestlistsPageBehavior],
-    properties: {
-      uid: String,
-      user_data: {
-        type: Object,
-        value: { name: '', email: '' },
-        observer: '_user_data_changed'
-      },
-      avatar: {
-        type: String,
-        value: '/images/unknown_user.svg'
-      },
-    },
-    //observers: ['_set_with_gravatar(user_data.email)'],
-    ready: function(){
-      this._pageName = 'settings'
-    },
+  class QuestlistsSettings extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+    static get is() { return 'questlists-settings'; }
 
-    loadData: function(){
+    static get properties() {
+      let props = Object.assign({}, this.mixinProperties, {
+        uid: String,
+        user_data: {
+          type: Object,
+          value: { name: '', email: '' },
+          observer: '_user_data_changed'
+        },
+        avatar: {
+          type: String,
+          value: '/images/unknown_user.svg'
+        },
+      })
+      return props
+    }
+
+    static get observers() {
+      return [
+        // '_set_with_gravatar(user_data.email)'
+      ];
+    }
+    connectedCallback() {
+      super.connectedCallback()
+      this._pageName = 'settings'
+    }
+
+    loadData() {
       this.$.user_doc.removeAttribute('disabled')
       this.$.user_doc.getStoredValue(this.$.user_doc.path)
-    },
-    _set_with_gravatar: function(email){
-      if(!email)
+    }
+    _set_with_gravatar(email) {
+      if (!email)
         this.avatar = '/images/unknown_user.svg'
       else
         this.avatar = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=150"
-
-    },
-    _user_data_changed: function(new_data){
+    }
+    _user_data_changed(new_data) {
       this._set_with_gravatar(new_data.email)
-    },
-    _save_user_data: function(){
+    }
+    _save_user_data() {
       let doc = this.$.user_doc
       doc.setStoredValue(doc.path, this.user_data)
       this._set_with_gravatar(this.user_data.email)
       this.notification = "Profile saved"
     }
-  });
-});
+  }
+  window.customElements.define(QuestlistsSettings.is, QuestlistsSettings);
+
 </script>

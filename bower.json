@@ -6,7 +6,7 @@
   "license": "https://polymer.github.io/LICENSE.txt",
   "dependencies": {
     "app-layout": "PolymerElements/app-layout#2.0",
-    "app-changelog":"skamansam/app-changelog#2.0",
+    "app-changelog":"skamansam/app-changelog#2.0.1",
     "app-route": "PolymerElements/app-route#2.0",
     "iron-collapse": "PolymerElements/iron-collapse#2.0",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0",

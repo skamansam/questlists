@@ -23,7 +23,7 @@
   </template>
 
   <script>
-    class QuestlistsAbout extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+    class QuestlistsBrowser extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
       static get is() { return 'questlists-browser'; }
 
       static get properties() {
@@ -44,6 +44,6 @@
         console.log('Loading Browser...')
       }
     }
-    window.customElements.define(QuestlistsAbout.is, QuestlistsAbout);
+    window.customElements.define(QuestlistsBrowser.is, QuestlistsBrowser);
   </script>
 </dom-module>

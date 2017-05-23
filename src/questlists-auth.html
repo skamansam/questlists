@@ -11,8 +11,8 @@
 
 <dom-module id="questlists-auth">
   <template>
-    <link rel="import" href="shared-styles.html">
-    <link rel="import" href="questlists-theme.html">
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
     <style>
 
     </style>
@@ -39,7 +39,7 @@
   </template>
 
   <script>
-    class QuestlistsAuth extends Mixin(Polymer.Element).with() {
+    class QuestlistsAuth extends Polymer.Element {
       static get is() { return 'questlists-auth'; }
 
       static get properties() {
