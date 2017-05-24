@@ -31,18 +31,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /* Application theme */
 
       :root {
+        /* The following two stanzas are colors from
+         *   https://material.io/color/#!/?view.left=0&view.right=0&primary.color=263238&secondary.color=D50000&primary.text.color=ffffff
+         *  Use that site as a guide!
+         */
+        --theme-primary-color: #000a12;
+        --theme-primary-text-color: #ffffff;
+        --theme-dark-primary-color: #212121;
+        --theme-light-primary-color: #4f5b62;
 
-        --dark-theme-color: #607D8B;
-        --dark-theme-primary-color: #212121;
-        --dark-theme-text-color: #ffffff ;
+        --theme-secondary-color: #d50000;
+        --theme-secondary-text-color: #ffffff;
+        --theme-dark-secondary-color: #9b0000;
+        --theme-light-secondary-color: #ff5131;
+
+        --disabled-text-color: #aaaaaa;
+
+
+        /*old values here*/
+/*        --dark-theme-text-color: #ffffff;
         --dark-theme-background-color: #455A64;
         --dark-theme-secondary-color: #03A9F4;
         --dark-theme-disabled-color: #727272;
         --dark-theme-disabled-text-color: #BDBDBD;
         --dark-theme-divider-color: #B6B6B6;
         --dark-theme-ink-color: #ffffff;
-
-        --accent-color:                var(--dark-theme-secondary-color);
+*/
+        --accent-color:                var(--theme-secondary-color);
         --default-primary-color:       var(--dark-theme-primary-color);
         --primary-border-color:        var(--dark-theme-border-color);
         --divider-color:               var(--dark-theme-divider-color);
@@ -91,12 +106,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /* General styles */
 
       body {
-        @apply(--layout-fullbleed);
-        @apply(--layout-vertical);
+        @apply --layout-fullbleed;
+        @apply --layout-vertical;
       }
 
       .space {
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
 
       #drawerToolbar {
@@ -106,7 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #drawerToolbar .menu-name {
-        @apply(--paper-font-title);
+        @apply --paper-font-title;
       }
 
       app-drawer, app-header {

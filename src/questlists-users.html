@@ -1,72 +1,71 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="questlists-page-behavior.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
+<link rel="import" href="questlists-user.html">
 
 <dom-module id="questlists-users">
-  <style include="shared-styles"></style>
-  <style>
-  </style>
-
   <template>
+    <style include="shared-styles"></style>
+    <style>
+
+    </style>
+
     <section>
       <firebase-document path='/users/' id="users_doc" disabled data="{{users}}"></firebase-document>
-      <paper-material elevation="1">
+      <div paper-material elevation="1">
         <h1 class="page-title focus-target" tabindex="-1">Users</h1>
         <p>These are the users with the most contributions.</p>
-      </paper-material>
-      <template is="dom-repeat" items="[[users]]" as="user" >
+      </div>
+      <template is="dom-repeat" items="[[users]]" as="user">
         <questlists-user name="{{user.username}}" icon="{{user.icon}}" email="{{user.email}}"></questlists-user>
       </template>
     </section>
   </template>
-</dom-module>
 
-<script>
-window.addEventListener('WebComponentsReady', function() {
-    class QuestlistsUsers extends Polymer.Element {
-      static get is() { return  'questlists-users'; }
+  <script>
+    class QuestlistsUsers extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-users'; }
 
       static get properties() {
-        return  {
+        let props = Object.assign({}, this.mixinProperties, {
           users: {
             type: Array,
             value: [],
             observer: 'dataChanged'
           }
-        }
+
+        })
+        return props
+      }
+      static get observers() {
+        return [
+        ];
+      }
+      connectedCallback() {
+        super.connectedCallback()
+        this._pageName = 'users'
       }
 
-      static get observers() { return  []; }
-
-    }
-  Polymer({
-    is: 'questlists-users',
-    behaviors: [QuestlistsPageBehavior],
-    properties: {
-      users: {
-        type: Array,
-        value: [],
-        observer: 'dataChanged'
+      loadData() {
+        console.log('Loading users data...')
+        this.$.users_doc.getStoredValue(this.$.users_doc.path).then(function (users) {
+          new_users = new Array
+          for (uid in users) {
+            info = users[uid].info
+            info[uid] = uid
+            new_users.push(info)
+          }
+          this.set('users', new_users)
+        }.bind(this)) // you need to do this for promises!
       }
-    },
-    dataChanged: function(val){
-      console.log('users changed: ',this.$.users)
-    },
-    ready: function(){
-      this._pageName = 'users'
-    },
-    loadData: function(){
-      console.log('Loading users data...')
-      this.$.users_doc.getStoredValue(this.$.users_doc.path).then(function(users){
-        new_users = new Array
-        for(uid in users){
-          info = users[uid].info
-          info[uid] = uid
-          new_users.push(info)
-        }
-        this.set('users', new_users)
-      }.bind(this)) // you need to do this for promises!
+      dataChanged(val) {
+        console.log('users changed: ', this.$.users)
+      }
     }
-  });
-});
-</script>
+    window.customElements.define(QuestlistsUsers.is, QuestlistsUsers);
+  </script>
+</dom-module>

@@ -11,28 +11,28 @@
 
 <dom-module id="questlists-settings">
   <template>
-  <style include="shared-styles"></style>
-  <style include="questlists-theme"></style>
-  <style>
-    paper-card {
-      width: 100%;
-      margin-bottom: 32px;
-      padding-left: 30px;
-      padding-right: 30px;
-    }
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style>
+      paper-card {
+        width: 100%;
+        margin-bottom: 32px;
+        padding-left: 30px;
+        padding-right: 30px;
+      }
 
-    #avatar {
-      height: 150px;
-      width: 150px;
-      float: left;
-      margin-right: 20px;
-    }
+      #avatar {
+        height: 150px;
+        width: 150px;
+        float: left;
+        margin-right: 20px;
+      }
 
-    #avatar_pane {
-      clear: both;
-      height: 160px;
-    }
-  </style>
+      #avatar_pane {
+        clear: both;
+        height: 160px;
+      }
+    </style>
     <section>
       <div paper-material elevation="1">
         <h1 class="page-title focus-target" tabindex="-1">Settings</h1>
@@ -60,58 +60,58 @@
       </paper-card>
     </section>
   </template>
+
+  <script>
+    class QuestlistsSettings extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-settings'; }
+
+      static get properties() {
+        let props = Object.assign({}, this.mixinProperties, {
+          uid: String,
+          user_data: {
+            type: Object,
+            value: { name: '', email: '' },
+            observer: '_user_data_changed'
+          },
+          avatar: {
+            type: String,
+            value: '/images/unknown_user.svg'
+          },
+        })
+        return props
+      }
+
+      static get observers() {
+        return [
+          // '_set_with_gravatar(user_data.email)'
+        ];
+      }
+      connectedCallback() {
+        super.connectedCallback()
+        this._pageName = 'settings'
+      }
+
+      loadData() {
+        this.$.user_doc.removeAttribute('disabled')
+        this.$.user_doc.getStoredValue(this.$.user_doc.path)
+      }
+      _set_with_gravatar(email) {
+        if (!email)
+          this.avatar = '/images/unknown_user.svg'
+        else
+          this.avatar = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=150"
+      }
+      _user_data_changed(new_data) {
+        this._set_with_gravatar(new_data.email)
+      }
+      _save_user_data() {
+        let doc = this.$.user_doc
+        doc.setStoredValue(doc.path, this.user_data)
+        this._set_with_gravatar(this.user_data.email)
+        this.notification = "Profile saved"
+      }
+    }
+    window.customElements.define(QuestlistsSettings.is, QuestlistsSettings);
+
+  </script>
 </dom-module>
-
-<script>
-  class QuestlistsSettings extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
-    static get is() { return 'questlists-settings'; }
-
-    static get properties() {
-      let props = Object.assign({}, this.mixinProperties, {
-        uid: String,
-        user_data: {
-          type: Object,
-          value: { name: '', email: '' },
-          observer: '_user_data_changed'
-        },
-        avatar: {
-          type: String,
-          value: '/images/unknown_user.svg'
-        },
-      })
-      return props
-    }
-
-    static get observers() {
-      return [
-        // '_set_with_gravatar(user_data.email)'
-      ];
-    }
-    connectedCallback() {
-      super.connectedCallback()
-      this._pageName = 'settings'
-    }
-
-    loadData() {
-      this.$.user_doc.removeAttribute('disabled')
-      this.$.user_doc.getStoredValue(this.$.user_doc.path)
-    }
-    _set_with_gravatar(email) {
-      if (!email)
-        this.avatar = '/images/unknown_user.svg'
-      else
-        this.avatar = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=150"
-    }
-    _user_data_changed(new_data) {
-      this._set_with_gravatar(new_data.email)
-    }
-    _save_user_data() {
-      let doc = this.$.user_doc
-      doc.setStoredValue(doc.path, this.user_data)
-      this._set_with_gravatar(this.user_data.email)
-      this.notification = "Profile saved"
-    }
-  }
-  window.customElements.define(QuestlistsSettings.is, QuestlistsSettings);
-
-</script>
