@@ -14,12 +14,21 @@
     <style include="shared-styles"></style>
     <style include="questlists-theme"></style>
     <style>
-
+    paper-dialog {
+      width: 50vw;
+      height: 50vh;
+/*        position: fixed;
+        top: 33%;
+        width: auto;
+        height: 300px;
+        overflow: auto;*/
+      }
+    }
     </style>
     <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-error="errorHandler">
     </firebase-auth>
     <firebase-document path='/users/{{user_id}}/info' data="{{user_data}}"></firebase-document>
-    <paper-dialog id="loginDialog" modal on-iron-overlay-closed="_on_dialog_close">
+    <paper-dialog id="loginDialog" on-iron-overlay-closed="_on_dialog_close">
       <h2>Login</h2>
       <form on-submit="_handle_password_login">
         <paper-input label="email" id="email" autocomplete="email" required></paper-input>

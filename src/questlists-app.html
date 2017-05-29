@@ -15,7 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -33,12 +33,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style is="custom-style">
        :host {
         display: block;
+       }
+       app-drawer-layout {
+        background-color: var(--theme-area-background-color);
       }
-
-      *[hidden] {
-        display: none;
-      }
-
       app-drawer-layout:not([narrow]) [drawer-toggle] {
         display: none;
       }
@@ -46,7 +44,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-header,
       app-drawer {
         color: var(--primary-text-color);
-        background-color: var(--primary-background-color);
         border-color: var(--drawer-border-color);
       }
 
@@ -56,68 +53,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
+      .menu-top {
+        background-color: var(--theme-secondary-color)
+      }
       .focus-target {
         outline: none;
-      }
-
-      app-drawer-layout:not([narrow]) #mainToolbar {
-        height: calc(64px * 3);
-      }
-
-      app-drawer-layout[narrow] #mainToolbar {
-        height: calc(64px);
-      }
-
-      app-drawer-layout app-header [condensed-title] {
-        opacity: 1;
-      }
-
-      app-drawer-layout:not([narrow]) app-header [condensed-title] {
-        display: none;
-      }
-
-      app-header [main-title] .app-name {
-        font-size: 40px;
-        font-weight: 300;
-        /* Required for main area's paper-scroll-header-panel custom condensing transformation */
-        -webkit-transform-origin: left center;
-        transform-origin: left center;
-      }
-
-      app-drawer-layout[narrow] app-header [main-title] {
-        display: none;
-      }
-
-      app-header [condensed-title] .app-name {
-        font-size: 20px;
-        font-weight: 300;
-        /* Required for main area's paper-scroll-header-panel custom condensing transformation */
-        -webkit-transform-origin: left center;
-        transform-origin: left center;
-      }
-
-      app-header .middle-container,
-      app-header .bottom-container {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-      }
-
-      app-header .middle-container {
-        height: 100%;
-        margin-left: 48px;
-      }
-
-      #mainToolbar:not(.tall) .middle-container {
-        font-size: 18px;
-        padding-bottom: 0;
-      }
-
-      #mainToolbar .bottom-container {
-        @apply --paper-font-subhead;
-        margin-left: 48px;
-        /* Required for main area's paper-scroll-header-panel custom condensing transformation */
-        -webkit-transform-origin: left center;
-        transform-origin: left center;
       }
 
       app-drawer-layout:not([narrow]) app-header .logo {
@@ -130,31 +70,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 58px;
       }
 
-      app-drawer-layout[narrow] app-header .logo {
-        float: left;
-        height: 58px;
+      app-header [main-title] .app-name {
+        font-size: 40px;
+        font-weight: 300;
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
       }
 
-      paper-fab {
-        float: right;
+      app-header [condensed-title] .app-name {
+        font-size: 20px;
+        font-weight: 300;
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
       }
 
-      .drawer-list {
-        margin: 0 20px;
+      /** BEGIN block of styles stolen from https://github.com/PolymerElements/app-layout/blob/master/templates/test-drive/test-app.html*/
+
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
       }
 
-      .drawer-list a {
-        display: block;
-        padding: 0 16px;
-        text-decoration: none;
-        color: var(--app-secondary-color);
-        line-height: 40px;
+      app-header {
+        color: var(--theme-primary-text-color);
+        background-color: var(--theme-dark-primary-color);
+        --app-header-background-front-layer: {
+          background-color: var(--theme-light-primary-color);
+        }
+        ;
       }
 
-      .drawer-list a.iron-selected {
-        color: black;
-        font-weight: bold;
+      [main-title]{
+        font-size: 2em;
+        min-width: calc(100% - 50px);
+        margin-top: 0px;
+        min-height: 155px;
+        position: relative;
+        bottom: 0px;
+
       }
+      /** END stolen styles */
+      [main-title] .app-slogan {
+        font-size: 0.5em;
+      }
+      [condensed-title]{
+        font-size: 1em;
+      }
+      [condensed-title] .app-slogan {
+        font-size: 0.5em;
+      }
+
+      /** reduce info in header based on width */
+
+      @media all and (min-width: 0) and (max-width: 350px) and (orientation: portrait) {
+        app-header .sub-slogan { display: none; }
+      }
+
+      @media all and (min-width: 0) and (max-width: 300px) and (orientation: portrait) {
+        app-header .app-name {
+          font-size: .75em !important;
+        }
+        app-header .app-slogan { display: none; }
+        app-header .sub-slogan { display: none; }
+      }
+      @media all and (min-width: 0) and (max-width: 250px) and (orientation: portrait) {
+        app-header .app-name { display: none; }
+        app-header .app-slogan { display: none; }
+        app-header .sub-slogan { display: none; }
+      }
+
+
     </style>
 
     <!--
@@ -169,8 +153,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer">
-        <app-toolbar>
+      <app-drawer id="drawer" swipe-open slot="drawer">
+        <app-toolbar class='menu-top'>
           <questlists-user-menu user="{{user}}" online="{{online}}">
           </questlists-user-menu>
         </app-toolbar>
@@ -183,27 +167,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
 
-        <app-header slot="header" condenses reveals effects="waterfall">
-          <app-toolbar id="mainToolbar">
-            <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
-
-            <!-- Application name -->
-            <div class="middle middle-container">
-              <div id="main-title" main-title>
-                <img class='logo' src="images/questlists.png" alt='logo' />
-                <div class="app-name">Questlists</div>
-                <div class="app-slogan">Keep track of stuff - in games or IRL.</div>
-              </div>
-              <div id="condensed-title" condensed-title>
-                <img class='logo' src="images/questlists.png" alt='logo' />
-                <div class="app-name">Questlists</div>
-                <div class="app-slogan">Keep track of stuff - in games or IRL.</div>
-              </div>
+        <app-header condenses fixed slot="header" effects="blend-background parallax-background resize-title waterfall">
+          <app-toolbar>
+            <paper-icon-button id="paperToggle" icon="menu" drawer-toggle></paper-icon-button>
+            <div id="condensed-title" condensed-title>
+              <img class='logo' src="images/questlists.png" alt='logo' />
+              <div class="app-name">Questlists</div>
+              <div class="app-slogan">Keep track of stuff - in games or IRL.</div>
+            </div>
+          </app-toolbar>
+          <app-toolbar></app-toolbar>
+          <app-toolbar>
+            <div id="main-title" main-title>
+              <img class='logo' src="images/questlists.png" alt='logo' />
+              <div class="app-name">Questlists</div>
+              <div class="app-slogan">Keep track of stuff<span class="sub-slogan"> - in games or IRL.</span></div>
             </div>
             <span class="space"></span>
 
             <iron-icon icon="cloud-download" hidden="[[!online]]"></iron-icon>
             <iron-icon icon="cloud-off" hidden="[[online]]"></iron-icon>
+            <paper-progress id="progress" value="{{progress_value}}" bottom-item></paper-progress>
           </app-toolbar>
         </app-header>
 
@@ -236,6 +220,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Boolean,
             reflectToAttributes: true,
             value: false
+          },
+          progress_value: {
+            type: Number,
+            value: 33
           }
         };
       }

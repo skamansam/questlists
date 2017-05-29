@@ -1,35 +1,9 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<!--<link rel="import" href="../bower_components/paper-styles/typography.html">
-<link rel="import" href="../bower_components/paper-styles/color.html">
-<link rel="import" href="../bower_components/paper-styles/shadow.html">
-<link rel="import" href="../bower_components/paper-styles/color.html">
-<link rel="import" href="../bower_components/paper-styles/default-theme.html">
--->
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
 <dom-module id="questlists-theme">
   <template>
     <style is="custom-style">
-
-      /*
-      Polymer includes a shim for CSS Custom Properties that we can use for application theming.
-      Below, you'll find the default palette for the Polymer Starter Kit layout. Feel free to play
-      with changing the colors used or generate your own palette of colours at MaterialPalette.com.
-
-      See https://www.polymer-project.org/1.0/docs/devguide/styling.html#xscope-styling-details
-      for further information on custom CSS properties.
-      */
-
-      /* Application theme */
-
       :root {
         /* The following two stanzas are colors from
          *   https://material.io/color/#!/?view.left=0&view.right=0&primary.color=263238&secondary.color=D50000&primary.text.color=ffffff
@@ -45,8 +19,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --theme-dark-secondary-color: #9b0000;
         --theme-light-secondary-color: #ff5131;
 
-        --disabled-text-color: #aaaaaa;
+        --disabled-text-color: #E1E2E1;
+        --theme-content-block-background-color:#f5f5f6;
+        --theme-area-background-color: var(--disabled-text-color);
 
+        --theme-app-header-color: var(--theme-light-primary-color);
 
         /*old values here*/
 /*        --dark-theme-text-color: #ffffff;
@@ -56,44 +33,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --dark-theme-disabled-text-color: #BDBDBD;
         --dark-theme-divider-color: #B6B6B6;
         --dark-theme-ink-color: #ffffff;
-*/
         --accent-color:                var(--theme-secondary-color);
         --default-primary-color:       var(--dark-theme-primary-color);
         --primary-border-color:        var(--dark-theme-border-color);
-        --divider-color:               var(--dark-theme-divider-color);
-        --disabled-text-color:         var(--dark-theme-disabled-text-color);
+        --divider-color:               var(--theme-light-primary-color);
         --primary-text-color:          var(--dark-theme-text-color);
         --secondary-text-color:        var(--dark-theme-secondary-color);
-        --primary-background-color:    var(--dark-theme-background-color);
+        --primary-background-color:    var(--theme-content-block-background-color);
         --primary-color:               var(--dark-theme-primary-color);
         --primary-text-color:          var(--dark-theme-text-color);
         --paper-icon-button-ink-color: var(--dark-theme-ink-color);
         --divider-color:               var(--dark-theme-divider-color)
-
-        --dark-accent-color:        #999999; /*#303F9F*/;
+*/
+/*        --dark-accent-color:        #999999;
         --dark-primary-color:       #455A64;
 
         --light-accent-color:       #03A9F4;
         --light-primary-color:      #CFD8DC;
-
+*/
         /* Components */
 
+        /** app-layout/app-drawer
+        --app-drawer-width: 256px;
+        --app-drawer-content-container: {}
+        --app-drawer-scrim-background: rgba(0, 0, 0, 0.5)
+        */
+
         /* paper-drawer-panel */
+/*        --app-drawer-scrim-background: rgba(0, 0, 0, 0.25);
         --drawer-menu-color:           var(--primary-color);
         --drawer-border-color:         1px solid #000;
         --drawer-background-color:      var(--primary-background-color);
         --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
-
+        --app-drawer-width: 300px;
+*/
         /* paper-menu */
-        --paper-menu-background-color: var(--primary-color);
-        --menu-link-color: var(--text-primary-color);
-
+/*        --paper-menu-background-color: var(--theme-area-background-color);
+        --menu-link-color: var(--theme-secondary-color);
+*/
           /* paper-input */
-        --paper-input-container-color:       var(--dark-primary-color);
+/*        --paper-input-container-color:       var(--dark-primary-color);
         --paper-input-container-focus-color: var(--primary-color);
         --paper-input-container-input-color: var(--primary-text-color);
-
-        --app-drawer-width: 300px;
+*/
 
         /* polymer 2.0 styles */
         --light-theme-color: var(--light-primary-color);
@@ -105,7 +87,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       /* General styles */
 
-      body {
+/*      body {
         @apply --layout-fullbleed;
         @apply --layout-vertical;
       }
@@ -131,12 +113,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-scroll-header-panel {
         height: 100%;
       }
-
+*/
       /* Height of the scroll area */
-      .content {
+/*      .content {
         height: 900px;
       }
-
+*/
       /*paper-material {
         border-radius: 2px;
         height: 100%;
@@ -146,12 +128,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background: white;
       }*/
 
-      #toast .toast-hide-button {
+/*      #toast .toast-hide-button {
         color: #eeff41;
         margin: 10px;
       }
-
       section[tabindex="-1"]:focus { outline: none; }
+*/
 
       /* Breakpoints */
 
