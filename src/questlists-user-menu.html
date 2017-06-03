@@ -23,9 +23,10 @@
       .menu-name {
         @apply --paper-font-title;
         display: block;
-        width: 170px;
+        width: 150px;
         margin-top: -42px;
-        padding-left: 75px;
+        padding-left: 65px;
+        padding-right: 35px;
       }
 
       .user-menu {
@@ -73,9 +74,15 @@
         }
         ;
       }
+      .user-action {
+        float: right;
+      }
+      paper-icon-button.user-action{
+        margin-top: -34px;
+      }
     </style>
 
-    <questlists-auth user_id="{{user_id}}" user="{{user}}" id="auth"></questlists-auth>
+    <questlists-auth user="{{user}}" id="auth"></questlists-auth>
 
     <iron-image preload fade class='avatar' src='{{icon}}' error="{{err}}" alt="avatar" placeholder="/images/unknown_user.svg">
     </iron-image>
@@ -86,12 +93,14 @@
       </span>
     </span>
 
-    <paper-dropdown-menu label$="{{display_name}}" class="user-menu" no-label-float>
+    <paper-icon-button class="user-action" title="Sign Out" icon="exit-to-app"  on-tap="logout" hidden$="{{!logged_in}}"></paper-icon-button>
+    <paper-icon-button class="user-action" title="Sign In" icon="forward"  on-tap="login" hidden$="{{logged_in}}"></paper-icon-button>
+    <!--<paper-dropdown-menu label$="{{display_name}}" class="user-menu" no-label-float>
       <paper-listbox class="dropdown-content" class="menu-name" slot="dropdown-content">
-        <paper-item on-tap="logout" hidden$="{{!_logged_in()}}">Log Out</paper-item>
-        <paper-item on-tap="login" hidden$="{{_logged_in()}}">Log IN</paper-item>
+        <paper-item on-tap="logout" hidden$="{{_logged_in()}}">Log Out</paper-item>
+        <paper-item on-tap="login" hidden$="{{!_logged_in()}}">Log In</paper-item>
       </paper-listbox>
-    </paper-dropdown-menu>
+    </paper-dropdown-menu> -->
 
   </template>
 
@@ -102,6 +111,7 @@
 
       static get properties() {
         return {
+          logged_in: Boolean,
           icon: String,
           display_name: {
             type: String,
@@ -134,7 +144,7 @@
       }
 
       login() {
-        if (!this._logged_in())
+        if (!this.logged_in)
           this.$.auth.login();
       }
 
@@ -143,43 +153,41 @@
       }
 
       _userChanged(new_user) {
-        if (new_user == null) return
+        if (new_user == null) {
+          this.logged_in = false
+          return
+        }
+        this.logged_in = true
         console.info("User Changed", new_user)
-        this._set_user_name(new_user.name, new_user.email)
-        this._set_gravatar(new_user.email)
+        let new_name = new_user.providerData[0].displayName || new_user.name
+        let new_email = new_user.providerData[0].email || new_user.email
+        this._set_user_name(new_name, new_email)
+        if(new_user.providerData[0].photoURL == null)
+          this._set_gravatar(new_user.email)
+        else
+          this.set('icon', new_user.providerData[0].photoURL)
       }
 
       _set_gravatar(email) {
         if (!email)
           return
+        console.info("No avatar provided, using gravatar")
         this.icon = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=50"
       }
 
       _set_user_name(new_name, new_email) {
-        console.info("user name changed")
-        if (this._logged_in()) {
-          console.info("logged in")
+        if (this.logged_in) {
           if (new_name != "" && new_name != null) {
-            console.info("has new name", new_name)
             this.set('display_name', new_name)
           } else if (new_email != "" && new_email != null) {
-            console.info("has new email")
             this.set('display_name', new_email.split('@')[0])
           } else {
-            console.info("no new info")
             this.set('display_name', "Anonymous")
-            debugger
           }
         } else {
-          console.info("not logged in")
           this.set('display_name', "Log In / Sign Up")
         }
         return this.display_name
-      }
-
-      _logged_in(user_obj) {
-        let user = user_obj || this.user;
-        return (user != null && user != undefined && user.email != "" && user.email != null);
       }
     }
 
