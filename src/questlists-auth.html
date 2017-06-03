@@ -2,28 +2,32 @@
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="util.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="questlists-theme.html">
+<link rel="import" href="questlists-icons.html">
 
 <dom-module id="questlists-auth">
   <template>
     <style include="shared-styles"></style>
     <style include="questlists-theme"></style>
     <style>
-    paper-dialog {
-      width: 50vw;
-      height: 50vh;
-/*        position: fixed;
+      paper-dialog {
+        width: 50vw;
+        height: 50vh;
+        /*        position: fixed;
         top: 33%;
         width: auto;
         height: 300px;
         overflow: auto;*/
       }
-    }
+      paper-button iron-icon{
+        padding-right: 1ex;
+      }
     </style>
     <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-error="errorHandler">
     </firebase-auth>
@@ -34,10 +38,10 @@
         <paper-input label="email" id="email" autocomplete="email" required></paper-input>
         <paper-input type="password" label="password" id="password" autocomplete="password" required></paper-input>
         <div class='oauth-buttons'>
-          <paper-button on-tap="_handle_github_login">Github</paper-button>
-          <paper-button on-tap="_handle_google_login">Google</paper-button>
-          <paper-button on-tap="_handle_facebook_login">Facebook</paper-button>
-          <paper-button on-tap="_handle_twitter_login">Twitter</paper-button>
+          <paper-button on-tap="_handle_github_login"><iron-icon icon="questlists-icons:github"></iron-icon>Github</paper-icon-button>
+          <paper-button on-tap="_handle_google_login"><iron-icon icon="questlists-icons:google"></iron-icon>Google</paper-button>
+          <paper-button on-tap="_handle_facebook_login"><iron-icon icon="questlists-icons:facebook"></iron-icon>Facebook</paper-button>
+          <paper-button on-tap="_handle_twitter_login"><iron-icon icon="questlists-icons:twitter"></iron-icon>Twitter</paper-button>
         </div>
         <div class="buttons">
           <paper-button dialog-dismiss>Cancel</paper-button>
@@ -109,13 +113,44 @@
 
       _handle_github_login() {
         this.provider = 'github'
-        login()
+        console.log("Logging in with github...")
+        this.$.firebaseLogin.signInWithPopup('github')
+          .then(this.userSuccessHandler.call(this))
+          .catch( (error) => {
+            debugger
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
+      }
+
+      _handle_google_login() {
+        this.provider = 'google'
+        this.$.firebaseLogin.signInWithPopup('google')
+          .then(this.userSuccessHandler.call(this))
+      }
+
+      _handle_twitter_login() {
+        this.provider = 'twitter'
+        this.$.firebaseLogin.signInWithPopup('twitter')
+          .then(this.userSuccessHandler.call(this))
+      }
+
+      _handle_facebook_login() {
+        this.provider = 'facebook'
+        this.$.firebaseLogin.signInWithPopup('facebook')
+          .then(this.userSuccessHandler.call(this))
       }
 
       _handle_password_login(event, results, c, d) {
         this.provider = 'password'
-        email = this.$.email.value
-        pwd = this.$.password.value
+        let email = this.$.email.value
+        let pwd = this.$.password.value
         this.$.firebaseLogin.signInWithEmailAndPassword(email, pwd)
           .then(this.userSuccessHandler.call(this))
       }
