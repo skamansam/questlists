@@ -60,14 +60,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         outline: none;
       }
 
-      app-drawer-layout:not([narrow]) app-header .logo {
+      /*app-drawer-layout:not([narrow]) */
+      app-header .logo {
         float: left;
-        height: 100px;
+        width: 150px;
+        min-height: 100px;
+        position: relative;
       }
 
       app-drawer-layout[narrow] app-header .logo {
-        float: left;
-        height: 58px;
+        /*float: left;
+        height: 58px;*/
       }
 
       app-header [main-title] .app-name {
@@ -102,23 +105,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       [main-title]{
         font-size: 2em;
         min-width: calc(100% - 50px);
-        margin-top: 0px;
+        margin-top: -40px;
         min-height: 155px;
         position: relative;
         bottom: 0px;
 
       }
       /** END stolen styles */
+
       [main-title] .app-slogan {
         font-size: 0.5em;
       }
+
+      [main-title] .app-name {
+        padding-top: 30px;
+      }
+
       [condensed-title]{
         font-size: 1em;
       }
+
       [condensed-title] .app-slogan {
         font-size: 0.5em;
       }
 
+      [condensed-title] .app-name {
+        margin-top: 10px;
+      }
+
+      [condensed-title] .logo {
+        min-height: 50px;
+        width: 50px;
+        padding-right: 20px;
+      }
       /** reduce info in header based on width */
 
       @media all and (min-width: 0) and (max-width: 350px) and (orientation: portrait) {
@@ -171,7 +190,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button id="paperToggle" icon="menu" drawer-toggle></paper-icon-button>
             <div id="condensed-title" condensed-title>
-              <img class='logo' src="images/questlists.png" alt='logo' />
+              <iron-image class='logo' src="images/questlists.png" alt='logo' sizing="contain"></iron-image>
               <div class="app-name">Questlists</div>
               <div class="app-slogan">Keep track of stuff - in games or IRL.</div>
             </div>
@@ -179,7 +198,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar></app-toolbar>
           <app-toolbar>
             <div id="main-title" main-title>
-              <img class='logo' src="images/questlists.png" alt='logo' />
+              <iron-image class='logo' src="images/questlists.png" alt='logo' sizing="contain"></iron-image>
               <div class="app-name">Questlists</div>
               <div class="app-slogan">Keep track of stuff<span class="sub-slogan"> - in games or IRL.</span></div>
             </div>
