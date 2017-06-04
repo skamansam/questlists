@@ -76,8 +76,15 @@
         --paper-input-container-focus-color: var(--primary-color);
         --paper-input-container-input-color: var(--primary-text-color);
 */
+        /* paper-button */
+/*        --paper-icon-button-disabled-text: var(--disabled-text-color);
+        --paper-icon-button-ink-color: var(--primary-text-color);
+        --paper-icon-button: {};
+        --paper-icon-button-disabled: {};
+        --paper-icon-button-hover: {};
+*/
 
-        /* polymer 2.0 styles */
+       /* polymer 2.0 styles */
         --light-theme-color: var(--light-primary-color);
         --light-theme-background-color: var(--primary-background-color);
         --light-theme-secondary-color: var(--primary-background-color);
@@ -85,6 +92,16 @@
         --light-theme-divider-color: var(--light-primary-color);
 
       }
+
+      paper-dialog paper-button {
+        @apply --shadow-elevation-2dp;
+      }
+      paper-button.primary {
+        @apply --shadow-elevation-3dp;
+        background-color: var(--theme-secondary-color);
+        color: var(--theme-secondary-text-color)
+      }
+
       /* General styles */
 
 /*      body {

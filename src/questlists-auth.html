@@ -28,6 +28,9 @@
       paper-button iron-icon{
         padding-right: 1ex;
       }
+      .oauth-buttons paper-button {
+        width: 100px;
+      }
     </style>
     <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-error="errorHandler">
     </firebase-auth>
@@ -37,15 +40,16 @@
       <form on-submit="_handle_password_login">
         <paper-input label="email" id="email" autocomplete="email" required></paper-input>
         <paper-input type="password" label="password" id="password" autocomplete="password" required></paper-input>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button type="submit" on-tap="_handle_password_login" class="primary">Login</paper-button>
+        </div>
+        <h3>Or login using one of the following providers:</h3>
         <div class='oauth-buttons'>
-          <paper-button on-tap="_handle_github_login"><iron-icon icon="questlists-icons:github"></iron-icon>Github</paper-icon-button>
+          <paper-button on-tap="_handle_github_login"><iron-icon icon="questlists-icons:github"></iron-icon>Github</paper-button>
           <paper-button on-tap="_handle_google_login"><iron-icon icon="questlists-icons:google"></iron-icon>Google</paper-button>
           <paper-button on-tap="_handle_facebook_login"><iron-icon icon="questlists-icons:facebook"></iron-icon>Facebook</paper-button>
           <paper-button on-tap="_handle_twitter_login"><iron-icon icon="questlists-icons:twitter"></iron-icon>Twitter</paper-button>
-        </div>
-        <div class="buttons">
-          <paper-button dialog-dismiss>Cancel</paper-button>
-          <paper-button type="submit" on-tap="_handle_password_login">Login</paper-button>
         </div>
       </form>
     </paper-dialog>
