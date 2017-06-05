@@ -3,12 +3,6 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "build/es6-unbundled",
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
+    "public": "./"
   }
 }

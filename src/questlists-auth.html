@@ -137,6 +137,18 @@
         this.provider = 'google'
         this.$.firebaseLogin.signInWithPopup('google')
           .then(this.userSuccessHandler.call(this))
+          .catch( (error) => {
+            debugger
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
+
       }
 
       _handle_twitter_login() {
@@ -157,6 +169,17 @@
         let pwd = this.$.password.value
         this.$.firebaseLogin.signInWithEmailAndPassword(email, pwd)
           .then(this.userSuccessHandler.call(this))
+          .catch( (error) => {
+            debugger
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
       }
 
       userSuccessHandler(response) {
