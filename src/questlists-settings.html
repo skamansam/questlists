@@ -47,14 +47,14 @@
               that image or create a new one, go to <a href="https://www.gravatar.com">the Gravatar website</a> and sign
               up for a global avatar now!</p>
           </div>
-          <firebase-document path='/users/[[uid]]/info' id="user_doc" disabled data="{{user_data}}"></firebase-document>
-          <paper-input label="user id" id="user_id" value="[[uid]]" disabled></paper-input>
-          <paper-input label="user name" id="name" value="{{user_data.name}}"></paper-input>
-          <paper-input label="email" type="email" id="email" value="{{user_data.email}}"></paper-input>
+          <firebase-document path='/users/[[user.uid]]/info' id="user_doc" disabled data="{{user_info}}"></firebase-document>
+          <paper-input label="user id" id="user_id" value="[[user.uid]]" disabled></paper-input>
+          <paper-input label="user name" id="name" value="{{user_info.name}}"></paper-input>
+          <paper-input label="email" type="email" id="email" value="{{user_info.email}}" disabled></paper-input>
           <paper-input type="password" label="password" id="password"></paper-input>
         </div>
         <div class='card-actions'>
-          <paper-button on-tap="" type="reset">Reset</paper-button>
+          <paper-button on-tap="_reset_data" type="reset">Reset</paper-button>
           <paper-button on-tap="_save_user_data">Submit</paper-button>
         </div>
       </paper-card>
@@ -67,47 +67,75 @@
 
       static get properties() {
         let props = Object.assign({}, this.mixinProperties, {
-          uid: String,
-          user_data: {
+          user: {
             type: Object,
-            value: { name: '', email: '' },
-            observer: '_user_data_changed'
+            observer: '_user_changed',
+            notify: true
           },
           avatar: {
             type: String,
             value: '/images/unknown_user.svg'
           },
+          user_info: {
+            type: Object,
+            value: { name: '', email: '' },
+          }
         })
         return props
       }
 
       static get observers() {
-        return [
-          // '_set_with_gravatar(user_data.email)'
-        ];
+        return [];
       }
+
       connectedCallback() {
         super.connectedCallback()
         this._pageName = 'settings'
       }
 
       loadData() {
-        this.$.user_doc.removeAttribute('disabled')
-        this.$.user_doc.getStoredValue(this.$.user_doc.path)
+
       }
+
       _set_with_gravatar(email) {
         if (!email)
           this.avatar = '/images/unknown_user.svg'
         else
           this.avatar = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=150"
       }
-      _user_data_changed(new_data) {
-        this._set_with_gravatar(new_data.email)
+
+      /**
+       * happens when the passed in user changed. not used for internal user
+       */
+      _user_changed(new_data) {
+        if(!new_data) return
+        let new_user = {
+          name: new_data.name,
+          email: new_data.email
+        }
+        this.set('user_info', new_user)
+        this._set_with_gravatar(new_user.email)
+        this.$.user_doc.removeAttribute('disabled')
+        this.$.user_doc.getStoredValue(this.$.user_doc.path)
       }
+
+      _reset_data() {
+        let new_user = {
+          name: user.name,
+          email: user.email
+        }
+        this.set('user_info', new_user)
+      }
+
+      /**
+       * called when the user data needs to be saved.
+      */
       _save_user_data() {
         let doc = this.$.user_doc
-        doc.setStoredValue(doc.path, this.user_data)
-        this._set_with_gravatar(this.user_data.email)
+        doc.setStoredValue(doc.path, this.user_info)
+        this._set_with_gravatar(this.user_info.email)
+        this.set('user.name', this.user_info.name)
+        //this.set('user.email', this.user_info.email) //read-only property!
         this.notification = "Profile saved"
       }
     }

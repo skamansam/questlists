@@ -211,13 +211,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" selected-attribute="active" role="main">
-          <questlists-home name="home" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-home>
-          <questlists-favorites name="favorites" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-favorites>
-          <questlists-browser name="browser" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-browser>
-          <questlists-users name="users" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-users>
-          <questlists-about name="about" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-about>
-          <questlists-settings name="settings" uid="[[user.uid]]" notification="{{notification}}" route="{{subpage}}"></questlists-settings>
-          <my-view404 name="view404"></my-view404>
+          <questlists-home name="home" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-home>
+          <questlists-favorites name="favorites" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-favorites>
+          <questlists-browser name="browser" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-browser>
+          <questlists-users name="users" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-users>
+          <questlists-about name="about" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-about>
+          <questlists-settings name="settings" user="{{user}}" notification="{{notification}}" route="{{subpage}}"></questlists-settings>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
