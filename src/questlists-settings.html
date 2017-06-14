@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="questlists-page-behavior.html">
 <link rel="import" href="shared-styles.html">
@@ -32,6 +33,24 @@
         clear: both;
         height: 160px;
       }
+
+      .oauth-buttons {
+        margin-bottom: 2ex;
+      }
+
+      .oauth-buttons [linked] {
+        color: #009900;
+      }
+
+      .oauth-buttons [icon="icons:check"] {
+        position: absolute;
+        margin: auto;
+        font-weight: bold;
+        display: none;
+      }
+      .oauth-buttons [icon="icons:check"][linked] {
+        display: block;
+      }
     </style>
     <section>
       <div paper-material elevation="1">
@@ -43,6 +62,7 @@
         <div class="card-content">
           <div id="avatar_pane">
             <img id="avatar" src="{{avatar}}" />
+            <!-- Show OAuth dropdown here for user image: user.providerData[i].photoURL -->
             <p>This is the info displayed on your user card. Your gravatar is used as your user image. If you want to change
               that image or create a new one, go to <a href="https://www.gravatar.com">the Gravatar website</a> and sign
               up for a global avatar now!</p>
@@ -50,8 +70,30 @@
           <firebase-document path='/users/[[user.uid]]/info' id="user_doc" disabled data="{{user_info}}"></firebase-document>
           <paper-input label="user id" id="user_id" value="[[user.uid]]" disabled></paper-input>
           <paper-input label="user name" id="name" value="{{user_info.name}}"></paper-input>
+          <!-- Show OAuth dropdown here for user image: user.providerData[i].displayName -->
           <paper-input label="email" type="email" id="email" value="{{user_info.email}}" disabled></paper-input>
+          <!-- Show OAuth dropdown here for user image: user.providerData[i].email -->
           <paper-input type="password" label="password" id="password"></paper-input>
+          <!-- TODO: change password entry to button->dialog for changing password -->
+        </div>
+        <h5>Link your account with other services</h5>
+        <div class='oauth-buttons'>
+          <paper-button on-tap="_handle_github_link">
+            <iron-icon icon="questlists-icons:github"></iron-icon>
+            <iron-icon linked$="[[_hasGithubData]]" icon="icons:check"></iron-icon>Github
+          </paper-button>
+          <paper-button on-tap="_handle_google_link">
+            <iron-icon icon="questlists-icons:google-color"></iron-icon>
+            <iron-icon linked$="[[_hasGoogleData]]" icon="icons:check"></iron-icon>Google
+          </paper-button>
+          <paper-button on-tap="_handle_facebook_link">
+            <iron-icon icon="questlists-icons:facebook"></iron-icon>
+            <iron-icon linked$="[[_hasFacebookData]]" icon="icons:check"></iron-icon>Facebook
+          </paper-button>
+          <paper-button on-tap="_handle_twitter_link">
+            <iron-icon icon="questlists-icons:twitter"></iron-icon>
+            <iron-icon linked$="[[_hasTwitterData]]" icon="icons:check"></iron-icon>Twitter
+          </paper-button>
         </div>
         <div class='card-actions'>
           <paper-button on-tap="_reset_data" type="reset">Reset</paper-button>
@@ -62,6 +104,9 @@
   </template>
 
   <script>
+    /**
+      TODO: Show dropdowns of related info from each of the oauth providers, so users can select the informatipn they want.
+    */
     class QuestlistsSettings extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
       static get is() { return 'questlists-settings'; }
 
@@ -79,7 +124,11 @@
           user_info: {
             type: Object,
             value: { name: '', email: '' },
-          }
+          },
+          _hasGoogleData: Boolean,
+          _hasGithubData: Boolean,
+          _hasTwitterData: Boolean,
+          _hasFacebookData: Boolean
         })
         return props
       }
@@ -97,6 +146,50 @@
 
       }
 
+      _handle_google_link() {
+        if(this._hasTwitterData){
+          this.user.unlink('google.com').then((res) => this._handle_link_success(res)).catch((err) => this._handle_link_failure(err));
+        } else {
+          let provider = new firebase.auth.GoogleAuthProvider();
+          this.user.linkWithPopup(provider).then(this._handle_link_success).catch(this._handle_link_failure);
+        }
+      }
+
+      _handle_facebook_link() {
+        if(this._hasTwitterData){
+          this.user.unlink('facebook.com').then((res) => this._handle_link_success(res)).catch((err) => this._handle_link_failure(err));
+        } else {
+          var provider = new firebase.auth.FacebookAuthProvider();
+          this.user.linkWithPopup(provider).then(this._handle_link_success).catch(this._handle_link_failure);
+        }
+      }
+
+      _handle_twitter_link() {
+        if(this._hasTwitterData){
+          this.user.unlink('twitter.com').then((res) => this._handle_link_success(res)).catch((err) => this._handle_link_failure(err));
+        } else {
+          var provider = new firebase.auth.TwitterAuthProvider();
+          this.user.linkWithPopup(provider).then(this._handle_link_success).catch(this._handle_link_failure);
+        }
+      }
+
+      _handle_github_link() {
+        if(this._hasGithubData){
+          this.user.unlink('github.com').then((res) => this._handle_link_success(res)).catch((err) => this._handle_link_failure(err));
+        } else {
+          let provider = new firebase.auth.GithubAuthProvider();
+          this.user.linkWithPopup(provider).then((res) => this._handle_link_success(res)).catch((err) => this._handle_link_failure(err));
+        }
+      }
+      _handle_link_success(result) {
+        console.log("Linked!", result)
+        this.check_providers(this.user)
+      }
+      _handle_link_failure(error) {
+        console.log("Failed!", error)
+      }
+
+
       _set_with_gravatar(email) {
         if (!email)
           this.avatar = '/images/unknown_user.svg'
@@ -108,7 +201,7 @@
        * happens when the passed in user changed. not used for internal user
        */
       _user_changed(new_data) {
-        if(!new_data) return
+        if (!new_data) return
         let new_user = {
           name: new_data.name,
           email: new_data.email
@@ -117,6 +210,14 @@
         this._set_with_gravatar(new_user.email)
         this.$.user_doc.removeAttribute('disabled')
         this.$.user_doc.getStoredValue(this.$.user_doc.path)
+        this.check_providers(new_data)
+      }
+
+      check_providers(user) {
+          this.set('_hasGoogleData', user.providerData.find(p => p.providerId === 'google.com'));
+          this.set('_hasGithubData', user.providerData.find(p => p.providerId === 'github.com'));
+          this.set('_hasFacebookData', user.providerData.find(p => p.providerId === 'facebook.com'));
+          this.set('_hasTwitterData', user.providerData.find(p => p.providerId === 'twitter.com'));
       }
 
       _reset_data() {
@@ -140,6 +241,5 @@
       }
     }
     window.customElements.define(QuestlistsSettings.is, QuestlistsSettings);
-
   </script>
 </dom-module>

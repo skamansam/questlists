@@ -28,21 +28,45 @@
       paper-button iron-icon{
         padding-right: 1ex;
       }
-      .oauth-buttons paper-button {
-        width: 100px;
+      .error{
+        display: block;
+        background-color: #fcc;
+        border: 2px solid #f00;
+        color: #f00;
+        margin: 1ex;
+        padding: 1ex;
       }
+      *[hidden]{
+        display: none;
+      }
+
+      h2.header {
+        text-align: center;
+        border-bottom: dashed 1px var(--theme-border-color, #ccc);
+        margin-top: 0px;
+        padding: 0.5ex;
+      }
+
+      @media all and (min-width: 0) and (max-width: 1080px) {
+        .oauth-buttons paper-button {
+          width: 80%;
+          margin: 0px 10%;
+        }
+      }
+
     </style>
-    <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-error="errorHandler">
+    <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-user-changed="userSuccessHandler" on-error="errorHandler">
     </firebase-auth>
     <firebase-document path='/users/{{user_id}}/info' data="{{user_data}}"></firebase-document>
-    <paper-dialog id="loginDialog" on-iron-overlay-closed="_on_dialog_close">
-      <h2>Login</h2>
+    <paper-dialog id="loginDialog" role="dialog" on-iron-overlay-closed="_on_dialog_close" opened="{{opened}}">
+      <h2 class="header">Login</h2>
+      <div class="error" hidden$="{{!_show_error}}">{{_error}}</div>
       <form on-submit="_handle_password_login">
-        <paper-input label="email" id="email" autocomplete="email" required></paper-input>
-        <paper-input type="password" label="password" id="password" autocomplete="password" required></paper-input>
+        <paper-input label="email" on-keypress="_on_email_keypress" id="email" autocomplete="email" required></paper-input>
+        <paper-input type="password" label="password" on-keypress="_on_password_keypress" id="password" autocomplete="password" required></paper-input>
         <div class="buttons">
           <paper-button dialog-dismiss>Cancel</paper-button>
-          <paper-button type="submit" on-tap="_handle_password_login" class="primary">Login</paper-button>
+          <paper-button type="submit" id="login_button" on-tap="_handle_password_login" class="primary">Login</paper-button>
         </div>
         <h3>Or login using one of the following providers:</h3>
         <div class='oauth-buttons'>
@@ -94,6 +118,12 @@
             type: Object,
             notify: true
           },
+          opened: {
+            type: Boolean,
+            notify: true
+          },
+          _error: String,
+          _show_error: Boolean
         }
       }
 
@@ -105,62 +135,34 @@
       connectedCallback() {
         super.connectedCallback()
       }
+
       login() {
-        this.$.loginDialog.open()
+        this.opened = true
+        //this.$.loginDialog.open()
       }
+
       logout() {
         this.$.firebaseLogin.signOut()
       }
 
-      add_login() {
-      }
-
       _handle_github_login() {
         this.provider = 'github'
-        console.log("Logging in with github...")
         this.$.firebaseLogin.signInWithPopup('github')
-          .then(this.userSuccessHandler.call(this))
-          .catch( (error) => {
-            debugger
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // ...
-          });
       }
 
       _handle_google_login() {
         this.provider = 'google'
         this.$.firebaseLogin.signInWithPopup('google')
-          .then(this.userSuccessHandler.call(this))
-          .catch( (error) => {
-            debugger
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // ...
-          });
-
       }
 
       _handle_twitter_login() {
         this.provider = 'twitter'
         this.$.firebaseLogin.signInWithPopup('twitter')
-          .then(this.userSuccessHandler.call(this))
       }
 
       _handle_facebook_login() {
         this.provider = 'facebook'
         this.$.firebaseLogin.signInWithPopup('facebook')
-          .then(this.userSuccessHandler.call(this))
       }
 
       _handle_password_login(event, results, c, d) {
@@ -168,29 +170,31 @@
         let email = this.$.email.value
         let pwd = this.$.password.value
         this.$.firebaseLogin.signInWithEmailAndPassword(email, pwd)
-          .then(this.userSuccessHandler.call(this))
-          .catch( (error) => {
-            debugger
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // ...
-          });
+          //.then(this.userSuccessHandler.call(this))
+          //.catch(this.errorHandler.call(this))
       }
 
       userSuccessHandler(response) {
-        this.$.loginDialog.close()
+        this._error = null;
+        this._show_error = false;
+        this.opened = false
       }
 
       errorHandler(e) {
-        alert('Error: ' + e.detail.message)
+        this._error = e.detail.message;
+        this._show_error = true;
+        e.preventDefault();
+      }
+      _on_email_keypress(e){
+        if ( 13 === e.charCode ) {
+            this.$.password.focus();
+        }
       }
 
-      _handle_github_login(event, results, c, d) {
+      _on_password_keypress(e){
+        if ( 13 === e.charCode ) {
+            this.$.login_button.click();
+        }
       }
 
       signInAnonymously() {

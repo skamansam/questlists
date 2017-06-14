@@ -60,7 +60,7 @@ Just run the `bin/start` script from the repo's directory.
 You can deploy to your own repo's github page by running the `bin/deploy` script from the repo's directory.
 
 ## Code Style Guide
-Having a style guide really helps code readability and lessens cognitive overhead when developing software. I will use the style guidelines set forth in the [Polymer Guide](https://www.polymer-project.org/1.0/docs/devguide/feature-overview)'s section on [Documenting your elements](https://www.polymer-project.org/1.0/docs/tools/documentation), with the following addendums:
+Having a style guide really helps code readability and lessens cognitive overhead when developing software. I will use the style guidelines set forth in the [Polymer Guide](https://www.polymer-project.org/2.0/docs/devguide/feature-overview)'s section on [Documenting your elements](https://www.polymer-project.org/2.0/docs/tools/documentation), with the following addendums:
 
 1. Method Names
   1. Public methods are camel-case

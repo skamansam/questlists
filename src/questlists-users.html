@@ -10,6 +10,7 @@
 <dom-module id="questlists-users">
   <template>
     <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
     <style>
 
     </style>
@@ -63,7 +64,6 @@
         }.bind(this)) // you need to do this for promises!
       }
       dataChanged(val) {
-        console.log('users changed: ', this.$.users)
       }
     }
     window.customElements.define(QuestlistsUsers.is, QuestlistsUsers);
