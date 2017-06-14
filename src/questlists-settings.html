@@ -43,8 +43,7 @@
       }
 
       .oauth-buttons [icon="icons:check"] {
-        position: absolute;
-        margin: auto;
+        margin-left: 0.5ex;
         font-weight: bold;
         display: none;
       }
@@ -76,23 +75,27 @@
           <paper-input type="password" label="password" id="password"></paper-input>
           <!-- TODO: change password entry to button->dialog for changing password -->
         </div>
-        <h5>Link your account with other services</h5>
+        <h5>Link or unlink your account with other services. (Check means the service is currently linked to your account.)</h5>
         <div class='oauth-buttons'>
           <paper-button on-tap="_handle_github_link">
             <iron-icon icon="questlists-icons:github"></iron-icon>
-            <iron-icon linked$="[[_hasGithubData]]" icon="icons:check"></iron-icon>Github
+            Github
+            <iron-icon linked$="[[_hasGithubData]]" icon="icons:check"></iron-icon>
           </paper-button>
           <paper-button on-tap="_handle_google_link">
             <iron-icon icon="questlists-icons:google-color"></iron-icon>
-            <iron-icon linked$="[[_hasGoogleData]]" icon="icons:check"></iron-icon>Google
+            Google
+            <iron-icon linked$="[[_hasGoogleData]]" icon="icons:check"></iron-icon>
           </paper-button>
           <paper-button on-tap="_handle_facebook_link">
             <iron-icon icon="questlists-icons:facebook"></iron-icon>
-            <iron-icon linked$="[[_hasFacebookData]]" icon="icons:check"></iron-icon>Facebook
+            Facebook
+            <iron-icon linked$="[[_hasFacebookData]]" icon="icons:check"></iron-icon>
           </paper-button>
           <paper-button on-tap="_handle_twitter_link">
             <iron-icon icon="questlists-icons:twitter"></iron-icon>
-            <iron-icon linked$="[[_hasTwitterData]]" icon="icons:check"></iron-icon>Twitter
+            Twitter
+            <iron-icon linked$="[[_hasTwitterData]]" icon="icons:check"></iron-icon>
           </paper-button>
         </div>
         <div class='card-actions'>
