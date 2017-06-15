@@ -211,7 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" selected-attribute="active" role="main">
-          <questlists-home name="home" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-home>
+          <questlists-dashboard name="dashboard" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-dashboard>
           <questlists-favorites name="favorites" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-favorites>
           <questlists-browser name="browser" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-browser>
           <questlists-users name="users" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-users>
@@ -261,7 +261,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'home';
+        this.page = page || 'dashboard';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {

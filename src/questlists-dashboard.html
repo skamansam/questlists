@@ -9,7 +9,7 @@
 <link rel="import" href="util.html">
 
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
-<dom-module id="questlists-home">
+<dom-module id="questlists-dashboard">
   <template>
     <style include="questlists-theme"></style>
     <style include="shared-styles"></style>
@@ -21,7 +21,7 @@
       }
     </style>
     <div paper-material elevation="1">
-      <h1 class="page-title focus-target" tabindex="-1">Home</h1>
+      <h1 class="page-title focus-target" tabindex="-1">Dashboard</h1>
       <h3 class='subhead'>All your recent lists are here.</h3>
     </div>
     <firebase-query disabled id='configs_doc' limit-to-first='10' path="/list_configs" data="{{lists}}" data-changed='data_changed'>
@@ -35,8 +35,8 @@
   </template>
 
   <script>
-    class QuestlistsHome extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
-      static get is() { return 'questlists-home'; }
+    class QuestlistsDashboard extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-dashboard'; }
 
       static get properties() {
         let props = Object.assign({}, this.mixinProperties, {
@@ -71,13 +71,13 @@
       /** runs when switching to this page. load data from firebase here
       */
       loadData() {
-        console.info('home data loaded')
+        console.info('dashboard data loaded')
 
         this.$.configs_doc.removeAttribute('disabled')
       }
 
       unloadData() {
-        console.info('home data unloaded')
+        console.info('dashboard data unloaded')
       }
 
       new_questlist() {
@@ -86,7 +86,7 @@
 
     }
 
-    window.customElements.define(QuestlistsHome.is, QuestlistsHome);
+    window.customElements.define(QuestlistsDashboard.is, QuestlistsDashboard);
 
   </script>
 </dom-module>
