@@ -14,23 +14,53 @@
     <style include="questlists-theme"></style>
     <style include="shared-styles"></style>
     <style>
+      :root {
+        width: 100%;
+        overflow: hidden;
+        overflow-y: auto;
+      }
       paper-fab {
         position: fixed;
         bottom: 30px;
         right: 50px;
       }
+      @keyframes slideLeft {
+        from {
+          margin-left: 0px;
+        }
+        to {
+          margin-left: calc(-100% + 10px);
+        }
+      }
+      .animate-hide {
+        animation-name: slideLeft;
+        animation-duration: 2s;
+        animation-delay: 1s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-direction: alternate;
+      }
+      #newItem {
+        left: 100%;
+        position: relative;
+        top: -25ex;
+        width: 100%;
+        opacity: 0;
+      }
     </style>
-    <div paper-material elevation="1">
-      <h1 class="page-title focus-target" tabindex="-1">Dashboard</h1>
-      <h3 class='subhead'>All your recent lists are here.</h3>
+    <div id="content">
+      <div paper-material elevation="1">
+        <h1 class="page-title focus-target" tabindex="-1">Dashboard</h1>
+        <h3 class='subhead'>All your recent lists are here.</h3>
+      </div>
+      <firebase-query disabled id='configs_doc' limit-to-first='10' path="/list_configs" data="{{lists}}" data-changed='data_changed'>
+      </firebase-query>
+      <template is="dom-repeat" items="[[lists]]" as="list">
+        <questlist-card uid="[[uid]]" list-id="[[list.$key]]" config="{{list}}"></questlist-card>
+      </template>
+      <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
     </div>
-    <firebase-query disabled id='configs_doc' limit-to-first='10' path="/list_configs" data="{{lists}}" data-changed='data_changed'>
-    </firebase-query>
-    <template is="dom-repeat" items="[[lists]]" as="list">
-      <questlist-card uid="[[uid]]" list-id="[[list.$key]]" config="{{list}}"></questlist-card>
-    </template>
-    <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
-    <questlist-edit id="newItem" uid="[[uid]]" config="{{list_config}}" on-confirmed="data_changed" disabled></questlist-edit>
+    <questlist-edit hidden="[[!showEdit]]" id="newItem" user="[[user]]" config_data="{{list_config}}" on-cancel="_hideEdit" on-confirmed="data_changed" disabled></questlist-edit>
 
   </template>
 
@@ -40,12 +70,14 @@
 
       static get properties() {
         let props = Object.assign({}, this.mixinProperties, {
-          uid: String,
           lists: {
             type: Object,
             value: [],
             observer: 'listsChanged'
           },
+          showEdit: {type: Boolean, value: false},
+          _hideContentAnimation: Object,
+          _showEditAnimation: Object
         })
         return props
       }
@@ -62,6 +94,12 @@
 
       data_changed(config_data) {
         console.log('data changed', config_data)
+        this.showEdit = false;
+        this._hideEdit()
+      }
+      _hideEdit(){
+        this._showEditAnimation.reverse()
+        this._hideContentAnimation.reverse()
       }
 
       listsChanged(new_lists) {
@@ -81,9 +119,34 @@
       }
 
       new_questlist() {
-        this.$.newItem.show()
+        //this.$.newItem.show()
+        this._hide_content()
+        this._show_edit()
       }
 
+      _hide_content(){
+        this._hideContentAnimation = this.$.content.animate([
+          { transform: 'translateX(-100%)' }
+        ],{
+          duration: 300,
+          iterations: 1,
+          fill: 'both'
+        })
+      }
+
+      _show_edit(){
+        this.showEdit = true;
+        this._showEditAnimation = this.$.newItem.animate([
+          {
+            transform: 'translateX(-100%)',
+            opacity: 1
+          }
+        ],{
+          duration: 300,
+          iterations: 1,
+          fill: 'both'
+        })
+      }
     }
 
     window.customElements.define(QuestlistsDashboard.is, QuestlistsDashboard);

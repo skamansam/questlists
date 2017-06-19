@@ -70,19 +70,19 @@
     <!-- Drawer Content -->
     <paper-listbox class="app-menu" attr-for-selected="data-route" selectable=".selectable" selected="{{currentRequest.page}}">
       <paper-item class="menu-item selectable" data-route="dashboard">
-        <iron-icon icon="Dashboard"></iron-icon>
+        <iron-icon icon="home"></iron-icon>
         <span>Dashboard</span>
       </paper-item>
 
-      <paper-item class="menu-item selectable" data-route="favorites">
+      <!--<paper-item class="menu-item selectable" data-route="favorites">
         <iron-icon icon="star"></iron-icon>
         <span>Favorites</span>
-      </paper-item>
+      </paper-item>-->
 
-      <paper-item class="menu-item selectable" data-route="browser">
+      <!--<paper-item class="menu-item selectable" data-route="browser">
         <iron-icon icon="dashboard"></iron-icon>
-        <span>Browse</span>
-      </paper-item>
+        <span>Community Browser</span>
+      </paper-item>-->
 
       <paper-item class="menu-item selectable" data-route="users">
         <iron-icon icon="social:people"></iron-icon>
@@ -99,10 +99,10 @@
         <span>Settings</span>
       </paper-item>
 
-      <paper-item class="menu-item" on-tap="show_changes">
+      <!--<paper-item class="menu-item" on-tap="show_changes">
         <iron-icon icon="grade"></iron-icon>
         <span>What's New?</span>
-      </paper-item>
+      </paper-item>-->
 
     </paper-listbox>
     <app-changelog id="changes" src="/CHANGELOG.md">

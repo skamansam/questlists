@@ -1,7 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="questlists-page-behavior.html">
@@ -24,26 +25,26 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
        :host {
         display: block;
       }
-
+      :host[hidden]{
+        display: none
+      }
       #dialog {
         padding: 0px;
       }
     </style>
-    <firebase-document sequentialtransactions="" log="" disabled="" path="/list_configs/[[listId]]" id="config_doc" data="{{config}}">
+    <firebase-document sequentialtransactions log disabled path="/list_configs/[[listId]]" id="config_doc" data="{{config}}">
     </firebase-document>
-    <paper-dialog id="dialog" always-on-top="" modal="" entry-animation="scale-up-animation" on-iron-overlay-opened="_opened"
-      on-iron-overlay-closed="_closed">
-      <h2><span>{{config.name}}</span> List</h2>
-      <div id="dlg-content">
-        <paper-input label="List ID" id="list_id" value="[[listId]]" disabled=""></paper-input>
-        <paper-input label="Title" id="title" value="{{config.title}}"></paper-input>
-        <paper-input label="Description" type="text" id="description" value="{{config.description}}"></paper-input>
-      </div>
+    <paper-card id="edit_card" paper-material elevation="2">
+      <h2><span>{{config_data.name}}</span> List</h2>
+      <paper-input label="Created By" id="created_by" value="[[listId]]" disabled></paper-input>
+      <paper-input label="List ID" id="list_id" value="[[listId]]" disabled></paper-input>
+      <paper-input autofocus label="Title" id="title" value="{{config_data.title}}"></paper-input>
+      <paper-textarea label="Description" type="text" id="description" value="{{config_data.description}}"></paper-textarea>
       <div class="buttons">
-        <paper-button dialog-dismiss="">Cancel</paper-button>
-        <paper-button dialog-confirm="" autofocus="">Accept</paper-button>
+        <paper-button on-tap="onCanceled">Cancel</paper-button>
+        <paper-button on-tap="onConfirmed" default>Accept</paper-button>
       </div>
-    </paper-dialog>
+    </paper-card>
 
   </template>
   <script>
@@ -58,7 +59,7 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
             notify: true,
             observer: '_list_id_changed'
           },
-          uid: String,
+          user: Object,
           /** The config object. */
           config: {
             type: Object,
@@ -67,15 +68,15 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
             value: {}
           },
 
-          /* The inital data */
-          initial_config_data: {
+          /** The inital data */
+          config_data: {
             type: Object,
             value: {
               title: "New",
-              created_by: '',
-              description: '',
-              image: '',
-              image_alt: '',
+              created_by: null,
+              description: 'New Questlist',
+              image: 'some image',
+              image_alt: 'awesomeimage no.1',
               color: '#00ccff',
               states: {
                 active: {
@@ -99,6 +100,15 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
           }
         }
       }
+      connectedCallback() {
+        super.connectedCallback()
+        const root = Polymer.dom(this.root);
+        const first = root.firstChild;
+        Array.from(root.querySelectorAll('paper-dialog'))
+          .reverse()
+          .forEach(dialog => root.insertBefore(dialog, first));
+      }
+
 
       /** Show the settings window. */
       show(id) {
@@ -106,9 +116,12 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
         //if(!this.config){
         console.log(this.$.config_doc.path);
         this.$.config_doc.removeAttribute('disabled');
+
+        this.config_data.created_by = (this.config_data.created_by || this.user.uid);
         //this.$.config_doc.getStoredValue(this.$.config_doc.path)
         //}
         //console.log(this.$.config_doc.path)
+        this.$.dialog.positionTarget = document.body;
         this.$.dialog.open();
       }
 
@@ -150,13 +163,17 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
       }
 
       /* Called when dialog is open. Fires `canceled` event */
-      onCanceled() {
-        this.fire('canceled');
+      onCanceled(evt) {
+        this.dispatchEvent(new CustomEvent('cancel', evt));
       }
 
       /* Called when dialog is open. Fires `opened` event */
       _opened(evt) {
-        this.fire('opened', evt);
+        if (evt.target.withBackdrop) {
+           evt.target.parentNode.insertBefore(evt.target.backdropElement, evt.target);
+        }
+
+        this.dispatchEvent(new CustomEvent('opened', evt));
       }
 
     }
