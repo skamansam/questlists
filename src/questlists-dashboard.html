@@ -43,24 +43,23 @@
       #newItem {
         left: 100%;
         position: relative;
-        top: -25ex;
         width: 100%;
         opacity: 0;
       }
     </style>
-    <div id="content">
+    <div id="content" hidden="[[hideContent]]">
       <div paper-material elevation="1">
         <h1 class="page-title focus-target" tabindex="-1">Dashboard</h1>
         <h3 class='subhead'>All your recent lists are here.</h3>
       </div>
       <firebase-query disabled id='configs_doc' limit-to-first='10' path="/list_configs" data="{{lists}}" data-changed='data_changed'>
       </firebase-query>
-      <template is="dom-repeat" items="[[lists]]" as="list">
-        <questlist-card uid="[[uid]]" list-id="[[list.$key]]" config="{{list}}"></questlist-card>
+      <template is="dom-repeat" items="[[lists]]">
+        <questlist-card user="[[user]]" list-id="[[item.$key]]" config="[[item]]" on-edit="edit_list"></questlist-card>
       </template>
       <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
     </div>
-    <questlist-edit hidden="[[!showEdit]]" id="newItem" user="[[user]]" config_data="{{list_config}}" on-cancel="_hideEdit" on-confirmed="data_changed" disabled></questlist-edit>
+    <questlist-edit hidden="[[!showEdit]]" id="newItem" user="[[user]]" list-id="[[list_config.$key]]" config="{{list_config}}" on-cancel="_hideEdit" on-confirmed="data_changed" disabled></questlist-edit>
 
   </template>
 
@@ -75,51 +74,58 @@
             value: [],
             observer: 'listsChanged'
           },
+          list_config: Object,
           showEdit: {type: Boolean, value: false},
-          _hideContentAnimation: Object,
-          _showEditAnimation: Object
+          hideContent: {type: Boolean, value: false},
+          _hideContentAnimation: Object, // animation used when content is hidden. stored here so it can be reversed()
+          _showEditAnimation: Object // animation used when edit panel is shown. stored here so it can be reversed()
         })
         return props
       }
 
       static get observers() {
-        return [
-          'listsChanged(lists)'
-        ];
+        return [];
       }
 
+      edit_list(evt, config){
+        console.info("questlist-dashboard: editing list: ", evt,  config)
+        this.list_config = config
+        this.$.newItem.show()
+        this._hide_content()
+        this._show_edit()
+
+      }
       connectedCallback() {
         super.connectedCallback()
+        //this.$.configs_doc.removeAttribute('disabled')
       }
 
       data_changed(config_data) {
-        console.log('data changed', config_data)
+        console.log('questlist-dashboard: data changed', config_data)
         this.showEdit = false;
         this._hideEdit()
       }
+
       _hideEdit(){
         this._showEditAnimation.reverse()
         this._hideContentAnimation.reverse()
       }
 
       listsChanged(new_lists) {
-        console.log('lists changed: ', new_lists)
+        console.log('questlist-dashboard: lists changed: ', new_lists)
       }
 
       /** runs when switching to this page. load data from firebase here
       */
       loadData() {
-        console.info('dashboard data loaded')
-
         this.$.configs_doc.removeAttribute('disabled')
       }
 
       unloadData() {
-        console.info('dashboard data unloaded')
       }
 
       new_questlist() {
-        //this.$.newItem.show()
+        this.$.newItem.show(this.list_config.$key)
         this._hide_content()
         this._show_edit()
       }
@@ -132,6 +138,12 @@
           iterations: 1,
           fill: 'both'
         })
+        this._hideContentAnimation.onfinish = () => {
+          this.hideContent = true
+          this._hideContentAnimation.onfinish = () => {
+            this.hideContent = false //hide the edit panel when animation is reversed
+          }
+        }
       }
 
       _show_edit(){
@@ -146,6 +158,11 @@
           iterations: 1,
           fill: 'both'
         })
+        this._showEditAnimation.onfinish = () => {
+          this._showEditAnimation.onfinish = () => {
+            this.showEdit = false //hide the edit panel when animation is reversed
+          }
+        }
       }
     }
 

@@ -89,7 +89,6 @@
         </iron-collapse>
       </div>
       <div class="rate-image"></div>
-      <questlist-edit id="edit" uid="[[uid]]" list-id="[[listId]]" config="{{config}}" on-confirmed="config_changed"></questlist-edit>
     </paper-card>
   </template>
 
@@ -99,7 +98,7 @@
 
       static get properties() {
         return {
-          uid: String,
+          user: Object,
           listId: {
             type: String,
             observer: '_list_id_changed'
@@ -124,8 +123,12 @@
         }
       }
 
-      _list_id_changed(new_val) {
-        console.info('list id:', new_val);
+      connectedCallback(){
+        super.connectedCallback()
+      }
+
+      _list_id_changed(new_val, a, b) {
+        console.info('questlist-card: list id:', new_val, a, b);
       }
 
       _set_rating(evt, a, b) {
@@ -147,16 +150,16 @@
       }
 
       _edit_config() {
-        this.$.edit.show(this.listId);
+        this.dispatchEvent(new CustomEvent('edit', { detail: this.config } ));
       }
 
       delete() {
         this.fire('delete', { id: this.album._id });
       }
 
-      config_changed(new_val) {
+      config_changed(new_val, a,b) {
         //debugger
-        //console.info('config', new_val)
+        console.info('questlist-card: config', new_val, a,b)
       }
     }
     window.customElements.define(QuestlistCard.is, QuestlistCard);

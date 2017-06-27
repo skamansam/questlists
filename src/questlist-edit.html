@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -25,21 +27,29 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
        :host {
         display: block;
       }
-      :host[hidden]{
+
+       :host[hidden] {
         display: none
       }
+
       #dialog {
         padding: 0px;
       }
+      #background-image-changer{
+        float: right;
+        height: 33px;
+        color: var(--theme-secondary-color)
+      }
     </style>
-    <firebase-document sequentialtransactions log disabled path="/list_configs/[[listId]]" id="config_doc" data="{{config}}">
+    <firebase-document log disabled path="/list_configs/[[listId]]/" id="config_doc" on-save="_save_test" data="{{the_data}}">
     </firebase-document>
     <paper-card id="edit_card" paper-material elevation="2">
-      <h2><span>{{config_data.name}}</span> List</h2>
-      <paper-input label="Created By" id="created_by" value="[[listId]]" disabled></paper-input>
+      <paper-icon-button title="Set Background Image" id="background-image-changer" icon="image:image" value="[[default_config.created_by]]"></paper-icon-button>
+      <h2><span>{{default_config.title}}</span> List</h2>
+      <paper-input label="Created By" id="created_by" value="[[default_config.created_by]]" disabled></paper-input>
       <paper-input label="List ID" id="list_id" value="[[listId]]" disabled></paper-input>
-      <paper-input autofocus label="Title" id="title" value="{{config_data.title}}"></paper-input>
-      <paper-textarea label="Description" type="text" id="description" value="{{config_data.description}}"></paper-textarea>
+      <paper-input autofocus label="Title" id="title" value="{{default_config.title}}"></paper-input>
+      <paper-textarea label="Description" type="text" id="description" value="{{default_config.description}}"></paper-textarea>
       <div class="buttons">
         <paper-button on-tap="onCanceled">Cancel</paper-button>
         <paper-button on-tap="onConfirmed" default>Accept</paper-button>
@@ -59,8 +69,14 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
             notify: true,
             observer: '_list_id_changed'
           },
-          user: Object,
-          /** The config object. */
+
+          /** The author of this item, if the config object doesn't already have it.*/
+          user: {
+            type: Object,
+            observer: '_user_changed'
+          },
+
+          /** The config object that is passed in. We don't change this internally. */
           config: {
             type: Object,
             notify: true,
@@ -68,8 +84,8 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
             value: {}
           },
 
-          /** The inital data */
-          config_data: {
+          /** The inital data. This is the internal state representation. We don't change the passed in config object, so we can reset the data! */
+          default_config: {
             type: Object,
             value: {
               title: "New",
@@ -100,56 +116,74 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
           }
         }
       }
+      _save_test(a,b,c){
+        console.log("SAVED!!!", a,b,c)
+      }
       connectedCallback() {
         super.connectedCallback()
-        const root = Polymer.dom(this.root);
-        const first = root.firstChild;
-        Array.from(root.querySelectorAll('paper-dialog'))
-          .reverse()
-          .forEach(dialog => root.insertBefore(dialog, first));
       }
 
+      _user_changed(new_user) {
+        if (!new_user) return
+        this._set_uid(new_user)
+      }
 
       /** Show the settings window. */
       show(id) {
+        console.info('questlist-edit: show()',id)
         //this.$.config_doc.path = `/list_configs/${this.listId}`
         //if(!this.config){
-        console.log(this.$.config_doc.path);
-        this.$.config_doc.removeAttribute('disabled');
+        //console.log(this.$.config_doc.path);
+        //this.$.config_doc.removeAttribute('disabled');
 
-        this.config_data.created_by = (this.config_data.created_by || this.user.uid);
+        if(this.default_config.created_by === null)
+          this.default_config.created_by = this.user.uid;
         //this.$.config_doc.getStoredValue(this.$.config_doc.path)
         //}
         //console.log(this.$.config_doc.path)
-        this.$.dialog.positionTarget = document.body;
-        this.$.dialog.open();
       }
 
-      /** event handler that fires when config data is changed*/
+      _set_uid(user) {
+        if (this.default_config.created_by == null) {
+          this.set('default_config.created_by', user.uid)
+        }
+      }
+
+      /** event handler that fires when config data is changed.
+        We want to make sure our values are at least what they should be, as listed in default_config, so we merge the new values into the
+        default data.
+      */
       _config_changed(new_val) {
-        console.info("Config Changed: ", new_val);
+        if (!new_val || Object.keys(new_val).length == 0) return
+        this.default_config = Object.assign({}, this.default_config, new_val)
+        this._set_uid(this.user)
+      }
+
+      _get_stored_data(){
+        this.$.config_doc.removeAttribute('disabled');
+        this.$.config_doc.getStoredValue(this.$.config_doc.path).then(()=>{
+          this.$.config_doc.addAttribute('disabled');
+        })
       }
 
       /** event handler that fires when config data is changed*/
       _list_id_changed(new_val) {
-        console.info("List ID updated to: ", new_val);
-      }
-
-      /** What happens when the dialog is closed. Updates the config in Firebase.
-      Also fires two events: `canceled` and `confirmed`. */
-      _closed(evt) {
-        if (evt.detail.confirmed) this.onConfirmed(); else this.onCanceled();
+        if (!new_val) return
+        console.info("questlist-edit: List ID updated to: ", new_val);
       }
 
       /* Called when dialog is confirmed. Saves data. Fires 'confirmed' event after successfully saving.*/
       onConfirmed() {
         //this.$.config_doc.removeAttribute('disabled')
-        console.info(this.$.config_doc.path, this.listId, this.config);
-        this.$.config_doc.setStoredValue(this.$.config_doc.path, this.config).then(function (config) {
-          console.info("SAVING: ", config);
-        }.bind(this), function (reason) {
-          console.error("ERROR SAVING: ", reason);
-        }.bind(this));
+        //let updated_config = this._changed_values(this.default_config, this.config)
+        console.info('questlist-edit: updating',this.$.config_doc.path, this.listId, this.default_config);
+        this.$.config_doc.setStoredValue(this.$.config_doc.path, this.default_config).then((config, a, b, c) => {
+          console.info("questlist-edit: SAVING: ", config, a, b, c);
+          debugger
+          this.dispatchEvent(new CustomEvent('confirmed', { detail: this.default_config }));
+        }, (reason) => {
+          console.error("questlist-edit: ERROR SAVING: ", reason);
+        })
         /*if(this.listId){
           this.config.$key = this.listId
         } else {
@@ -169,11 +203,15 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
 
       /* Called when dialog is open. Fires `opened` event */
       _opened(evt) {
-        if (evt.target.withBackdrop) {
-           evt.target.parentNode.insertBefore(evt.target.backdropElement, evt.target);
-        }
-
         this.dispatchEvent(new CustomEvent('opened', evt));
+      }
+
+      _changed_values(old_obj, changed_obj) {
+        let changes = {}
+        for (let key in changed_obj)
+          if (old_obj[key] !== changed_obj[key])
+            changes[key] = changed_obj[key]
+        return changes
       }
 
     }
