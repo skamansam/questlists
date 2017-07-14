@@ -16,6 +16,6 @@ module.exports = {
     '/manifest.json',
     '/bower_components/webcomponentsjs/*',
   ],
-  //navigateFallback: '',
+  navigateFallback: '/',
   navigateFallbackWhitelist: [/^(?!\/__)/]
 };

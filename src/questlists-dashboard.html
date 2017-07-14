@@ -52,16 +52,17 @@
         <h1 class="page-title focus-target" tabindex="-1">Dashboard</h1>
         <h3 class='subhead'>All your recent lists are here.</h3>
       </div>
-      <firebase-query disabled id='configs_doc' limit-to-first='10' path="/list_configs" data="{{lists}}" data-changed='data_changed'>
+      <firebase-query id='configs_doc' limit-to-first='10' disabled path="/list_configs" data="{{lists}}" data-changed='data_changed'>
       </firebase-query>
       <template is="dom-repeat" items="[[lists]]">
-        <questlist-card user="[[user]]" list-id="[[item.$key]]" config="[[item]]" on-edit="edit_list"></questlist-card>
+        <questlist-card user="[[user]]" id="[[item.$key]]" list-id="[[item.$key]]" config="[[item]]" on-edit="edit_list"></questlist-card>
       </template>
       <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
     </div>
-    <questlist-edit hidden="[[!showEdit]]" id="newItem" user="[[user]]" list-id="[[list_config.$key]]" config="{{list_config}}" on-cancel="_hideEdit" on-confirmed="data_changed" disabled></questlist-edit>
+    <questlist-edit hidden="[[!showEdit]]" id="newItem"  info_object="[[_selected_element]]" user="[[user]]" list-id="[[list_config.$key]]" config="{{list_config}}" on-cancel="_hideEdit" on-confirmed="data_changed"></questlist-edit>
 
   </template>
+
 
   <script>
     class QuestlistsDashboard extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
@@ -75,8 +76,9 @@
             observer: 'listsChanged'
           },
           list_config: Object,
-          showEdit: {type: Boolean, value: false},
-          hideContent: {type: Boolean, value: false},
+          showEdit: {type: Boolean, value: false}, //
+          hideContent: {type: Boolean, value: false}, // use two different variables for smoother animations
+          _selected_element: Object,
           _hideContentAnimation: Object, // animation used when content is hidden. stored here so it can be reversed()
           _showEditAnimation: Object // animation used when edit panel is shown. stored here so it can be reversed()
         })
@@ -100,9 +102,16 @@
         //this.$.configs_doc.removeAttribute('disabled')
       }
 
-      data_changed(config_data) {
+      data_changed(evt) {
+        let config_data = evt.detail
+        let key = config_data.$key
         console.log('questlist-dashboard: data changed', config_data)
-        this.showEdit = false;
+        for(let idx in this.lists) {
+          if(this.lists[idx].$key == key){
+            let e = this.$.content.querySelector('#'+key)
+            e.set('config',config_data)
+          }
+        }
         this._hideEdit()
       }
 
@@ -119,19 +128,29 @@
       */
       loadData() {
         this.$.configs_doc.removeAttribute('disabled')
+        this.$.configs_doc.getStoredValue(this.$.configs_doc.path).then(()=>{
+          console.log("Got new configs!")
+        })
+
       }
 
       unloadData() {
       }
 
       new_questlist() {
-        this.$.newItem.show(this.list_config.$key)
+        this.list_config = {}
+        this.$.newItem.show()
         this._hide_content()
         this._show_edit()
       }
 
+      _show_content() {
+        this.hideContent.reverse();
+        this.hideContent.reverse();
+      }
       _hide_content(){
         this._hideContentAnimation = this.$.content.animate([
+          { transform: 'translateX(0%)' },
           { transform: 'translateX(-110%)' }
         ],{
           duration: 300,
@@ -149,6 +168,10 @@
       _show_edit(){
         this.showEdit = true;
         this._showEditAnimation = this.$.newItem.animate([
+          {
+            transform: 'translateX(0%)',
+            opacity: 0
+          },
           {
             transform: 'translateX(-100%)',
             opacity: 1

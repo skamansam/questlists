@@ -38,7 +38,7 @@
     },
     "list_configs":{
         ".read": true,
-        ".write": "auth.uid != null",
+        ".write": false,
       "$list_id": {
         ".read": true,
         ".write": "auth.uid != null"

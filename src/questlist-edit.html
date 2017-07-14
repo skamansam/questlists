@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -40,19 +41,48 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
         height: 33px;
         color: var(--theme-secondary-color)
       }
+      .state-section {}
+      .state-section .delete_state { float: right; clear: right;}
+      .state-section .is_hidden { padding-left: 0.5em; align-self: flex-end; vertical-align: bottom; padding-bottom: 1ex}
+      .state-section .display_name { flex: auto; }
+      .state-section .checked_style {}
+      .group {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
     </style>
-    <firebase-document log disabled path="/list_configs/[[listId]]/" id="config_doc" on-save="_save_test" data="{{the_data}}">
+    <firebase-document log disabled is-new="new_item" path="/list_configs/" id="config_doc" on-save="_save_test" data="{{_config}}">
     </firebase-document>
-    <paper-card id="edit_card" paper-material elevation="2">
-      <paper-icon-button title="Set Background Image" id="background-image-changer" icon="image:image" value="[[default_config.created_by]]"></paper-icon-button>
-      <h2><span>{{default_config.title}}</span> List</h2>
-      <paper-input label="Created By" id="created_by" value="[[default_config.created_by]]" disabled></paper-input>
-      <paper-input label="List ID" id="list_id" value="[[listId]]" disabled></paper-input>
-      <paper-input autofocus label="Title" id="title" value="{{default_config.title}}"></paper-input>
-      <paper-textarea label="Description" type="text" id="description" value="{{default_config.description}}"></paper-textarea>
-      <div class="buttons">
-        <paper-button on-tap="onCanceled">Cancel</paper-button>
-        <paper-button on-tap="onConfirmed" default>Accept</paper-button>
+    <paper-card id="edit_card" paper-material elevation="3x">
+      <paper-icon-button label="Set Background Image" aria-title="Set Background Image" id="background-image-changer" icon="image:image"></paper-icon-button>
+      <h2><span>{{_config.title}}</span> List</h2>
+      <paper-input label="Created By" id="created_by" value="[[_config.created_by]]" disabled></paper-input>
+      <paper-input label="List ID" id="list_id" value="[[_config.$key]]" disabled></paper-input>
+      <paper-input autofocus label="Title" id="title" value="{{_config.title}}"></paper-input>
+      <paper-textarea label="Description" type="text" id="description" value="{{_config.description}}"></paper-textarea>
+      <paper-input label="Color" id="color" value="[[_config.color]]" disabled></paper-input>
+
+      <h3>States</h3>
+      <template is="dom-repeat" items="[[_config_states_ary]]">
+        <section class="state-section" paper-material elevation="1">
+          <paper-icon-button label="delete state '[[item.name]]'" icon="delete" class="delete_state"></paper-icon-button>
+          <div class="group">
+            <paper-input label="Display Name" value="{{item.name}}" class="display_name"></paper-input>
+            <paper-checkbox checked="{{item.hidden}}" class="is_hidden" >Hidden?</paper-checkbox>
+          </div>
+          <paper-input label="Checked Style" value="{{item.style}}" class="checked_style"></paper-input>
+          <div class="buttons">
+            <paper-button on-tap="cancel">Cancel</paper-button>
+            <paper-button on-tap="confirm" default>Accept</paper-button>
+          </div>
+        </section>
+      </template>
+
+      <paper-icon-button label="add new state"></paper-icon-button>
+       <div class="buttons">
+        <paper-button on-tap="cancel">Cancel</paper-button>
+        <paper-button on-tap="confirm" default>Accept</paper-button>
       </div>
     </paper-card>
 
@@ -84,8 +114,18 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
             value: {}
           },
 
+          /** The internally used data. when the config is changed, we merge config and _default_config to get this.*/
+          _config: Object,
+
+          /** The internally used array to allow editing the states alot easier! */
+          _config_states_ary: {
+            type: Array,
+            value: [],
+            observer: '_states_changed'
+          },
+
           /** The inital data. This is the internal state representation. We don't change the passed in config object, so we can reset the data! */
-          default_config: {
+          _default_config: {
             type: Object,
             value: {
               title: "New",
@@ -116,6 +156,11 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
           }
         }
       }
+
+      new_item(a,b,c){
+        console.log('CALLING NEW_ITEM()',a,b,c)
+        return true
+      }
       _save_test(a,b,c){
         console.log("SAVED!!!", a,b,c)
       }
@@ -136,16 +181,16 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
         //console.log(this.$.config_doc.path);
         //this.$.config_doc.removeAttribute('disabled');
 
-        if(this.default_config.created_by === null)
-          this.default_config.created_by = this.user.uid;
+        this.reset()
+        this._set_uid(this.user)
         //this.$.config_doc.getStoredValue(this.$.config_doc.path)
         //}
         //console.log(this.$.config_doc.path)
       }
 
       _set_uid(user) {
-        if (this.default_config.created_by == null) {
-          this.set('default_config.created_by', user.uid)
+        if (this._config.created_by == null) {
+          this.set('_config.created_by', user.uid)
         }
       }
 
@@ -155,14 +200,30 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
       */
       _config_changed(new_val) {
         if (!new_val || Object.keys(new_val).length == 0) return
-        this.default_config = Object.assign({}, this.default_config, new_val)
+        this._config = Object.assign({}, this.default_config, new_val)
+        this._set_config_states(new_val.states)
         this._set_uid(this.user)
       }
 
+      _set_config_states(new_states){
+        this._config_states_ary = Object.keys(new_states).map((key) => {
+            return Object.assign({}, new_states[key], { name: key })
+          }
+        )
+      }
+
+      _states_changed(new_states_ary){
+        let new_states = {}
+        for(let state in new_states_ary){
+          new_states[state.name] = {}
+          delete(state.name)
+          new_states[state.name] = state
+        }
+        this._config.states = new_states
+      }
+
       _get_stored_data(){
-        this.$.config_doc.removeAttribute('disabled');
         this.$.config_doc.getStoredValue(this.$.config_doc.path).then(()=>{
-          this.$.config_doc.addAttribute('disabled');
         })
       }
 
@@ -173,31 +234,34 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
       }
 
       /* Called when dialog is confirmed. Saves data. Fires 'confirmed' event after successfully saving.*/
-      onConfirmed() {
-        //this.$.config_doc.removeAttribute('disabled')
-        //let updated_config = this._changed_values(this.default_config, this.config)
-        console.info('questlist-edit: updating',this.$.config_doc.path, this.listId, this.default_config);
-        this.$.config_doc.setStoredValue(this.$.config_doc.path, this.default_config).then((config, a, b, c) => {
-          console.info("questlist-edit: SAVING: ", config, a, b, c);
-          debugger
-          this.dispatchEvent(new CustomEvent('confirmed', { detail: this.default_config }));
+      confirm() {
+        let path = "/list_configs/"
+        let key = this._config.$key
+        delete this._config.$key
+        console.info('questlist-edit: updating', path, key, this._config);
+
+        this.$.config_doc.saveValue(path, key).then(() => {
+          this.set('config', this._config)
+          this.$.config_doc.getStoredValue(path).then(() =>
+            this.dispatchEvent( new CustomEvent('confirmed', { detail: this.config }) )
+          ), (reason) => {
+            console.error("questlist-edit: ERROR SAVE-FETCHING: ", reason);
+          }
         }, (reason) => {
           console.error("questlist-edit: ERROR SAVING: ", reason);
         })
-        /*if(this.listId){
-          this.config.$key = this.listId
-        } else {
-          this.$.config_doc.save('/list_configs', this.listId).then(function(val){
-            console.info("RESOLVED: ", val)
-          },function(reason){
-            console.error("FAILED: ", reason)
-          })
-          this.fire('confirmed', this.config)
-        }*/
       }
 
-      /* Called when dialog is open. Fires `canceled` event */
-      onCanceled(evt) {
+      reset(evt){
+        this._config = Object.assign({}, this._default_config, this.config)
+        this._set_uid(this.user)
+        this._set_config_states(this._config.states)
+
+        //this.dispatchEvent(new CustomEvent('reset', evt));
+      }
+
+      /* Called when dialog is cancelled. Fires `canceled` event */
+      cancel(evt) {
         this.dispatchEvent(new CustomEvent('cancel', evt));
       }
 
