@@ -1,0 +1,172 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="questlist-edit.html">
+<link rel="import" href="questlists-page-behavior.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
+
+<dom-module id="questlist-card">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style is="custom-style">
+       :host {
+        padding: 10px;
+        --emblem-image-url: url('/images/inventory-icon.png');
+        --rating-icon-color: gold;
+      }
+
+      #card {
+        width: 300px
+      }
+
+      .card-actions {
+        width: 100%;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      paper-card.rate {
+        width: 400px;
+      }
+
+      .rate-image {
+        width: 100px;
+        height: 170px;
+        background: var(--emblem-image-url);
+        background-size: cover;
+        float: right;
+      }
+
+      .rate-content {
+        @apply --layout-flex;
+        float: left;
+      }
+
+      .rate-header {
+        @apply --paper-font-headline;
+      }
+
+      .rate-name {
+        color: var(--paper-grey-600);
+        margin: 10px 0;
+      }
+
+      paper-icon-button.rate-icon {
+        --iron-icon-fill-color: var(--rating-icon-color);
+        --iron-icon-stroke-color: var(--rating-icon-color);
+      }
+      .card-image {
+        float: right;
+        width: 100px;
+        height: 170px;
+      }
+    </style>
+
+    <paper-card class="rate">
+      <div class="rate-content">
+        <div class="card-content">
+          <div class="rate-header">[[config.title]]</div>
+          <div class="rate-name">[[config.user]]</div>
+          <div>[[config.tagline]]</div>
+        </div>
+        <div class="card-actions">
+          <paper-icon-button class="rate-icon" id="rating1" icon="star-border" on-tap="_set_rating"></paper-icon-button>
+          <paper-icon-button class="rate-icon" id="rating2" icon="star-border" on-tap="_set_rating"></paper-icon-button>
+          <paper-icon-button class="rate-icon" id="rating3" icon="star-border" on-tap="_set_rating"></paper-icon-button>
+          <paper-icon-button class="rate-icon" id="rating4" icon="star-border" on-tap="_set_rating"></paper-icon-button>
+          <paper-icon-button class="rate-icon" id="rating5" icon="star-border" on-tap="_set_rating"></paper-icon-button>
+        </div>
+        <div class="card-actions">
+          <paper-icon-button icon="settings" on-tap="_edit_config">Configure</paper-icon-button>
+          <paper-icon-button icon="social:share">Share</paper-icon-button>
+          <paper-icon-button icon="bookmark">Add to Favorites</paper-icon-button>
+          <paper-icon-button icon="view-list">View</paper-icon-button>
+          <paper-icon-button icon="hardware:keyboard-arrow-up" id="info_collapse_button" title="more info" on-tap="_toggle_info"></paper-icon-button>
+        </div>
+        <iron-collapse id="more_info">
+          [[config.description]]
+        </iron-collapse>
+      </div>
+      <iron-image class="card-image" sizing="cover" src="/images/inventory-icon.png"></iron-image>
+      <!-- <div class="rate-image"></div> -->
+    </paper-card>
+  </template>
+
+  <script>
+    class QuestlistCard extends Mixin(Polymer.Element).with() {
+      static get is() { return 'questlist-card'; }
+
+      static get properties() {
+        return {
+          user: Object,
+          listId: {
+            type: String,
+            observer: '_list_id_changed'
+          },
+          config: {
+            type: Object,
+            notify: true,
+            observer: 'config_changed'
+            /*        value: {
+                      title: 'New Questlist',
+                      tagline: 'definitely new',
+                      info: 'Here is a new list you can do whatever you want with!',
+                      image: 'http://loremflickr.com/320/240/game',
+                      image_alt: 'Lorem Flickr Game',
+                      uid: null
+                    }*/
+          },
+          _show_info: {
+            type: Boolean,
+            value: false
+          }
+        }
+      }
+
+      connectedCallback(){
+        super.connectedCallback()
+      }
+
+      _list_id_changed(new_val, a, b) {
+        console.info('questlist-card: list id:', new_val, a, b);
+      }
+
+      _set_rating(evt, a, b) {
+        clicked_id = evt.currentTarget.id;
+        rating = clicked_id.match(/\w+(\d+)/)[1];
+        for (i = 1; i <= 5; i++) {
+          this.$['rating' + i].icon = 'star-border';
+        }
+        for (i = 1; i <= rating; i++) {
+          this.$['rating' + i].icon = 'star';
+        }
+      }
+
+      _toggle_info(evt) {
+        this.$.more_info.toggle();
+        this._show_info = !this._show_info;
+        var iconButton = this.$.info_collapse_button;
+        iconButton.icon = this.$.more_info.opened ? 'hardware:keyboard-arrow-down' : 'hardware:keyboard-arrow-up';
+      }
+
+      _edit_config() {
+        this.dispatchEvent(new CustomEvent('edit', { detail: this.config } ));
+      }
+
+      delete() {
+        this.fire('delete', { id: this.album._id });
+      }
+
+      config_changed(new_val, a,b) {
+        console.info('questlist-card: config', new_val, a,b)
+      }
+    }
+    window.customElements.define(QuestlistCard.is, QuestlistCard);
+  </script>
+</dom-module>

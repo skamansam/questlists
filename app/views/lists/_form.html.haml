@@ -1,9 +1,0 @@
-= simple_form_for @list, :html => { :class => 'form-horizontal' }, :remote=>true do |f|
-  = f.input :title
-  = f.input :description
-  = f.input :icon
-  = f.input :list_item, :label=>"Sublist of: ",:as=>:select, :collection=>ListItem.all
-  = f.input :created_by, :as=>:hidden, :value=>current_user.id
-  .form-actions
-    = f.submit nil, :class => 'btn btn-primary'
-    = link_to t('.cancel', :default => t("helpers.links.cancel")), lists_path, :class => 'btn'

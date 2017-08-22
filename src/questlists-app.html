@@ -1,0 +1,291 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="questlists-user-menu.html">
+<link rel="import" href="questlists-navigation.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+
+
+<dom-module id="questlists-app">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style is="custom-style">
+       :host {
+        display: block;
+       }
+       app-drawer-layout {
+        background-color: var(--theme-area-background-color);
+      }
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
+      app-header,
+      app-drawer {
+        color: var(--primary-text-color);
+        border-color: var(--drawer-border-color);
+      }
+
+      app-drawer {
+        --app-drawer-content-container: {
+          background-color: var(--primary-background-color)
+        }
+      }
+
+      .menu-top {
+        background-color: var(--theme-secondary-color)
+      }
+      .focus-target {
+        outline: none;
+      }
+
+      /*app-drawer-layout:not([narrow]) */
+      app-header .logo {
+        float: left;
+        width: 150px;
+        min-height: 100px;
+        position: relative;
+      }
+
+      app-drawer-layout[narrow] app-header .logo {
+        /*float: left;
+        height: 58px;*/
+      }
+
+      app-header [main-title] .app-name {
+        font-size: 40px;
+        font-weight: 300;
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+      }
+
+      app-header [condensed-title] .app-name {
+        font-size: 20px;
+        font-weight: 300;
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+      }
+
+      /** BEGIN block of styles stolen from https://github.com/PolymerElements/app-layout/blob/master/templates/test-drive/test-app.html*/
+
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
+      app-header {
+        color: var(--theme-primary-text-color);
+        background-color: var(--theme-dark-primary-color);
+        --app-header-background-front-layer: {
+          background-color: var(--theme-light-primary-color);
+        }
+        ;
+      }
+
+      [main-title]{
+        font-size: 2em;
+        min-width: calc(100% - 50px);
+        margin-top: -40px;
+        min-height: 155px;
+        position: relative;
+        bottom: 0px;
+
+      }
+      /** END stolen styles */
+
+      [main-title] .app-slogan {
+        font-size: 0.5em;
+      }
+
+      [main-title] .app-name {
+        padding-top: 30px;
+      }
+
+      [condensed-title]{
+        font-size: 1em;
+      }
+
+      [condensed-title] .app-slogan {
+        font-size: 0.5em;
+      }
+
+      [condensed-title] .app-name {
+        margin-top: 10px;
+      }
+
+      [condensed-title] .logo {
+        min-height: 50px;
+        width: 50px;
+        padding-right: 20px;
+      }
+      /** reduce info in header based on width */
+
+      @media all and (min-width: 0) and (max-width: 350px) and (orientation: portrait) {
+        app-header .sub-slogan { display: none; }
+      }
+
+      @media all and (min-width: 0) and (max-width: 300px) and (orientation: portrait) {
+        app-header .app-name {
+          font-size: .75em !important;
+        }
+        app-header .app-slogan { display: none; }
+        app-header .sub-slogan { display: none; }
+      }
+      @media all and (min-width: 0) and (max-width: 250px) and (orientation: portrait) {
+        app-header .app-name { display: none; }
+        app-header .app-slogan { display: none; }
+        app-header .sub-slogan { display: none; }
+      }
+
+
+    </style>
+
+    <!--
+      Ensure we are on a secure site! Comment or remove for hosting on a
+      site not hosted on a https-enabled server
+    -->
+    <!--<platinum-https-redirect></platinum-https-redirect>-->
+
+    <firebase-app auth-domain="questlists.firebaseapp.com" database-url="https://questlists.firebaseio.com/" api-key="AIzaSyCFba6yCVUJJwh_-_8HZaZvVsvlnKOH0OQ"
+      online="{{online}}" id="firebaseApp">
+    <!--<firebase-app auth-domain="questlists.firebaseapp.com" database-url="ws://localhost.firebaseio.test:5000" api-key="AIzaSyCFba6yCVUJJwh_-_8HZaZvVsvlnKOH0OQ"
+      online="{{online}}" id="firebaseApp">-->
+    </firebase-app>
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer" swipe-open slot="drawer">
+        <app-toolbar class='menu-top'>
+          <questlists-user-menu user="{{user}}" online="{{online}}">
+          </questlists-user-menu>
+        </app-toolbar>
+
+        <questlists-navigation id="nav" selected-page="{{page}}" current-request="{{currentRequest}}" current-request-data="{{requestData}}"
+          current-subrequest="{{subpage}}"></questlists-navigation>
+
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses fixed slot="header" effects="blend-background parallax-background resize-title waterfall">
+          <app-toolbar>
+            <paper-icon-button id="paperToggle" icon="menu" drawer-toggle></paper-icon-button>
+            <div id="condensed-title" condensed-title>
+              <iron-image class='logo' src="images/questlists.png" alt='logo' sizing="contain"></iron-image>
+              <div class="app-name">Questlists</div>
+              <div class="app-slogan">Keep track of stuff - in games or IRL.</div>
+            </div>
+          </app-toolbar>
+          <app-toolbar></app-toolbar>
+          <app-toolbar>
+            <div id="main-title" main-title>
+              <iron-image class='logo' src="images/questlists.png" alt='logo' sizing="contain"></iron-image>
+              <div class="app-name">Questlists</div>
+              <div class="app-slogan">Keep track of stuff<span class="sub-slogan"> - in games or IRL.</span></div>
+            </div>
+            <span class="space"></span>
+
+            <iron-icon icon="cloud-download" hidden="[[!online]]"></iron-icon>
+            <iron-icon icon="cloud-off" hidden="[[online]]"></iron-icon>
+            <paper-progress id="progress" value="{{progress_value}}" bottom-item></paper-progress>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" selected-attribute="active" role="main">
+          <questlists-dashboard name="dashboard" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-dashboard>
+          <!--<questlists-favorites name="favorites" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-favorites>
+          <questlists-browser name="browser" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-browser>-->
+          <questlists-users name="users" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-users>
+          <questlists-about name="about" user="[[user]]" notification="{{notification}}" route="{{subpage}}"></questlists-about>
+          <questlists-settings name="settings" user="{{user}}" notification="{{notification}}" route="{{subpage}}"></questlists-settings>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    class QuestlistsApp extends Polymer.Element {
+
+      static get is() { return 'questlists-app'; }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          online: {
+            type: Boolean,
+            reflectToAttributes: true,
+            value: false
+          },
+          progress_value: {
+            type: Number,
+            value: 33
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      _routePageChanged(page) {
+        // Polymer 2.0 will call with `undefined` on initialization.
+        // Ignore until we are properly called with a string.
+        if (page === undefined) {
+          return;
+        }
+
+        // If no page was found in the route data, page will be an empty string.
+        // Deault to 'view1' in that case.
+        this.page = page || 'dashboard';
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('questlists-' + page + '.html');
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
+      }
+
+      _showPage404() {
+        this.page = 'view404';
+      }
+    }
+
+    window.customElements.define(QuestlistsApp.is, QuestlistsApp);
+  </script>
+</dom-module>

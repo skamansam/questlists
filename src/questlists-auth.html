@@ -1,0 +1,210 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="util.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="questlists-icons.html">
+
+<dom-module id="questlists-auth">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style>
+      paper-dialog {
+        width: 50vw;
+        height: 50vh;
+        /*        position: fixed;
+        top: 33%;
+        width: auto;
+        height: 300px;
+        overflow: auto;*/
+      }
+      paper-button iron-icon{
+        padding-right: 1ex;
+      }
+      .error{
+        display: block;
+        background-color: #fcc;
+        border: 2px solid #f00;
+        color: #f00;
+        margin: 1ex;
+        padding: 1ex;
+      }
+      *[hidden]{
+        display: none;
+      }
+
+      h2.header {
+        text-align: center;
+        border-bottom: dashed 1px var(--theme-border-color, #ccc);
+        margin-top: 0px;
+        padding: 0.5ex;
+      }
+
+      @media all and (min-width: 0) and (max-width: 1080px) {
+        .oauth-buttons paper-button {
+          width: 80%;
+          margin: 0px 10%;
+        }
+      }
+
+    </style>
+    <firebase-auth id="firebaseLogin" auth="{{auth}}" user="{{user}}" signed-in="{{signed_in}}" provider="[[provider]]" on-user-changed="userSuccessHandler" on-error="errorHandler">
+    </firebase-auth>
+    <firebase-document path='/users/{{user_id}}/info' data="{{user_data}}"></firebase-document>
+    <paper-dialog id="loginDialog" role="dialog" on-iron-overlay-closed="_on_dialog_close" opened="{{opened}}">
+      <h2 class="header">Login</h2>
+      <div class="error" hidden$="{{!_show_error}}">{{_error}}</div>
+      <form on-submit="_handle_password_login">
+        <paper-input label="email" on-keypress="_on_email_keypress" id="email" autocomplete="email" required></paper-input>
+        <paper-input type="password" label="password" on-keypress="_on_password_keypress" id="password" autocomplete="password" required></paper-input>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button type="submit" id="login_button" on-tap="_handle_password_login" class="primary">Login</paper-button>
+        </div>
+        <h3>Or login using one of the following providers:</h3>
+        <div class='oauth-buttons'>
+          <paper-button on-tap="_handle_github_login"><iron-icon icon="questlists-icons:github"></iron-icon>Github</paper-button>
+          <paper-button on-tap="_handle_google_login"><iron-icon icon="questlists-icons:google-color"></iron-icon>Google</paper-button>
+          <paper-button on-tap="_handle_facebook_login"><iron-icon icon="questlists-icons:facebook"></iron-icon>Facebook</paper-button>
+          <paper-button on-tap="_handle_twitter_login"><iron-icon icon="questlists-icons:twitter"></iron-icon>Twitter</paper-button>
+        </div>
+      </form>
+    </paper-dialog>
+  </template>
+
+  <script>
+    class QuestlistsAuth extends Polymer.Element {
+      static get is() { return 'questlists-auth'; }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            notify: true
+          },
+          user_id: {
+            type: String,
+            notify: true
+          },
+          logged_in: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          fbInstance: {
+            type: Object,
+            notify: true
+          },
+          auth: {
+            type: Object,
+            notify: true
+          },
+          signed_in: {
+            type: Boolean,
+            notify: true
+          },
+          provider: {
+            type: Object,
+            notify: true
+          },
+          user_data: {
+            type: Object,
+            notify: true
+          },
+          opened: {
+            type: Boolean,
+            notify: true
+          },
+          _error: String,
+          _show_error: Boolean
+        }
+      }
+
+      static get observers() {
+        return [
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback()
+      }
+
+      login() {
+        this.opened = true
+        //this.$.loginDialog.open()
+      }
+
+      logout() {
+        this.$.firebaseLogin.signOut()
+      }
+
+      _handle_github_login() {
+        this.provider = 'github'
+        this.$.firebaseLogin.signInWithPopup('github')
+      }
+
+      _handle_google_login() {
+        this.provider = 'google'
+        this.$.firebaseLogin.signInWithPopup('google')
+      }
+
+      _handle_twitter_login() {
+        this.provider = 'twitter'
+        this.$.firebaseLogin.signInWithPopup('twitter')
+      }
+
+      _handle_facebook_login() {
+        this.provider = 'facebook'
+        this.$.firebaseLogin.signInWithPopup('facebook')
+      }
+
+      _handle_password_login(event, results, c, d) {
+        this.provider = 'password'
+        let email = this.$.email.value
+        let pwd = this.$.password.value
+        this.$.firebaseLogin.signInWithEmailAndPassword(email, pwd)
+          //.then(this.userSuccessHandler.call(this))
+          //.catch(this.errorHandler.call(this))
+      }
+
+      userSuccessHandler(response) {
+        this._error = null;
+        this._show_error = false;
+        this.opened = false
+      }
+
+      errorHandler(e) {
+        this._error = e.detail.message;
+        this._show_error = true;
+        e.preventDefault();
+      }
+      _on_email_keypress(e){
+        if ( 13 === e.charCode ) {
+            this.$.password.focus();
+        }
+      }
+
+      _on_password_keypress(e){
+        if ( 13 === e.charCode ) {
+            this.$.login_button.click();
+        }
+      }
+
+      signInAnonymously() {
+        if (this.user != undefined)
+          return true
+        this.$.firebaseLogin.signInAnonymously()
+          .then(this.userSuccessHandler.call(this))
+      }
+    }
+
+    window.customElements.define(QuestlistsAuth.is, QuestlistsAuth);
+  </script>
+</dom-module>

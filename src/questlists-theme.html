@@ -1,0 +1,253 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="questlists-theme">
+  <template>
+    <style is="custom-style">
+      :root {
+        /* The following two stanzas are colors from
+         *   https://material.io/color/#!/?view.left=0&view.right=0&primary.color=263238&secondary.color=D50000&primary.text.color=ffffff
+         *  Use that site as a guide!
+         */
+        --theme-primary-color: #000a12;
+        --theme-primary-text-color: #ffffff;
+        --theme-dark-primary-color: #212121;
+        --theme-light-primary-color: #4f5b62;
+
+        --theme-secondary-color: #d50000;
+        --theme-secondary-text-color: #ffffff;
+        --theme-dark-secondary-color: #9b0000;
+        --theme-light-secondary-color: #ff5131;
+
+        --disabled-text-color: #E1E2E1;
+        --theme-content-block-background-color:#f5f5f6;
+        --theme-area-background-color: var(--disabled-text-color);
+
+        --theme-app-header-color: var(--theme-light-primary-color);
+
+        /*old values here*/
+/*        --dark-theme-text-color: #ffffff;
+        --dark-theme-background-color: #455A64;
+        --dark-theme-secondary-color: #03A9F4;
+        --dark-theme-disabled-color: #727272;
+        --dark-theme-disabled-text-color: #BDBDBD;
+        --dark-theme-divider-color: #B6B6B6;
+        --dark-theme-ink-color: #ffffff;
+        --accent-color:                var(--theme-secondary-color);
+        --default-primary-color:       var(--dark-theme-primary-color);
+        --primary-border-color:        var(--dark-theme-border-color);
+        --divider-color:               var(--theme-light-primary-color);
+        --primary-text-color:          var(--dark-theme-text-color);
+        --secondary-text-color:        var(--dark-theme-secondary-color);
+        --primary-background-color:    var(--theme-content-block-background-color);
+        --primary-color:               var(--dark-theme-primary-color);
+        --primary-text-color:          var(--dark-theme-text-color);
+        --paper-icon-button-ink-color: var(--dark-theme-ink-color);
+        --divider-color:               var(--dark-theme-divider-color)
+*/
+/*        --dark-accent-color:        #999999;
+        --dark-primary-color:       #455A64;
+
+        --light-accent-color:       #03A9F4;
+        --light-primary-color:      #CFD8DC;
+*/
+        /* Components */
+
+        /** app-layout/app-drawer
+        --app-drawer-width: 256px;
+        --app-drawer-content-container: {}
+        --app-drawer-scrim-background: rgba(0, 0, 0, 0.5)
+        */
+
+        /* paper-drawer-panel */
+/*        --app-drawer-scrim-background: rgba(0, 0, 0, 0.25);
+        --drawer-menu-color:           var(--primary-color);
+        --drawer-border-color:         1px solid #000;
+        --drawer-background-color:      var(--primary-background-color);
+        --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+        --app-drawer-width: 300px;
+*/
+        /* paper-menu */
+/*        --paper-menu-background-color: var(--theme-area-background-color);
+        --menu-link-color: var(--theme-secondary-color);
+*/
+          /* paper-input */
+/*        --paper-input-container-color:       var(--dark-primary-color);
+        --paper-input-container-focus-color: var(--primary-color);
+        --paper-input-container-input-color: var(--primary-text-color);
+*/
+        /* paper-button */
+/*        --paper-icon-button-disabled-text: var(--disabled-text-color);
+        --paper-icon-button-ink-color: var(--primary-text-color);
+        --paper-icon-button: {};
+        --paper-icon-button-disabled: {};
+        --paper-icon-button-hover: {};
+*/
+
+       /* polymer 2.0 styles */
+        --light-theme-color: var(--light-primary-color);
+        --light-theme-background-color: var(--primary-background-color);
+        --light-theme-secondary-color: var(--primary-background-color);
+        --light-theme-disabled-color: var(--primary-background-color);
+        --light-theme-divider-color: var(--light-primary-color);
+
+      }
+
+      paper-dialog paper-button {
+        @apply --shadow-elevation-2dp;
+      }
+      paper-button.primary {
+        @apply --shadow-elevation-3dp;
+        background-color: var(--theme-secondary-color);
+        color: var(--theme-secondary-text-color)
+      }
+
+      paper-button iron-icon {
+        margin-right: 0.5em;
+      }
+      [icon="questlists-icons:facebook"] {
+        color: #3b5998
+      }
+      [icon="questlists-icons:twitter"] {
+        color: #4099ff
+      }
+
+
+
+      /* General styles */
+
+/*      body {
+        @apply --layout-fullbleed;
+        @apply --layout-vertical;
+      }
+
+      .space {
+        @apply --layout-flex;
+      }
+
+      #drawerToolbar {
+        color: var(--drawer-toolbar-color);
+        background-color: var(--drawer-menu-color);
+        border-bottom: var(--drawer-toolbar-border-color);
+      }
+
+      #drawerToolbar .menu-name {
+        @apply --paper-font-title;
+      }
+
+      app-drawer, app-header {
+        background-color: var(--primary-background-color);
+      }
+
+      paper-scroll-header-panel {
+        height: 100%;
+      }
+*/
+      /* Height of the scroll area */
+/*      .content {
+        height: 900px;
+      }
+*/
+      /*paper-material {
+        border-radius: 2px;
+        height: 100%;
+        padding: 16px 0 16px 0;
+        width: calc(98.66% - 16px);
+        margin: 16px auto;
+        background: white;
+      }*/
+
+/*      #toast .toast-hide-button {
+        color: #eeff41;
+        margin: 10px;
+      }
+      section[tabindex="-1"]:focus { outline: none; }
+*/
+
+      /* Breakpoints */
+
+      /* Small */
+      @media (max-width: 600px) {
+
+        #drawer .paper-toolbar {
+          margin-left: 16px;
+        }
+
+        #mainToolbar.tall .app-name {
+          font-size: 24px;
+          font-weight: 400;
+        }
+
+        /*paper-material {
+          --menu-container-display: none;
+          width: calc(97.33% - 32px);
+          padding-left: 16px;
+          padding-right: 16px;
+        }*/
+
+      }
+
+      /* Tablet+ */
+      @media (min-width: 601px) {
+
+        #drawer.paper-drawer-panel > [drawer] {
+          border-right: 1px solid rgba(0, 0, 0, 0.14);
+        }
+
+        iron-pages {
+          padding: 2em 2ex;
+        }
+
+       /* paper-material {
+          width: calc(98% - 46px);
+          margin-bottom: 32px;
+          padding-left: 30px;
+          padding-right: 30px;
+        }*/
+
+      }
+
+      /* Material Design Adaptive Breakpoints */
+      /*
+        Below you'll find CSS media queries based on the breakpoint guidance
+        published by the Material Design team. You can choose to use, customise
+        or remove these breakpoints based on your needs.
+
+        http://www.google.com/design/spec/layout/adaptive-ui.html#adaptive-ui-breakpoints
+      */
+
+      /* mobile-small */
+      @media all and (min-width: 0) and (max-width: 360px) and (orientation: portrait) { }
+      /* mobile-large */
+      @media all and (min-width: 361px) and (orientation: portrait) { }
+      /* mobile-small-landscape */
+      @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+      /* mobile-large-landscape */
+      @media all and (min-width: 481px) and (orientation: landscape) { }
+      /* tablet-small-landscape */
+      @media all and (min-width: 600px) and (max-width: 960px) and (orientation: landscape) { }
+      /* tablet-large-landscape */
+      @media all and (min-width: 961px) and (orientation: landscape) { }
+      /* tablet-small */
+      @media all and (min-width: 600px) and (orientation: portrait) { }
+      /* tablet-large */
+      @media all and (min-width: 601px) and (max-width: 840px) and (orientation : portrait) { }
+      /* desktop-x-small-landscape */
+      @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+      /* desktop-x-small */
+      @media all and (min-width: 0) and (max-width: 480px) and (max-aspect-ratio: 4/3) { }
+      /* desktop-small-landscape */
+      @media all and (min-width: 481px) and (max-width: 840px) and (orientation: landscape) { }
+      /* desktop-small */
+      @media all and (min-width: 481px) and (max-width: 840px) and (max-aspect-ratio: 4/3) { }
+      /* desktop-medium-landscape */
+      @media all and (min-width: 841px) and (max-width: 1280px) and (orientation: landscape) { }
+      /* desktop-medium */
+      @media all and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) { }
+      /* desktop-large */
+      @media all and (min-width: 1281px) and (max-width: 1600px) { }
+      /* desktop-xlarge */
+      @media all and (min-width: 1601px) and (max-width: 1920px) { }
+    </style>
+  </template>
+</dom-module>

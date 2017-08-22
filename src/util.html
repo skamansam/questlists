@@ -1,0 +1,39 @@
+<script>
+  let Mixin = (superclass) => new MixinBuilder(superclass);
+  class MixinBuilder {
+    constructor(superclass) {
+      this.superclass = superclass;
+    }
+
+    with(...mixins) {
+      let v = mixins.reduce((c, mixin) => mixin(c), this.superclass);
+      return v
+    }
+  }
+
+  /**
+    //Use in the following way:
+
+    //For your behavior, define it as such
+    const MyMixin = subclass => class extends subclass {
+      // mixin behavior defined here
+      _test(){
+      }
+      ...
+    }
+
+    const MyMixinTwo = subclass => class extends subclass {
+      // another behavior defined here
+      _testTwo(){
+      }
+      ...
+    }
+
+    //when defining your element, do this:
+    class MyElement extends Mixin(Polymer.Element).with(MyMixin,MyMixin2) {
+      static get is() { return 'my-element' }
+      ...
+    }
+
+  */
+</script>

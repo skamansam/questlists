@@ -1,0 +1,51 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
+
+<dom-module id="questlists-user">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style>
+
+    </style>
+
+    <div paper-material elevation="1">
+      <h2 class="page-title focus-target" tabindex="-1">{{name}}</h2>
+      <p>{{icon}}</p>
+      <p>{{email}}</p>
+    </div>
+  </template>
+
+  <script>
+    class QuestlistsUser extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-user'; }
+
+      static get properties() {
+        return {
+          name: {
+            type: String
+          },
+          email: {
+            type: String
+          },
+          icon: {
+            type: String
+          }
+        }
+      }
+      static get observers() {
+        return [
+        ];
+      }
+      connectedCallback() {
+        super.connectedCallback()
+      }
+
+    }
+    window.customElements.define(QuestlistsUser.is, QuestlistsUser);
+
+  </script>
+</dom-module>

@@ -1,0 +1,195 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="questlist-card.html">
+<link rel="import" href="questlist-edit.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="questlists-page-behavior.html">
+<link rel="import" href="util.html">
+
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<dom-module id="questlists-dashboard">
+  <template>
+    <style include="questlists-theme"></style>
+    <style include="shared-styles"></style>
+    <style>
+      :root {
+        width: 100%;
+        overflow: hidden;
+        overflow-y: auto;
+      }
+      paper-fab {
+        position: fixed;
+        bottom: 30px;
+        right: 50px;
+      }
+      @keyframes slideLeft {
+        from {
+          margin-left: 0px;
+        }
+        to {
+          margin-left: calc(-100% + 10px);
+        }
+      }
+      .animate-hide {
+        animation-name: slideLeft;
+        animation-duration: 2s;
+        animation-delay: 1s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-direction: alternate;
+      }
+      #newItem {
+        left: 100%;
+        position: relative;
+        width: 100%;
+        opacity: 0;
+      }
+    </style>
+    <div id="content" hidden="[[hideContent]]">
+      <div paper-material elevation="1">
+        <h1 class="page-title focus-target" tabindex="-1">Dashboard</h1>
+        <h3 class='subhead'>All your recent lists are here.</h3>
+      </div>
+      <firebase-query id='configs_doc' limit-to-first='10' disabled path="/list_configs" data="{{lists}}" data-changed='data_changed'>
+      </firebase-query>
+      <template is="dom-repeat" items="[[lists]]">
+        <questlist-card user="[[user]]" id="[[item.$key]]" list-id="[[item.$key]]" config="[[item]]" on-edit="edit_list"></questlist-card>
+      </template>
+      <paper-fab icon="add" label="new" raised on-tap="new_questlist"></paper-fab>
+    </div>
+    <questlist-edit hidden="[[!showEdit]]" id="newItem"  info_object="[[_selected_element]]" user="[[user]]" list-id="[[list_config.$key]]" config="{{list_config}}" on-cancel="_hideEdit" on-confirmed="data_changed"></questlist-edit>
+
+  </template>
+
+
+  <script>
+    class QuestlistsDashboard extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-dashboard'; }
+
+      static get properties() {
+        let props = Object.assign({}, this.mixinProperties, {
+          lists: {
+            type: Object,
+            value: [],
+            observer: 'listsChanged'
+          },
+          list_config: Object,
+          showEdit: {type: Boolean, value: false}, //
+          hideContent: {type: Boolean, value: false}, // use two different variables for smoother animations
+          _selected_element: Object,
+          _hideContentAnimation: Object, // animation used when content is hidden. stored here so it can be reversed()
+          _showEditAnimation: Object // animation used when edit panel is shown. stored here so it can be reversed()
+        })
+        return props
+      }
+
+      static get observers() {
+        return [];
+      }
+
+      edit_list(evt, config){
+        console.info("questlist-dashboard: editing list: ", evt,  config)
+        this.list_config = config
+        this.$.newItem.show()
+        this._hide_content()
+        this._show_edit()
+
+      }
+      connectedCallback() {
+        super.connectedCallback()
+        //this.$.configs_doc.removeAttribute('disabled')
+      }
+
+      data_changed(evt) {
+        let config_data = evt.detail
+        let key = config_data.$key
+        console.log('questlist-dashboard: data changed', config_data)
+        for(let idx in this.lists) {
+          if(this.lists[idx].$key == key){
+            let e = this.$.content.querySelector('#'+key)
+            e.set('config',config_data)
+          }
+        }
+        this._hideEdit()
+      }
+
+      _hideEdit(){
+        this._showEditAnimation.reverse()
+        this._hideContentAnimation.reverse()
+      }
+
+      listsChanged(new_lists) {
+        console.log('questlist-dashboard: lists changed: ', new_lists)
+      }
+
+      /** runs when switching to this page. load data from firebase here
+      */
+      loadData() {
+        this.$.configs_doc.removeAttribute('disabled')
+        this.$.configs_doc.getStoredValue(this.$.configs_doc.path).then(()=>{
+          console.log("Got new configs!")
+        })
+
+      }
+
+      unloadData() {
+      }
+
+      new_questlist() {
+        this.list_config = {}
+        this.$.newItem.show()
+        this._hide_content()
+        this._show_edit()
+      }
+
+      _show_content() {
+        this.hideContent.reverse();
+        this.hideContent.reverse();
+      }
+      _hide_content(){
+        this._hideContentAnimation = this.$.content.animate([
+          { transform: 'translateX(0%)' },
+          { transform: 'translateX(-110%)' }
+        ],{
+          duration: 300,
+          iterations: 1,
+          fill: 'both'
+        })
+        this._hideContentAnimation.onfinish = () => {
+          this.hideContent = true
+          this._hideContentAnimation.onfinish = () => {
+            this.hideContent = false //hide the edit panel when animation is reversed
+          }
+        }
+      }
+
+      _show_edit(){
+        this.showEdit = true;
+        this._showEditAnimation = this.$.newItem.animate([
+          {
+            transform: 'translateX(0%)',
+            opacity: 0
+          },
+          {
+            transform: 'translateX(-100%)',
+            opacity: 1
+          }
+        ],{
+          duration: 300,
+          iterations: 1,
+          fill: 'both'
+        })
+        this._showEditAnimation.onfinish = () => {
+          this._showEditAnimation.onfinish = () => {
+            this.showEdit = false //hide the edit panel when animation is reversed
+          }
+        }
+      }
+    }
+
+    window.customElements.define(QuestlistsDashboard.is, QuestlistsDashboard);
+
+  </script>
+</dom-module>

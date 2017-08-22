@@ -1,0 +1,199 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="questlists-auth.html">
+
+<dom-module id="questlists-user-menu">
+  <template>
+    <style include="questlists-theme"></style>
+    <style include="shared-styles"></style>
+    <style>
+       :host {
+        height: 60px;
+        --iron-image-placeholder: {
+          background-size: 100%;
+        }
+      }
+
+      .menu-name {
+        @apply --paper-font-title;
+        display: block;
+        width: 150px;
+        margin-top: -42px;
+        padding-left: 65px;
+        padding-right: 35px;
+      }
+
+      .user-menu {
+        float: right;
+        width: 23px;
+        margin-top: -35px;
+      }
+
+      .login_links .menu-name {
+        float: none;
+        width: 100%;
+        margin-top: 15px;
+        padding-left: 20px;
+        cursor: pointer;
+      }
+
+      .avatar {
+        padding: 0px;
+        height: 50px;
+        width: 50px;
+        border: 1px solid #000;
+        border-radius: 50%;
+        background-color: var(--dark-accent-color)
+      }
+
+      .avatar-small {
+        padding: 0px;
+        height: 30px;
+        margin-right: 5px;
+        border: 1px solid #000;
+        border-radius: 50%;
+        float: right;
+      }
+
+      .small-icons {
+        float: right;
+        height: 48%;
+        width: 50%;
+      }
+
+      paper-item {
+        --paper-item: {
+          cursor: pointer;
+          background-color: var(--drawer-background-color);
+        }
+        ;
+      }
+      .user-action {
+        float: right;
+      }
+      paper-icon-button.user-action{
+        margin-top: -34px;
+      }
+    </style>
+
+    <questlists-auth user="{{user}}" id="auth"></questlists-auth>
+
+    <iron-image preload fade class='avatar' src='{{icon}}' error="{{err}}" alt="avatar" placeholder="/images/unknown_user.svg">
+    </iron-image>
+
+    <span class$="login_links">
+      <span class="menu-name" on-tap="login">
+          {{display_name}}
+      </span>
+    </span>
+
+    <paper-icon-button class="user-action" title="Sign Out" icon="exit-to-app"  on-tap="logout" hidden$="{{!logged_in}}"></paper-icon-button>
+    <paper-icon-button class="user-action" title="Sign In" icon="forward"  on-tap="login" hidden$="{{logged_in}}"></paper-icon-button>
+    <!--<paper-dropdown-menu label$="{{display_name}}" class="user-menu" no-label-float>
+      <paper-listbox class="dropdown-content" class="menu-name" slot="dropdown-content">
+        <paper-item on-tap="logout" hidden$="{{_logged_in()}}">Log Out</paper-item>
+        <paper-item on-tap="login" hidden$="{{!_logged_in()}}">Log In</paper-item>
+      </paper-listbox>
+    </paper-dropdown-menu> -->
+
+  </template>
+
+  <script src="md5.min.js"></script>
+  <script>
+    class QuestlistsUserMenu extends Polymer.Element {
+      static get is() { return 'questlists-user-menu'; }
+
+      static get properties() {
+        return {
+          logged_in: Boolean,
+          icon: String,
+          display_name: {
+            type: String,
+            value: 'unknown_user'
+          },
+          email: {
+            type: String
+          },
+          err: String,
+          user: {
+            type: Object,
+            observer: '_userChanged',
+            notify: true,
+            value: {
+              name: "",
+              email: ""
+            }
+          }
+        }
+      }
+
+      static get observers() {
+        return [
+          '_set_gravatar(user.email)',
+          '_set_user_name(user.name, user.email)'
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback()
+      }
+
+      login() {
+        if (!this.logged_in)
+          this.$.auth.login();
+      }
+
+      logout() {
+        this.$.auth.logout()
+      }
+
+      _userChanged(new_user) {
+        if (new_user == null) {
+          this.logged_in = false
+          return
+        }
+        this.logged_in = true
+        console.info("User Changed", new_user)
+        let new_name = new_user.providerData[0].displayName || new_user.name
+        let new_email = new_user.providerData[0].email || new_user.email
+        this._set_user_name(new_name, new_email)
+        if(new_user.providerData[0].photoURL == null)
+          this._set_gravatar(new_user.email)
+        else
+          this.set('icon', new_user.providerData[0].photoURL)
+      }
+
+      _set_gravatar(email) {
+        if (!email)
+          return
+        console.info("No avatar provided, using gravatar")
+        this.icon = "https://secure.gravatar.com/avatar/" + md5(email.toLowerCase().trim()) + "?size=50"
+      }
+
+      _set_user_name(new_name, new_email) {
+        if (this.logged_in) {
+          if (new_name != "" && new_name != null) {
+            this.set('display_name', new_name)
+          } else if (new_email != "" && new_email != null) {
+            this.set('display_name', new_email.split('@')[0])
+          } else {
+            this.set('display_name', "Anonymous")
+          }
+        } else {
+          this.set('display_name', "Log In / Sign Up")
+        }
+        return this.display_name
+      }
+    }
+
+    window.customElements.define(QuestlistsUserMenu.is, QuestlistsUserMenu);
+
+  </script>
+</dom-module>

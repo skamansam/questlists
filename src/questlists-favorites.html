@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="questlists-page-behavior.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+
+<dom-module id="questlists-favorites">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style>
+
+    </style>
+    <section>
+      <div paper-material elevation="1">
+        <h1 class="page-title focus-target" tabindex="-1">Your Questlists</h1>
+        <p>All your favorited lists are here.</p>
+      </div>
+      <paper-fab icon="add" label="new" raised on-tap="_new_list"></paper-fab>
+    </section>
+  </template>
+
+  <script>
+    class QuestlistsFavorites extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-favorites'; }
+
+      static get properties() {}
+
+      connectedCallback() {
+        super.connectedCallback();
+        this._pageName = 'favorites';
+      }
+
+      loadData() {
+        console.log('Loading Favorites...');
+      }
+    }
+    window.customElements.define(QuestlistsFavorites.is, QuestlistsFavorites);
+  </script>
+</dom-module>

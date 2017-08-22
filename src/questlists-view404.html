@@ -1,0 +1,50 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="questlists-page-behavior.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
+
+<dom-module id="questlists-view404">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+
+        padding: 10px 20px;
+      }
+    </style>
+
+    <!--
+      If deploying in a folder replace href="/" with the full path to your site.
+      Such as: href=="http://polymerelements.github.io/polymer-starter-kit"
+    -->
+    Oops you hit a 404. <a href="/">Head back to the Dashboard.</a>
+  </template>
+
+  <script>
+    class QuestlistsNotFound extends Mixin(Polymer.Element).with(QuestlistsPageBehaviorMixin) {
+      static get is() { return 'questlists-view404'; }
+
+      static get properties() {
+        let props = Object.assign({}, this.mixinProperties, {})
+        return props
+      }
+
+      static get observers() {
+        return [
+        ];
+      }
+      connectedCallback() {
+        super.connectedCallback()
+        this._pageName = 'view404'
+      }
+
+      loadData() {
+        console.log('Loading Unknown Data...???')
+      }
+    }
+    window.customElements.define(QuestlistsNotFound.is, QuestlistsNotFound);
+  </script>
+</dom-module>
