@@ -15,7 +15,7 @@
     <style is="custom-style">
        :host {
         padding: 10px;
-        --emblem-image-url: url('http://loremflickr.com/100/200/game');
+        --emblem-image-url: url('/images/inventory-icon.png');
         --rating-icon-color: gold;
       }
 
@@ -61,6 +61,11 @@
         --iron-icon-fill-color: var(--rating-icon-color);
         --iron-icon-stroke-color: var(--rating-icon-color);
       }
+      .card-image {
+        float: right;
+        width: 100px;
+        height: 170px;
+      }
     </style>
 
     <paper-card class="rate">
@@ -88,7 +93,8 @@
           [[config.description]]
         </iron-collapse>
       </div>
-      <div class="rate-image"></div>
+      <iron-image class="card-image" sizing="cover" src="/images/inventory-icon.png"></iron-image>
+      <!-- <div class="rate-image"></div> -->
     </paper-card>
   </template>
 
