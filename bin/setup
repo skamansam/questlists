@@ -1,4 +1,17 @@
 #!/bin/bash
 mkdir -p "log"
+
+echo "Updating npm modules..."
 npm update --save
+
+echo "Checking firebase tools..."
+npm update -g firebase-tools
+
+echo "Checking firebase development server..."
+npm update -g firebase-server
+
+echo "Checking polymer tools..."
+npm update -g polymer-cli
+
+echo "Updating bower modules..."
 bower update --save
