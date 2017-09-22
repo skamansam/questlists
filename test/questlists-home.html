@@ -30,13 +30,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--</test-fixture>-->
 
     <script>
-      // suite('questlists-dashboard tests', function() {
-        // test('Number in circle should be 1', function() {
-          //var myView = fixture('BasicView');
-          //var circle = myView.shadowRoot.querySelector('.circle');
-          //assert.equal(circle.textContent, '1');
-        // });
-      // });
+       suite('questlists-dashboard tests', function() {
+        test('Number in circle should be 1', function() {
+          var myView = fixture('BasicView');
+          var circle = myView.shadowRoot.querySelector('.circle');
+          assert.equal(circle.textContent, '1');
+        });
+      });
     </script>
   </body>
 </html>

@@ -93,7 +93,7 @@
           [[config.description]]
         </iron-collapse>
       </div>
-      <iron-image class="card-image" sizing="cover" src="/images/inventory-icon.png"></iron-image>
+      <iron-image class="card-image" sizing="cover" src="[[config.image]]" alt="[[config.image_description]]"></iron-image>
       <!-- <div class="rate-image"></div> -->
     </paper-card>
   </template>
@@ -112,15 +112,18 @@
           config: {
             type: Object,
             notify: true,
-            observer: 'config_changed'
-            /*        value: {
-                      title: 'New Questlist',
-                      tagline: 'definitely new',
-                      info: 'Here is a new list you can do whatever you want with!',
-                      image: 'http://loremflickr.com/320/240/game',
-                      image_alt: 'Lorem Flickr Game',
-                      uid: null
-                    }*/
+            observer: 'config_changed',
+            value: {}
+          },
+          _default_config: {
+            type: Object,
+            value: {
+              title: 'New Questlist',
+              tagline: 'definitely new',
+              info: 'Here is a new list you can do whatever you want with!',
+              image: '/images/inventory-icon.png',
+              image_description: 'New Questlist Image'
+            }
           },
           _show_info: {
             type: Boolean,
@@ -163,8 +166,9 @@
         this.fire('delete', { id: this.album._id });
       }
 
-      config_changed(new_val, a,b) {
-        console.info('questlist-card: config', new_val, a,b)
+      config_changed(new_val) {
+        console.info('questlist-card: config', new_val)
+        //this.config = object.assign({},this._default_config, new_val)
       }
     }
     window.customElements.define(QuestlistCard.is, QuestlistCard);

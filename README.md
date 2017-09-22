@@ -40,7 +40,8 @@ Questlists is originally intended for game quests, so will have the following id
   4. Locations reached - filter list by item type
   5. Integration with external service (links to wikia)
   6. stats page for each item: dashboard for item types
-  7. custom item types
+  7. custom item types (allow users to build a template for items)
+  8. 
 
 I am sure you can generalize these ideas to fit any circumstance, so i will eventually create a few demos of lists for everyday use, such as a shopping list and various TODO lists.
 

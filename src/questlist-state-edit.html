@@ -1,0 +1,88 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="questlists-theme.html">
+<link rel="import" href="util.html">
+
+<!--
+`<questlist-state-edit>` 
+
+The config data is stored in Firebase at /questlists/config/{{listId}}
+-->
+<dom-module id="questlist-state-edit">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="questlists-theme"></style>
+    <style>
+       :host {
+        display: block;
+      }
+      .state-section {}
+      .state-section .delete_state { float: right; clear: right;}
+      .state-section .is_hidden { padding-left: 0.5em; align-self: flex-end; vertical-align: bottom; padding-bottom: 1ex}
+      .state-section .display_name { flex: auto; }
+      .state-section .checked_style {}
+      .group {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
+    </style>
+    <section class="state-section" paper-material elevation="1">
+      <paper-icon-button label="delete state '[[item.name]]'" icon="delete" on-tap="deleteItem" class="delete_state"></paper-icon-button>
+      <div class="group">
+        <paper-input label="Display Name" value="{{item.name}}" class="display_name"></paper-input>
+        <paper-checkbox checked="{{item.hidden}}" class="is_hidden" >Hidden?</paper-checkbox>
+      </div>
+      <paper-input label="Checked Style" value="{{item.style}}" class="checked_style"></paper-input>
+      <div class="buttons">
+        <paper-button on-tap="reset">Reset</paper-button>
+        <paper-button on-tap="confirm" default>Accept</paper-button>
+      </div>
+    </section>
+  </template>
+  <script>
+    class QuestlistStateEdit extends Mixin(Polymer.Element).with() {
+      static get is() { return 'questlist-state-edit'; }
+
+      static get properties() {
+        return {
+          item: {
+            type: Object,
+            notify: true
+          },
+          index: Number,
+          _originalItem: Object
+        }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this._originalItem = Object.assign({},this.item)
+      }
+      
+      deleteItem(){
+        this.dispatchEvent(new CustomEvent('destroy', {detail: {index: this.index}}));
+      }
+
+      confirm(){
+        this.item = this.item
+        console.log(this.item)
+      }
+
+      reset(){
+        this.item = Object.assign({},this._originalItem)
+      }
+    }
+
+    window.customElements.define(QuestlistStateEdit.is, QuestlistStateEdit);
+  </script>
+</dom-module>

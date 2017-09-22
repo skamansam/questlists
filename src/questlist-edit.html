@@ -11,6 +11,7 @@
 <link rel="import" href="questlists-page-behavior.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="questlists-theme.html">
+<link rel="import" href="questlist-state-edit.html">
 <link rel="import" href="util.html">
 
 <!--
@@ -41,11 +42,6 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
         height: 33px;
         color: var(--theme-secondary-color)
       }
-      .state-section {}
-      .state-section .delete_state { float: right; clear: right;}
-      .state-section .is_hidden { padding-left: 0.5em; align-self: flex-end; vertical-align: bottom; padding-bottom: 1ex}
-      .state-section .display_name { flex: auto; }
-      .state-section .checked_style {}
       .group {
         display: flex;
         flex-direction: row;
@@ -61,11 +57,12 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
       <paper-input label="List ID" id="list_id" value="[[_config.$key]]" disabled></paper-input>
       <paper-input autofocus label="Title" id="title" value="{{_config.title}}"></paper-input>
       <paper-textarea label="Description" type="text" id="description" value="{{_config.description}}"></paper-textarea>
-      <paper-input label="Color" id="color" value="[[_config.color]]" disabled></paper-input>
+      <paper-input label="Color" id="color" value="[[_config.color]]"></paper-input>
 
       <h3>States</h3>
-      <template is="dom-repeat" items="[[_config_states_ary]]">
-        <section class="state-section" paper-material elevation="1">
+      <template is="dom-repeat" items="{{_config.states}}">
+        <questlist-state-edit item="{{item}}" index="[[index]]" on-destroy="delete_state"> </questlist-state-edit>
+        <!-- <section class="state-section" paper-material elevation="1">
           <paper-icon-button label="delete state '[[item.name]]'" icon="delete" class="delete_state"></paper-icon-button>
           <div class="group">
             <paper-input label="Display Name" value="{{item.name}}" class="display_name"></paper-input>
@@ -73,11 +70,12 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
           </div>
           <paper-input label="Checked Style" value="{{item.style}}" class="checked_style"></paper-input>
           <div class="buttons">
-            <paper-button on-tap="cancel">Cancel</paper-button>
+            <paper-button on-tap="state_cancel">Cancel</paper-button>
             <paper-button on-tap="confirm" default>Accept</paper-button>
           </div>
-        </section>
+        </section> -->
       </template>
+      <paper-button raised on-tap="add_state">Add State</paper-button>
 
       <paper-icon-button label="add new state"></paper-icon-button>
        <div class="buttons">
@@ -117,13 +115,6 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
           /** The internally used data. when the config is changed, we merge config and _default_config to get this.*/
           _config: Object,
 
-          /** The internally used array to allow editing the states alot easier! */
-          _config_states_ary: {
-            type: Array,
-            value: [],
-            observer: '_states_changed'
-          },
-
           /** The inital data. This is the internal state representation. We don't change the passed in config object, so we can reset the data! */
           _default_config: {
             type: Object,
@@ -131,32 +122,40 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
               title: "New",
               created_by: null,
               description: 'New Questlist',
-              image: 'some image',
+              image: '/images/questlists.png',
               image_alt: 'awesomeimage no.1',
               color: '#00ccff',
-              states: {
-                active: {
+              states: [
+                {
+                  name: "active",
                   hidden: false,
                   style: 'font-weight: bold;'
-                },
-                inactive: {
+                }, {
+                  name: "inactive",
                   hidden: true,
                   style: 'font-weight: bold;'
-                },
-                completed: {
+                }, {
+                  name: "completed",
                   hidden: false,
                   style: 'font-weight: normal;'
-                },
-                partial: {
+                }, {
+                  name: "partial",
                   hidden: false,
                   style: 'font-weight: bold; font-style: italics;'
                 }
-              }
+              ]
             }
           }
         }
       }
-
+      add_state(){
+        this.push('_config.states',{name: 'new state', hidden:false, style: ""})
+      }
+      delete_state(evt){
+        const idx = evt.detail.index
+        console.info("Deleting State: ", idx, this._config.states[idx])
+        this.splice('_config.states', idx, 1)
+      }
       new_item(a,b,c){
         console.log('CALLING NEW_ITEM()',a,b,c)
         return true
@@ -201,25 +200,7 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
       _config_changed(new_val) {
         if (!new_val || Object.keys(new_val).length == 0) return
         this._config = Object.assign({}, this.default_config, new_val)
-        this._set_config_states(new_val.states)
         this._set_uid(this.user)
-      }
-
-      _set_config_states(new_states){
-        this._config_states_ary = Object.keys(new_states).map((key) => {
-            return Object.assign({}, new_states[key], { name: key })
-          }
-        )
-      }
-
-      _states_changed(new_states_ary){
-        let new_states = {}
-        for(let state in new_states_ary){
-          new_states[state.name] = {}
-          delete(state.name)
-          new_states[state.name] = state
-        }
-        this._config.states = new_states
       }
 
       _get_stored_data(){
@@ -241,7 +222,7 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
         console.info('questlist-edit: updating', path, key, this._config);
 
         this.$.config_doc.saveValue(path, key).then(() => {
-          this.set('config', this._config)
+          this.set('config', Object.assign({}, this._config))
           this.$.config_doc.getStoredValue(path).then(() =>
             this.dispatchEvent( new CustomEvent('confirmed', { detail: this.config }) )
           ), (reason) => {
@@ -253,15 +234,15 @@ The config data is stored in Firebase at /questlists/config/{{listId}}
       }
 
       reset(evt){
-        this._config = Object.assign({}, this._default_config, this.config)
+        this.set('_config', Object.assign({}, this._default_config, this.config))
         this._set_uid(this.user)
-        this._set_config_states(this._config.states)
 
         //this.dispatchEvent(new CustomEvent('reset', evt));
       }
 
       /* Called when dialog is cancelled. Fires `canceled` event */
       cancel(evt) {
+        this.reset(evt)
         this.dispatchEvent(new CustomEvent('cancel', evt));
       }
 
